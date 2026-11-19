@@ -5,7 +5,7 @@ Kho lưu các skill Claude dùng cho công việc bất động sản:
 | Skill | Việc làm |
 |---|---|
 | `diem-bao-bds` | Điểm báo BĐS cả nước, tối thiểu 50 bài mỗi lần, lọc theo địa phương và phân khúc, có cột mức độ quan trọng; chỉ lấy bài trực tiếp từ 23 báo |
-| `kich-ban-tiktok-bds` | Viết kịch bản TikTok BĐS Hà Nội từ 3–5 tin nóng nhất 24–48 giờ qua |
+| `kich-ban-tiktok-bds` | Viết kịch bản TikTok BĐS Hà Nội từ đúng 5 tin nóng nhất 24–48 giờ qua |
 
 ## Cài vào Claude Code (một lần)
 
