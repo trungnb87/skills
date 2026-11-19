@@ -1,6 +1,6 @@
 ---
 name: kich-ban-tiktok-bds
-description: Viết kịch bản TikTok bất động sản Hà Nội cho anh Trung (Giám đốc Kinh doanh BĐS hạng sang) tự đọc trước camera. Chọn 3–5 tin nóng nhất 24–48 giờ qua, kiểm chứng số liệu, viết mỗi tin một kịch bản ~450 từ có HOOK–TIN–TÁC ĐỘNG–LỜI KHUYÊN–CTA, kèm chữ trên màn hình, caption, hashtag và nguồn. Dùng khi Trung nhờ viết kịch bản TikTok, kịch bản video BĐS, "tin hôm nay để quay", hoặc lịch tự động hằng ngày gọi đến.
+description: Viết kịch bản TikTok bất động sản Hà Nội cho anh Trung (Giám đốc Kinh doanh BĐS hạng sang) tự đọc trước camera. Chọn đúng 5 tin nóng nhất 24–48 giờ qua, kiểm chứng số liệu, viết mỗi tin một kịch bản ~450 từ gồm Tiêu đề–HOOK–TIN–VÌ SAO QUAN TRỌNG–KẾT, kèm chữ trên màn hình, caption, hashtag và nguồn. Dùng khi Trung nhờ viết kịch bản TikTok, kịch bản video BĐS, "tin hôm nay để quay", hoặc lịch tự động hằng ngày gọi đến.
 ---
 
 # Kịch bản TikTok BĐS Hà Nội
@@ -11,7 +11,7 @@ Người dùng: anh Trung, Giám đốc Kinh doanh bất động sản hạng sa
 
 Nếu có project "Kịch bản Tiktok BDS", đọc danh sách và các kịch bản 2–3 ngày gần nhất. Không chọn lại tin đã làm, trừ khi có diễn biến mới (khi đó ghi rõ "cập nhật").
 
-## Bước 1 — Chọn 3–5 tin
+## Bước 1 — Chọn đúng 5 tin
 
 1. Chạy WebSearch với nhiều truy vấn khác nhau, gửi cùng lúc, ví dụ:
    - "bất động sản Hà Nội" + ngày hôm nay
@@ -20,7 +20,7 @@ Nếu có project "Kịch bản Tiktok BDS", đọc danh sách và các kịch b
    - "lãi suất vay mua nhà", "bảng giá đất Hà Nội", "thuế bất động sản"
    - "nhà ở xã hội Hà Nội", "giá chung cư Hà Nội báo cáo"
 2. Chỉ lấy tin đăng trong 24–48 giờ qua. Nếu không đủ tin mới, được dùng tin tối đa khoảng 2 tuần nhưng phải ghi rõ ngày đăng và lý do chọn.
-3. Chọn ĐÚNG 3–5 tin có tác động lớn nhất đến BĐS Hà Nội. Thứ tự ưu tiên: chính sách/luật → quy hoạch → hạ tầng lớn → thuế, giá đất → lãi suất, tín dụng → dữ liệu thị trường quan trọng.
+3. Chọn ĐÚNG 5 tin có tác động lớn nhất đến BĐS Hà Nội. Thứ tự ưu tiên: chính sách/luật → quy hoạch → hạ tầng lớn → thuế, giá đất → lãi suất, tín dụng → dữ liệu thị trường quan trọng.
 4. Bỏ tin quảng cáo dự án và bài PR (dấu hiệu: nhắc tên một dự án hay chủ đầu tư cụ thể kèm lời chào bán). Bỏ tin cũ được đăng lại.
 5. Các tin nên khác mảng nhau (ví dụ 1 luật + 1 hạ tầng + 1 lãi suất), không làm 3 bài cùng một chủ đề.
 
@@ -40,9 +40,10 @@ Cấu trúc:
 - **Tiêu đề:** hiện khi đăng TikTok. Ngắn, dễ hiểu, gây chú ý, thường viết IN HOA, có thể dạng câu hỏi.
 - **[HOOK]** (3 giây đầu): 1–2 câu gây tò mò mạnh, có con số hoặc một mâu thuẫn.
 - **[TIN]:** tóm tắt bằng lời của mình. Nêu thời gian, cơ quan và con số chính.
-- **[TÁC ĐỘNG]:** 2–3 tác động cụ thể đến giá nhà, khu vực, dòng tiền, người mua ở thực và nhà đầu tư Hà Nội. Nêu tên khu vực khi có thể.
-- **[LỜI KHUYÊN]:** 2–3 điều nên làm hoặc nên tránh.
-- **[CTA]:** câu hỏi để người xem comment, gắn với chủ đề, kèm lời mời follow.
+- **[VÌ SAO QUAN TRỌNG]:** 4–5 tác động cụ thể đến giá nhà, khu vực, dòng tiền, người mua ở thực và nhà đầu tư Hà Nội. Nêu tên khu vực khi có thể. Đây là phần chính của kịch bản.
+- **[KẾT]:** đúng 1 câu ngắn khép lại video, gắn với chủ đề của tin (ví dụ: "Tin BĐS Hà Nội mỗi ngày, tôi sẽ cập nhật tiếp cho cả nhà."). Không đặt câu hỏi kêu gọi comment, không đưa lời khuyên.
+
+Không viết phần LỜI KHUYÊN và CTA riêng.
 
 Quy tắc bắt buộc:
 - Không khẳng định chắc chắn giá sẽ tăng hay giảm. Không khuyên mua hoặc bán một sản phẩm cụ thể.
@@ -58,7 +59,7 @@ Gửi bằng SendUserMessage (trong lượt chạy tự động) hoặc trả l�
 ## BÀI [số]: [tiêu đề ngắn] — [ngày đăng]
 **Vì sao chọn:** 1 câu
 **Tiêu đề:** ...
-**Kịch bản:** [HOOK] ... [TIN] ... [TÁC ĐỘNG] ... [LỜI KHUYÊN] ... [CTA] ...
+**Kịch bản:** [HOOK] ... [TIN] ... [VÌ SAO QUAN TRỌNG] ... [KẾT] ...
 **Gợi ý chữ trên màn hình:** 3 dòng ngắn
 **Caption + 5 hashtag** (luôn có #batdongsanhanoi và #trungbds)
 **Nguồn:** danh sách [Tiêu đề – Tên báo (ngày)](URL)
