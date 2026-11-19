@@ -40,7 +40,7 @@ Cấu trúc:
 - **Tiêu đề:** hiện khi đăng TikTok. Ngắn, dễ hiểu, gây chú ý, thường viết IN HOA, có thể dạng câu hỏi.
 - **[HOOK]** (3 giây đầu): 1–2 câu gây tò mò mạnh, có con số hoặc một mâu thuẫn.
 - **[TIN]:** tóm tắt bằng lời của mình. Nêu thời gian, cơ quan và con số chính.
-- **[VÌ SAO QUAN TRỌNG]:** 4–5 tác động cụ thể đến giá nhà, khu vực, dòng tiền, người mua ở thực và nhà đầu tư Hà Nội. Nêu tên khu vực khi có thể. Đây là phần chính của kịch bản.
+- **[VÌ SAO QUAN TRỌNG]:** đúng 3 tác động quan trọng nhất đến giá nhà, khu vực, dòng tiền, người mua ở thực và nhà đầu tư Hà Nội. Mỗi ý có con số hoặc kết luận cụ thể, nêu tên khu vực khi có thể; không viết ý chung chung. Đây là phần chính của kịch bản.
 - **[KẾT]:** đúng 1 câu ngắn khép lại video, gắn với chủ đề của tin (ví dụ: "Tin BĐS Hà Nội mỗi ngày, tôi sẽ cập nhật tiếp cho cả nhà."). Không đặt câu hỏi kêu gọi comment, không đưa lời khuyên.
 
 Không viết phần LỜI KHUYÊN và CTA riêng.
