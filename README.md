@@ -1,11 +1,9 @@
 # Skill bất động sản của Trung
 
-Kho lưu các skill Claude dùng cho công việc bất động sản:
+Kho lưu skill Claude dùng cho công việc bất động sản:
 
 | Skill | Việc làm |
 |---|---|
-| `diem-bao-bds` | Điểm báo BĐS cả nước, tối thiểu 50 bài mỗi lần, lọc theo địa phương và phân khúc, có cột mức độ quan trọng; chỉ lấy bài trực tiếp từ 23 báo |
-| `kich-ban-tiktok-bds` | Viết kịch bản TikTok BĐS Hà Nội từ đúng 5 tin nóng nhất 24–48 giờ qua, rồi chuẩn bị kịch bản video cho bài gợi ý quay trước, anh duyệt mới dựng (qua `video-diem-bao-bds`) |
 | `video-diem-bao-bds` | Dựng video TikTok 9:16 dài ~2 phút có phân tích từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, 16 bản nhạc nền theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover |
 
 ## Cài vào Claude Code (một lần)
@@ -21,7 +19,7 @@ Muốn tự nhận bản mới mỗi khi repo cập nhật: gõ `/plugin`, vào 
 
 ## Dùng trong ứng dụng Claude (web, máy tính, điện thoại)
 
-Ứng dụng Claude không đọc skill trực tiếp từ GitHub. Nén thư mục của skill (ví dụ `skills/diem-bao-bds`) thành file ZIP, rồi vào **Customize > Skills > + > Upload a skill**.
+Ứng dụng Claude không đọc skill trực tiếp từ GitHub. Nén thư mục của skill (ví dụ `skills/video-diem-bao-bds`) thành file ZIP, rồi vào **Customize > Skills > + > Upload a skill**.
 
 ## Cấu trúc
 
