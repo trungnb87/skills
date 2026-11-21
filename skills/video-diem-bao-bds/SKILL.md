@@ -1,11 +1,11 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (~50–60 giây) từ một tin bất động sản cho kênh TRUNGNB - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc khi skill kich-ban-tiktok-bds gọi đến để dựng video cho bài gợi ý quay trước.
+description: Dựng video TikTok dọc 9:16 (~50–60 giây) từ một tin bất động sản cho kênh TRUNG - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc khi skill kich-ban-tiktok-bds gọi đến để dựng video cho bài gợi ý quay trước.
 ---
 
 # Video điểm báo BĐS
 
-Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh **TRUNGNB - BUÔN CHUYỆN BĐS**. Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
+Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh **TRUNG - BUÔN CHUYỆN BĐS**. Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
 
 Kết quả mỗi lần chạy:
 1. `<ten-video>.mp4`: 1080×1920, 30 fps, ~50–60 giây, âm lượng chuẩn TikTok (-14 LUFS).
@@ -85,7 +85,7 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
 - `scenes`: mỗi cảnh có `lines` (chỉ số câu cảnh đó bao phủ), `broll`, `broll_offset` (giây bắt đầu trong clip), `html`.
 - `cover`: `title` (in hoa tự động, `<em>` tô vàng, ≤ 9 từ, gây tò mò), `kicker`, `number`, `number_label`.
 
-**Thành phần dùng trong `html` của cảnh** (vùng an toàn rộng 820px, cao 1000px):
+**Thành phần dùng trong `html` của cảnh** (vùng an toàn rộng 780px, cao 780px, đã đo theo giao diện TikTok trên iPhone):
 - `<div class="kick">` nhãn nhỏ vàng · `<div class="h1">` / `h2` tiêu đề · `<div class="body">` đoạn văn · `<span class="gold">` tô vàng
 - `<div class="huge">48%</div>` số cực lớn · `<div class="big" data-count="6188" data-dur="2.2">0</div>` số chạy đếm
 - Thanh so sánh: `<div class="row"><div class="lab">Tên <b>48%</b></div><div class="track"><div class="fill" style="--w:1" data-fx="grow" data-at="0.5"></div></div></div>` (`--w` = tỷ lệ so với thanh dài nhất; `row dim` cho thanh xám)
@@ -95,7 +95,7 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
 - `<div class="badge">` khung kết luận
 - Hiệu ứng: thêm `data-fx="up|pop|fade|grow"` và `data-at="<giây tính từ đầu cảnh>"`. Đặt `data-at` theo lúc giọng đọc nhắc tới ý đó (ước theo tỷ lệ ký tự trong câu).
 
-Tối đa ~3 khối thông tin mỗi cảnh; chữ phải đọc được trên điện thoại.
+Tối đa ~3 khối thông tin mỗi cảnh, tổng chiều cao không quá 780px (ví dụ 3 khối `stat`, hoặc `huge` + 1 dòng `h2` + `badge`); chữ phải đọc được trên điện thoại. Không đặt chữ sát mép: TikTok cắt khoảng 55px mỗi bên, thanh tìm kiếm che ~230px trên cùng, cột nút che bên phải từ giữa màn hình xuống.
 
 ## Bước 7 — Xem trước, rồi dựng
 
