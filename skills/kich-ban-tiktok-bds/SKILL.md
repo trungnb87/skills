@@ -1,6 +1,6 @@
 ---
 name: kich-ban-tiktok-bds
-description: Viết kịch bản TikTok bất động sản Hà Nội cho anh Trung (Giám đốc Kinh doanh BĐS hạng sang) tự đọc trước camera. Chọn đúng 5 tin nóng nhất 24–48 giờ qua, kiểm chứng số liệu, viết mỗi tin một kịch bản ~450 từ gồm Tiêu đề–HOOK–TIN–VÌ SAO QUAN TRỌNG–KẾT, kèm chữ trên màn hình, caption, hashtag và nguồn; sau đó dựng sẵn video cho bài gợi ý quay trước bằng skill video-diem-bao-bds. Dùng khi Trung nhờ viết kịch bản TikTok, kịch bản video BĐS, "tin hôm nay để quay", hoặc lịch tự động hằng ngày gọi đến.
+description: Viết kịch bản TikTok bất động sản Hà Nội cho anh Trung (Giám đốc Kinh doanh BĐS hạng sang) tự đọc trước camera. Chọn đúng 5 tin nóng nhất 24–48 giờ qua, kiểm chứng số liệu, viết mỗi tin một kịch bản ~450 từ gồm Tiêu đề–HOOK–TIN–VÌ SAO QUAN TRỌNG–KẾT, kèm chữ trên màn hình, caption, hashtag và nguồn; sau đó chuẩn bị kịch bản video cho bài gợi ý quay trước để anh duyệt rồi mới dựng bằng skill video-diem-bao-bds. Dùng khi Trung nhờ viết kịch bản TikTok, kịch bản video BĐS, "tin hôm nay để quay", hoặc lịch tự động hằng ngày gọi đến.
 ---
 
 # Kịch bản TikTok BĐS Hà Nội
@@ -74,13 +74,14 @@ Nếu có project "Kịch bản Tiktok BDS", lưu toàn bộ các kịch bản t
 
 Khi chạy theo lịch tự động (không có ai theo dõi trực tiếp): gửi thêm 1 thông báo ngắn, nêu tiêu đề các bài đã viết.
 
-## Bước 6 — Dựng video cho bài gợi ý quay trước
+## Bước 6 — Chuẩn bị kịch bản video cho bài gợi ý quay trước (chờ duyệt)
 
-Sau khi gửi kịch bản, dựng luôn một video hoàn chỉnh cho **bài đứng đầu** (bài gợi ý quay trước) theo skill `video-diem-bao-bds` (cùng bộ skill, file `skills/video-diem-bao-bds/SKILL.md`). Bắt đầu từ Bước 2 của skill đó, vì tin đã được kiểm chứng ở Bước 2 bên trên:
+Sau khi gửi 5 kịch bản, chuẩn bị **kịch bản video 2 phút** cho **bài đứng đầu** (bài gợi ý quay trước) theo skill `video-diem-bao-bds` (cùng bộ skill, file `skills/video-diem-bao-bds/SKILL.md`). Bắt đầu từ Bước 2 của skill đó, vì tin đã được kiểm chứng ở Bước 2 bên trên:
 
 - Chuyển kịch bản ~450 từ thành **bản đọc cho video 2 phút: 12–16 câu, khoảng 1.800–2.200 ký tự** theo khung ở Bước 2 của skill video (HOOK, TIN, BỐI CẢNH, PHÂN TÍCH TÁC ĐỘNG, GÓC NHÌN, KẾT). Giữ gần đủ các ý phân tích, chỉ gọt câu cho dễ đọc. Không thêm số nào ngoài kịch bản đã kiểm chứng.
 - Dùng **Tiêu đề** của kịch bản làm tiêu đề ảnh cover (rút gọn ≤ 9 từ nếu dài), con số nổi bật nhất làm `cover.number`.
 - Chọn nhạc nền theo mood của tin (bảng ở Bước 5 của skill video).
-- Gửi video, ảnh cover, tiêu đề, caption và hashtag cho anh Trung. Trong file lưu ở Bước 5, ghi thêm tên file video đã dựng.
+- **Gửi kịch bản video cho anh Trung duyệt theo Bước 2b của skill video và dừng ở đó.** Không tạo giọng, không dựng video khi anh chưa nhắn OK. Chạy theo lịch thì cũng chỉ gửi kịch bản chờ duyệt; anh nhắn OK ở lượt sau mới dựng.
+- Khi anh đã OK và video dựng xong: gửi video, ảnh cover, tiêu đề, caption và hashtag; trong file lưu ở Bước 5, ghi thêm tên file video.
 
-Nếu một bước của video bị lỗi (thiếu kết nối ElevenLabs, tên miền bị chặn, hết credit): vẫn gửi đủ 5 kịch bản như bình thường, rồi báo ngắn video chưa dựng được và lý do (ví dụ tên miền cần thêm trong Settings › Capabilities).
+Nếu bước video gặp lỗi (thiếu kết nối ElevenLabs, tên miền bị chặn, hết credit): báo ngắn lý do (ví dụ tên miền cần thêm trong Settings › Capabilities). 5 kịch bản vẫn gửi như bình thường.
