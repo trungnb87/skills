@@ -217,11 +217,11 @@ def main():
                     if loop.exists():
                         mpath = loop
             cmd += ["-stream_loop", "-1", "-i", str(mpath)]
-            mv = spec.get("music_volume", 0.32)
+            mv = spec.get("music_volume", 0.24)
             fil += (f"[{vi}:a]apad,aformat=sample_rates=44100:channel_layouts=stereo,asplit=2[vo][sc];"
                     f"[{vi+1}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume={mv},"
                     f"afade=t=out:st={max(0, total-3.5)}:d=3.5[mu];"
-                    f"[mu][sc]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[duck];"
+                    f"[mu][sc]sidechaincompress=threshold=0.03:ratio=8:attack=20:release=400[duck];"
                     f"[vo][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[aout]")
         else:
             fil += f"[{vi}:a]apad,loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
