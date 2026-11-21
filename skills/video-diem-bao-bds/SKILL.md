@@ -71,6 +71,7 @@ Gọi `creative_generate_speech` (ElevenLabs) với:
 - `prompt`: các câu nối nhau, **thêm ` [pause]` ở cuối mỗi câu trừ câu cuối và xuống dòng**. Script dựng dựa vào các khoảng nghỉ này để căn hình.
 - **Giọng tươi, nhịp nhanh:** mở đầu `prompt` bằng `[cheerful] [energetic]` (thẻ giữ hiệu lực cho cả bài). Câu HOOK và câu KẾT kết thúc bằng dấu `!` thay cho dấu chấm. Không dùng `[slowly]`.
 - Khi dựng, `build_video.py` tự rút khoảng nghỉ giữa các câu còn 0,3 giây và tăng tốc đọc 8% (giữ nguyên cao độ), cho video không bị dềnh dàng. Muốn chỉnh thì thêm vào spec `"voice_speed": 1.1` (nhanh hơn nữa, tối đa nên 1,15) hoặc `"voice_gap": 0.4`.
+- Nhạc nền giữ âm lượng đều suốt video, không tự hạ khi anh nói; mức mặc định `music_volume` 0,18 để giọng luôn nổi rõ hơn nhạc. Bản nhạc nào vẫn lấn giọng thì thêm vào spec `"music_volume": 0.14`; muốn nhạc rõ hơn thì nâng lên 0,22.
 
 Chờ ~20–30 giây rồi gọi `creative_get_generations` (flow_id + generation_id) để lấy `full_res_url`, tải bằng `curl -o voice.mp3 "<url>"`. Không gọi tạo giọng lần hai để "thử lại": mỗi lần đều trừ credit.
 
