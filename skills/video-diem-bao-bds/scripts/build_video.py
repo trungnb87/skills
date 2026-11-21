@@ -25,8 +25,10 @@ def duration(path):
     return float(out.strip())
 
 
-def line_timings(voice, n_lines):
-    """Tìm n_lines-1 khoảng nghỉ dài nhất trong giọng đọc để biết mỗi câu bắt đầu/kết thúc lúc nào."""
+def line_timings(voice, texts):
+    """Tìm khoảng nghỉ giữa các câu trong giọng đọc để biết mỗi câu bắt đầu/kết thúc lúc nào.
+    Chọn n-1 khoảng lặng vừa dài vừa nằm gần vị trí dự kiến (theo tỷ lệ số ký tự của từng câu)."""
+    n_lines = len(texts)
     total = duration(voice)
     err = sh(["ffmpeg", "-i", str(voice), "-af", "silencedetect=n=-35dB:d=0.3", "-f", "null", "-"]).stderr
     starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", err)]
@@ -38,12 +40,61 @@ def line_timings(voice, n_lines):
     sil = [s for s in sil if s[1] < total - 0.05]   # bỏ khoảng lặng cuối file
     if len(sil) < n_lines - 1:
         sys.exit(f"Chỉ tìm thấy {len(sil)} khoảng nghỉ cho {n_lines} câu. Tạo lại giọng đọc với [pause] giữa các câu.")
-    gaps = sorted(sorted(sil, key=lambda s: s[1] - s[0], reverse=True)[: n_lines - 1])
+    # vị trí dự kiến của mỗi ranh giới câu, theo tỷ lệ ký tự
+    lens = [len(t) for t in texts]
+    speech = total - lead
+    exp, acc = [], 0
+    for L in lens[:-1]:
+        acc += L
+        exp.append(lead + speech * acc / sum(lens))
+    # quy hoạch động: chọn n-1 khoảng lặng theo thứ tự, điểm = độ dài khoảng lặng (x5) trừ độ lệch so với dự kiến
+    INF = float("-inf")
+    m, k = len(sil), n_lines - 1
+    best = [[INF] * (m + 1) for _ in range(k + 1)]
+    prev = [[None] * (m + 1) for _ in range(k + 1)]
+    for j in range(m + 1):
+        best[0][j] = 0.0
+    for i in range(1, k + 1):
+        for j in range(1, m + 1):
+            s, e = sil[j - 1]
+            score = 5.0 * (e - s) - abs((s + e) / 2 - exp[i - 1]) / max(1.0, speech / n_lines)
+            cand = [(best[i - 1][jj] + score, jj) for jj in range(j) if best[i - 1][jj] > INF]
+            if cand:
+                best[i][j], prev[i][j] = max(cand)
+    j = max(range(m + 1), key=lambda x: best[k][x])
+    picked = []
+    for i in range(k, 0, -1):
+        picked.append(sil[j - 1]); j = prev[i][j]
+    gaps = sorted(picked)
     bounds, cur = [], lead
     for s, e in gaps:
         bounds.append((cur, s)); cur = e
     bounds.append((cur, total))
     return bounds, total
+
+
+def tighten_voice(voice, bounds, out, gap=0.3, speed=1.08, pad=0.06):
+    """Cho giọng gọn và nhanh hơn: cắt từng câu, nối lại với khoảng nghỉ ngắn `gap` giây,
+    rồi tăng tốc `speed` lần (giữ nguyên cao độ giọng). Trả về mốc câu mới và độ dài mới."""
+    total = duration(voice)
+    segs = [(max(0.0, s - pad), min(total, e + pad)) for s, e in bounds]
+    fil, labels = "", []
+    for i, (s, e) in enumerate(segs):
+        fil += f"[0:a]atrim={s:.3f}:{e:.3f},asetpts=PTS-STARTPTS,aformat=sample_rates=44100:channel_layouts=mono[s{i}];"
+        labels.append(f"[s{i}]")
+        if i + 1 < len(segs):
+            fil += f"anullsrc=r=44100:cl=mono,atrim=0:{gap}[g{i}];"
+            labels.append(f"[g{i}]")
+    fil += "".join(labels) + f"concat=n={len(labels)}:v=0:a=1,atempo={speed}[out]"
+    r = sh(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice), "-filter_complex", fil, "-map", "[out]", str(out)])
+    if r.returncode != 0:
+        sys.exit("Lỗi khi làm gọn giọng đọc: " + r.stderr[-500:])
+    new, t = [], 0.0
+    for s, e in segs:
+        d = (e - s) / speed
+        new.append((t + pad / speed, t + d - pad / speed))
+        t += d + gap / speed
+    return new, duration(out)
 
 
 def build_html(spec, base, lines, scene_times, total):
@@ -84,7 +135,15 @@ def main():
 
     voice = base / spec["voice"]
     texts = spec["lines"]
-    bounds, vdur = line_timings(voice, len(texts))
+    bounds, vdur = line_timings(voice, texts)
+    work = base / "_build"; work.mkdir(exist_ok=True)
+    # Mặc định: rút khoảng nghỉ giữa câu còn 0,3 giây và đọc nhanh hơn 8% cho đỡ dềnh dàng.
+    # Tắt bằng "voice_speed": 1.0 và "voice_gap": null trong spec.
+    if spec.get("voice_gap", 0.3) is not None:
+        tight = work / "voice_tight.wav"
+        bounds, vdur = tighten_voice(voice, bounds, tight, gap=spec.get("voice_gap", 0.3),
+                                     speed=spec.get("voice_speed", 1.08))
+        voice = tight
     lines = [{"start": round(s, 3), "dur": round(e - s, 3), "text": t} for (s, e), t in zip(bounds, texts)]
     total = round(vdur + spec.get("tail", 0.8), 2)
 
@@ -96,7 +155,6 @@ def main():
     scene_times = [{"in": ins[i], "out": ins[i + 1] if i + 1 < len(ins) else 999} for i in range(len(ins))]
 
     html = build_html(spec, base, lines, scene_times, total)
-    work = base / "_build"; work.mkdir(exist_ok=True)
     page = work / "overlay.html"; page.write_text(html, encoding="utf-8")
     print("Mốc câu:", [(round(l["start"], 2), round(l["start"] + l["dur"], 2)) for l in lines])
     print("Mốc cảnh:", [s["in"] for s in scene_times], "tổng", total)

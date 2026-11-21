@@ -1,6 +1,6 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (~50–60 giây) từ một tin bất động sản cho kênh TRUNGNB - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc lịch tự động gọi đến sau khi đã chọn tin.
+description: Dựng video TikTok dọc 9:16 (~50–60 giây) từ một tin bất động sản cho kênh TRUNGNB - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc khi skill kich-ban-tiktok-bds gọi đến để dựng video cho bài gợi ý quay trước.
 ---
 
 # Video điểm báo BĐS
@@ -27,6 +27,9 @@ Tên miền phải được cho phép trong claude.ai › Settings › Capabilit
 
 ## Bước 1 — Đọc tin và kiểm số liệu
 
+(Bỏ qua bước này khi được gọi từ `kich-ban-tiktok-bds`: tin đã được kiểm chứng ở đó; chỉ rút kịch bản sẵn có thành bản đọc ở Bước 2.)
+
+
 - Đọc bài gốc bằng WebFetch. Ghi lại ngày đăng, nguồn dữ liệu (ví dụ Knight Frank, Bộ Xây dựng) và mọi con số.
 - Chỉ dùng số có trong bài. Phân biệt dự thảo, đề xuất, đã thông qua, đã có hiệu lực.
 - Không dự báo giá tăng/giảm chắc chắn, không khuyên mua bán, không quảng cáo dự án cụ thể, không trích nguyên văn quá 15 từ.
@@ -46,6 +49,8 @@ Viết số bằng chữ số như văn viết (6.188, 48%). Giữ tổng dướ
 Gọi `creative_generate_speech` (ElevenLabs) với:
 - `voice_id`: `LXjvSaudzF11FKObF2RB`, `model_id`: `eleven_v4`, `generations_count`: 1.
 - `prompt`: các câu nối nhau, **thêm ` [pause]` ở cuối mỗi câu trừ câu cuối và xuống dòng**. Script dựng dựa vào các khoảng nghỉ này để căn hình.
+- **Giọng tươi, nhịp nhanh:** mở đầu `prompt` bằng `[cheerful] [energetic]` (thẻ giữ hiệu lực cho cả bài). Câu HOOK và câu KẾT kết thúc bằng dấu `!` thay cho dấu chấm. Không dùng `[slowly]`.
+- Khi dựng, `build_video.py` tự rút khoảng nghỉ giữa các câu còn 0,3 giây và tăng tốc đọc 8% (giữ nguyên cao độ), cho video không bị dềnh dàng. Muốn chỉnh thì thêm vào spec `"voice_speed": 1.1` (nhanh hơn nữa, tối đa nên 1,15) hoặc `"voice_gap": 0.4`.
 
 Chờ ~20–30 giây rồi gọi `creative_get_generations` (flow_id + generation_id) để lấy `full_res_url`, tải bằng `curl -o voice.mp3 "<url>"`. Không gọi tạo giọng lần hai để "thử lại": mỗi lần đều trừ credit.
 
@@ -103,8 +108,13 @@ Kiểm tra ảnh xem trước: chữ không tràn, không chồng lên nhau, kh�
 
 ## Bước 8 — Giao cho anh Trung
 
-- Gửi video và cover bằng SendUserFile. Nếu máy anh đang kết nối, lưu thêm vào `~/Movies/diem-bao-bds/` (dùng `device_commit_files` với `fileUuid` từ SendUserFile).
-- Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption 2–3 câu, 5 hashtag (luôn có `#batdongsan` và `#trungbds`), dòng "Video nền: Pexels", nguồn bài báo.
+- Mỗi video có **một thư mục riêng** trong `~/Movies/diem-bao-bds/`, đặt tên `YYYY-MM-DD-<ten-video>` (ngày dựng + tên không dấu, ví dụ `2026-11-21-xang-giam-30-nha-dat-duoc-loi-gi`). Trong thư mục có đủ:
+  - `<ten-video>.mp4`: video
+  - `<ten-video>-cover.jpg`: ảnh cover
+  - `thong-tin.txt`: tiêu đề TikTok, caption, hashtag, dòng "Video nền: Pexels", nguồn bài báo, credit đã dùng
+  Các bản sửa của cùng một video (v2, v3…) để chung thư mục đó, không để file lẻ ở ngoài thư mục `diem-bao-bds`.
+- Gửi video, cover và `thong-tin.txt` bằng SendUserFile. Nếu máy anh đang kết nối, lưu cả ba vào thư mục riêng ở trên bằng `device_commit_files` (dùng `fileUuid` từ SendUserFile, `devicePath` = `~/Movies/diem-bao-bds/<thu-muc>/<ten-file>`; công cụ tự tạo thư mục). Nếu máy không kết nối, báo anh rằng file chỉ có trong chat.
+- Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption 2–3 câu, 5 hashtag (luôn có `#batdongsanhanoi` và `#trungbds`), dòng "Video nền: Pexels", nguồn bài báo.
 - Chạy tự động theo lịch: báo ngắn tiêu đề video đã dựng, credit đã dùng và lỗi nếu có.
 
 ## Chi phí mỗi video

@@ -1,6 +1,6 @@
 ---
 name: kich-ban-tiktok-bds
-description: Viết kịch bản TikTok bất động sản Hà Nội cho anh Trung (Giám đốc Kinh doanh BĐS hạng sang) tự đọc trước camera. Chọn đúng 5 tin nóng nhất 24–48 giờ qua, kiểm chứng số liệu, viết mỗi tin một kịch bản ~450 từ gồm Tiêu đề–HOOK–TIN–VÌ SAO QUAN TRỌNG–KẾT, kèm chữ trên màn hình, caption, hashtag và nguồn. Dùng khi Trung nhờ viết kịch bản TikTok, kịch bản video BĐS, "tin hôm nay để quay", hoặc lịch tự động hằng ngày gọi đến.
+description: Viết kịch bản TikTok bất động sản Hà Nội cho anh Trung (Giám đốc Kinh doanh BĐS hạng sang) tự đọc trước camera. Chọn đúng 5 tin nóng nhất 24–48 giờ qua, kiểm chứng số liệu, viết mỗi tin một kịch bản ~450 từ gồm Tiêu đề–HOOK–TIN–VÌ SAO QUAN TRỌNG–KẾT, kèm chữ trên màn hình, caption, hashtag và nguồn; sau đó dựng sẵn video cho bài gợi ý quay trước bằng skill video-diem-bao-bds. Dùng khi Trung nhờ viết kịch bản TikTok, kịch bản video BĐS, "tin hôm nay để quay", hoặc lịch tự động hằng ngày gọi đến.
 ---
 
 # Kịch bản TikTok BĐS Hà Nội
@@ -73,3 +73,14 @@ Gửi bằng SendUserMessage (trong lượt chạy tự động) hoặc trả l�
 Nếu có project "Kịch bản Tiktok BDS", lưu toàn bộ các kịch bản trong ngày vào một file `claude/kich-ban-YYYY-MM-DD-<chu-de-chinh>.md`. Cuối file ghi tin dự phòng chưa dùng và việc cần theo dõi (ví dụ ngày Quốc hội biểu quyết), để làm video cập nhật.
 
 Khi chạy theo lịch tự động (không có ai theo dõi trực tiếp): gửi thêm 1 thông báo ngắn, nêu tiêu đề các bài đã viết.
+
+## Bước 6 — Dựng video cho bài gợi ý quay trước
+
+Sau khi gửi kịch bản, dựng luôn một video hoàn chỉnh cho **bài đứng đầu** (bài gợi ý quay trước) theo skill `video-diem-bao-bds` (cùng bộ skill, file `skills/video-diem-bao-bds/SKILL.md`). Bắt đầu từ Bước 2 của skill đó, vì tin đã được kiểm chứng ở Bước 2 bên trên:
+
+- Rút kịch bản ~450 từ thành **bản đọc cho video: 6–8 câu, tổng dưới 1.000 ký tự**. Giữ HOOK, các con số chính và 2–3 tác động mạnh nhất, giữ câu KẾT. Không thêm số nào ngoài kịch bản đã kiểm chứng.
+- Dùng **Tiêu đề** của kịch bản làm tiêu đề ảnh cover (rút gọn ≤ 9 từ nếu dài), con số nổi bật nhất làm `cover.number`.
+- Chọn nhạc nền theo mood của tin (bảng ở Bước 5 của skill video).
+- Gửi video, ảnh cover, tiêu đề, caption và hashtag cho anh Trung. Trong file lưu ở Bước 5, ghi thêm tên file video đã dựng.
+
+Nếu một bước của video bị lỗi (thiếu kết nối ElevenLabs, tên miền bị chặn, hết credit): vẫn gửi đủ 5 kịch bản như bình thường, rồi báo ngắn video chưa dựng được và lý do (ví dụ tên miền cần thêm trong Settings › Capabilities).
