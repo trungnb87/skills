@@ -106,8 +106,13 @@ Kiểm tra ảnh xem trước: chữ không tràn, không chồng lên nhau, kh�
 
 ## Bước 8 — Giao cho anh Trung
 
-- Gửi video và cover bằng SendUserFile. Nếu máy anh đang kết nối, lưu thêm vào `~/Movies/diem-bao-bds/` (dùng `device_commit_files` với `fileUuid` từ SendUserFile).
-- Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption 2–3 câu, 5 hashtag (luôn có `#batdongsan` và `#trungbds`), dòng "Video nền: Pexels", nguồn bài báo.
+- Mỗi video có **một thư mục riêng** trong `~/Movies/diem-bao-bds/`, đặt tên `YYYY-MM-DD-<ten-video>` (ngày dựng + tên không dấu, ví dụ `2026-11-21-xang-giam-30-nha-dat-duoc-loi-gi`). Trong thư mục có đủ:
+  - `<ten-video>.mp4`: video
+  - `<ten-video>-cover.jpg`: ảnh cover
+  - `thong-tin.txt`: tiêu đề TikTok, caption, hashtag, dòng "Video nền: Pexels", nguồn bài báo, credit đã dùng
+  Các bản sửa của cùng một video (v2, v3…) để chung thư mục đó, không để file lẻ ở ngoài thư mục `diem-bao-bds`.
+- Gửi video, cover và `thong-tin.txt` bằng SendUserFile. Nếu máy anh đang kết nối, lưu cả ba vào thư mục riêng ở trên bằng `device_commit_files` (dùng `fileUuid` từ SendUserFile, `devicePath` = `~/Movies/diem-bao-bds/<thu-muc>/<ten-file>`; công cụ tự tạo thư mục). Nếu máy không kết nối, báo anh rằng file chỉ có trong chat.
+- Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption 2–3 câu, 5 hashtag (luôn có `#batdongsanhanoi` và `#trungbds`), dòng "Video nền: Pexels", nguồn bài báo.
 - Chạy tự động theo lịch: báo ngắn tiêu đề video đã dựng, credit đã dùng và lỗi nếu có.
 
 ## Chi phí mỗi video
