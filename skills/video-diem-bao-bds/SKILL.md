@@ -1,14 +1,14 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (~50–60 giây) từ một tin bất động sản cho kênh TRUNGNB - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc khi skill kich-ban-tiktok-bds gọi đến để dựng video cho bài gợi ý quay trước.
+description: Dựng video TikTok dọc 9:16 (~2 phút, có phân tích) từ một tin bất động sản cho kênh TRUNG - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc khi skill kich-ban-tiktok-bds gọi đến để dựng video cho bài gợi ý quay trước.
 ---
 
 # Video điểm báo BĐS
 
-Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh **TRUNGNB - BUÔN CHUYỆN BĐS**. Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
+Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh **TRUNG - BUÔN CHUYỆN BĐS**. Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
 
 Kết quả mỗi lần chạy:
-1. `<ten-video>.mp4`: 1080×1920, 30 fps, ~50–60 giây, âm lượng chuẩn TikTok (-14 LUFS).
+1. `<ten-video>.mp4`: 1080×1920, 30 fps, ~1 phút 50 – 2 phút 10, âm lượng chuẩn TikTok (-14 LUFS).
 2. `<ten-video>-cover.jpg`: ảnh cover TikTok 1080×1920.
 3. Caption + 5 hashtag, gửi trong tin nhắn.
 
@@ -34,15 +34,17 @@ Tên miền phải được cho phép trong claude.ai › Settings › Capabilit
 - Chỉ dùng số có trong bài. Phân biệt dự thảo, đề xuất, đã thông qua, đã có hiệu lực.
 - Không dự báo giá tăng/giảm chắc chắn, không khuyên mua bán, không quảng cáo dự án cụ thể, không trích nguyên văn quá 15 từ.
 
-## Bước 2 — Viết lời đọc: 6–8 câu, tổng dưới 1.000 ký tự
+## Bước 2 — Viết lời đọc: 12–16 câu, khoảng 1.800–2.200 ký tự (~2 phút)
 
-Mỗi "câu" là một đoạn đọc liền mạch, ứng với một cảnh hoặc một phần cảnh:
-1. HOOK (≤ 5 giây): một con số hoặc nghịch lý gây tò mò.
-2–5. TIN và VÌ SAO QUAN TRỌNG: mỗi câu một ý, có số.
-6. Nhận định ngắn, không phán giá.
-7. Kết: "Theo dõi kênh để cập nhật thị trường mỗi ngày." (hoặc câu tương tự).
+Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với một cảnh (câu dài có thể chiếm cả cảnh). Khung chuẩn:
+1. **HOOK** (≤ 5 giây): một con số hoặc nghịch lý gây tò mò.
+2–4. **TIN**: chuyện gì xảy ra, ai quyết định, khi nào, con số chính.
+5–7. **BỐI CẢNH / SỐ LIỆU**: so sánh trước–sau, với nước khác, với cùng kỳ; con số phụ giúp hiểu quy mô.
+8–12. **PHÂN TÍCH TÁC ĐỘNG** (mỗi câu một ý, đánh số "Thứ nhất…"): người mua ở thực · nhà đầu tư · khu vực/phân khúc nào chịu ảnh hưởng (ưu tiên Hà Nội) · dòng tiền, lãi suất, pháp lý · rủi ro cần lưu ý.
+13–14. **GÓC NHÌN** của anh Trung từ kinh nghiệm thị trường hạng sang: nên theo dõi gì tiếp, không phán giá, không khuyên mua bán.
+15. **KẾT**: hẹn cập nhật + kêu gọi theo dõi kênh.
 
-Viết số bằng chữ số như văn viết (6.188, 48%). Giữ tổng dưới 1.000 ký tự: ~50 giây đọc và ~800 credit ElevenLabs.
+Viết số bằng chữ số như văn viết (6.188, 48%). Tổng 1.800–2.200 ký tự (≈ 1 phút 50 – 2 phút 10 sau khi script làm gọn nhịp). Nếu tin ít số liệu, đừng kéo dài bằng câu chung chung: thà video 1 phút 30 đủ chất còn hơn 2 phút loãng.
 
 ## Bước 3 — Tạo giọng đọc bằng giọng nhân bản
 
@@ -56,20 +58,32 @@ Chờ ~20–30 giây rồi gọi `creative_get_generations` (flow_id + generatio
 
 ## Bước 4 — Chọn video nền cho từng cảnh
 
-Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
+Video 2 phút có 10–14 cảnh, mỗi cảnh 8–12 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
+Bản 07–16 dài ~2 phút, hợp với video 2 phút. Bản 01–06 dài ~1 phút, script tự nối vòng có chồng mờ 3 giây nên vẫn dùng được.
+
 | File | Mood | Dùng cho |
 |---|---|---|
-| `01-tin-tuc-chuyen-nghiep.mp3` | chuyên nghiệp, chắc chắn | số liệu thị trường, báo cáo (mặc định) |
+| `01-tin-tuc-chuyen-nghiep.mp3` | chuyên nghiệp, chắc chắn | số liệu thị trường, báo cáo |
 | `02-vui-tuoi.mp3` | tươi sáng, năng động | mở bán, ưu đãi, tin tích cực |
 | `03-sang-trong-lounge.mp3` | jazz lounge sang trọng | dự án, phân khúc hạng sang |
 | `04-truyen-cam-hung.mp3` | điện ảnh, lạc quan | hạ tầng, quy hoạch, cơ hội |
 | `05-kich-tinh-tin-nong.mp3` | khẩn trương, nghiêm túc | luật mới, siết tín dụng, biến động |
 | `06-thu-gian-lofi.mp3` | nhẹ nhàng | kiến thức, mẹo, nội dung cuối tuần |
+| `07-ban-tin-tai-chinh.mp3` | bản tin tài chính, chắc chắn | báo cáo thị trường, số liệu quý (mặc định cho video 2 phút) |
+| `08-phan-tich-kinh-te.mp3` | tò mò, thông minh | giải thích chính sách, phân tích vĩ mô |
+| `09-tang-truong-cong-nghe.mp3` | lạc quan, tiến lên | tăng trưởng, FDI, khu công nghiệp, công nghệ |
+| `10-deep-house-sang-trong.mp3` | sang, hiện đại về đêm | hạng sang, căn hộ hàng hiệu, Tây Hồ |
+| `11-dieu-tra-rui-ro.mp3` | nghiêm, hồi hộp | cảnh báo rủi ro, sai phạm, pháp lý dự án |
+| `12-so-lieu-toi-gian.mp3` | tối giản, chính xác | tin nhiều biểu đồ, so sánh số liệu |
+| `13-ban-tin-sang-soi-dong.mp3` | sôi động, tích cực | điểm tin sáng, tin tốt ngắn |
+| `14-ha-tang-do-thi.mp3` | hoành tráng, hy vọng | metro, cầu, vành đai, quy hoạch đô thị |
+| `15-neo-soul-chuyen-gia.mp3` | thư thả, tự tin | góc nhìn chuyên gia, kinh nghiệm mua nhà |
+| `16-kinh-te-a-dong.mp3` | Á Đông hiện đại | Việt Nam – Hàn – Trung – Nhật, dòng vốn châu Á |
 
-Muốn thêm mood: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 60`), lưu vào `assets/nhac-nen/`.
+Đổi bản nhạc giữa các video liên tiếp, đừng dùng một bản nhiều ngày liền. Muốn thêm mood: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 130`), lưu vào `assets/nhac-nen/`.
 
 ## Bước 6 — Viết spec JSON
 
@@ -85,7 +99,7 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
 - `scenes`: mỗi cảnh có `lines` (chỉ số câu cảnh đó bao phủ), `broll`, `broll_offset` (giây bắt đầu trong clip), `html`.
 - `cover`: `title` (in hoa tự động, `<em>` tô vàng, ≤ 9 từ, gây tò mò), `kicker`, `number`, `number_label`.
 
-**Thành phần dùng trong `html` của cảnh** (vùng an toàn rộng 820px, cao 1000px):
+**Thành phần dùng trong `html` của cảnh** (vùng an toàn rộng 780px, cao 780px, đã đo theo giao diện TikTok trên iPhone):
 - `<div class="kick">` nhãn nhỏ vàng · `<div class="h1">` / `h2` tiêu đề · `<div class="body">` đoạn văn · `<span class="gold">` tô vàng
 - `<div class="huge">48%</div>` số cực lớn · `<div class="big" data-count="6188" data-dur="2.2">0</div>` số chạy đếm
 - Thanh so sánh: `<div class="row"><div class="lab">Tên <b>48%</b></div><div class="track"><div class="fill" style="--w:1" data-fx="grow" data-at="0.5"></div></div></div>` (`--w` = tỷ lệ so với thanh dài nhất; `row dim` cho thanh xám)
@@ -93,15 +107,36 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
 - `<div class="rank">` / `rank me` (dòng nổi bật) với `<span class="no">1</span>` bảng xếp hạng
 - `<div class="chips"><div class="chip"><div class="k">nhãn</div><div class="v">7,5/10</div><div class="s">ghi chú</div></div>…</div>`
 - `<div class="badge">` khung kết luận
-- Hiệu ứng: thêm `data-fx="up|pop|fade|grow"` và `data-at="<giây tính từ đầu cảnh>"`. Đặt `data-at` theo lúc giọng đọc nhắc tới ý đó (ước theo tỷ lệ ký tự trong câu).
+- Hiệu ứng: thêm `data-fx` và `data-at="<giây tính từ đầu cảnh>"`. Đặt `data-at` theo lúc giọng đọc nhắc tới ý đó (ước theo tỷ lệ ký tự trong câu, nhân 0,9 vì script đọc nhanh hơn 8%).
 
-Tối đa ~3 khối thông tin mỗi cảnh; chữ phải đọc được trên điện thoại.
+**Bộ hiệu ứng chữ** (`data-fx`):
+
+| Nhóm | Giá trị | Hợp với |
+|---|---|---|
+| Hiện cả khối | `up` · `left` · `right` · `drop` (rơi xuống, nảy nhẹ) · `flip` (lật) · `fade` | nhãn, khối `stat`, `chip`, `rank`, `badge` |
+| Lộ dần | `wipe` (quét từ trái) · `wipeup` (lộ từ dưới) | dòng tiêu đề phụ, thanh, chip |
+| Gây chú ý | `zoom` (phóng to rồi nét lại) · `blur` (mờ thành nét) · `pop` | số lớn `huge`, `big` |
+| Theo chữ | `words` (từng chữ nhô lên, chỉnh `data-stagger`) · `type` (gõ từng ký tự) | `h1`, `h2`, câu nhận định; `type` cho `kick` |
+| Tô sáng | `marker` (bút dạ vàng tô dưới chữ): đặt trên một `<span>` nằm trong khối chữ, ví dụ `<div class="body"><span data-fx="marker" data-at="1.5">ý chính</span></div>` | ý quan trọng nhất của cảnh |
+| Thanh | `grow` | `.fill` trong thanh so sánh |
+
+Nhấn mạnh sau khi hiện (`data-emph`): `pulse` (đập nhẹ) hoặc `shine` (ánh sáng lướt qua chữ vàng), dùng cho con số chủ chốt.
+
+Chuyển cảnh (`data-trans` trên cảnh, khai báo bằng `"trans"` trong spec nếu cần): `slide` · `zoom` · `wipe` · `rise` · `blur` · `fade`. Bỏ trống thì script tự xoay vòng, cảnh nào cũng khác cảnh trước; mỗi lần sang cảnh có vạch vàng quét ngang.
+
+**Quy tắc để video không đơn điệu:**
+- Mỗi cảnh dùng ít nhất 2 kiểu hiệu ứng khác nhau; hai cảnh liền nhau không mở đầu bằng cùng một hiệu ứng.
+- Mỗi kiểu `words`, `type`, `zoom`, `marker` xuất hiện ít nhất 1 lần trong video; không dùng một kiểu quá 3 cảnh.
+- Số liệu chủ chốt của video (thường ở HOOK và cảnh tin chính) dùng `zoom` hoặc `blur` kèm `data-emph`.
+- Đổi dạng thông tin giữa các cảnh: số lớn → thanh so sánh → chip → xếp hạng → câu nhận định, tránh 3 cảnh liền chỉ có chữ.
+
+Tối đa ~3 khối thông tin mỗi cảnh, tổng chiều cao không quá 780px (ví dụ 3 khối `stat`, hoặc `huge` + 1 dòng `h2` + `badge`); chữ phải đọc được trên điện thoại. Không đặt chữ sát mép: TikTok cắt khoảng 55px mỗi bên, thanh tìm kiếm che ~230px trên cùng, cột nút che bên phải từ giữa màn hình xuống.
 
 ## Bước 7 — Xem trước, rồi dựng
 
 ```
-python3 <skill>/scripts/build_video.py spec.json --preview 3 15 30 45   # ảnh trong _build/, xem bằng Read
-python3 <skill>/scripts/build_video.py spec.json                        # ~3 phút cho video 55 giây
+python3 <skill>/scripts/build_video.py spec.json --preview 3 15 30 45 60 75 90 105   # ảnh trong _build/, xem bằng Read
+python3 <skill>/scripts/build_video.py spec.json                        # ~6–7 phút cho video 2 phút
 python3 <skill>/scripts/make_cover.py spec.json                         # ra <out>-cover.jpg
 ```
 Kiểm tra ảnh xem trước: chữ không tràn, không chồng lên nhau, khối thông tin không đè phụ đề. Sau khi dựng, rút vài khung hình bằng ffmpeg để xem lại và xem ảnh cover. Script báo lỗi "không đủ khoảng nghỉ" thì tạo lại giọng với `[pause]` rõ hơn giữa các câu.
@@ -117,8 +152,8 @@ Kiểm tra ảnh xem trước: chữ không tràn, không chồng lên nhau, kh�
 - Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption 2–3 câu, 5 hashtag (luôn có `#batdongsanhanoi` và `#trungbds`), dòng "Video nền: Pexels", nguồn bài báo.
 - Chạy tự động theo lịch: báo ngắn tiêu đề video đã dựng, credit đã dùng và lỗi nếu có.
 
-## Chi phí mỗi video
+## Chi phí mỗi video (2 phút)
 
-- ElevenLabs: ~800 credit/1.000 ký tự lời đọc (gói Starter 40.000 credit/tháng ≈ 45–50 video).
-- vidIQ: ~5–6 credit tìm video nền (gói 2.000 credit/tháng).
+- ElevenLabs: ~1.800–2.200 credit (khoảng 900 credit/1.000 ký tự). Gói Starter 40.000 credit/tháng ≈ 18–20 video; đăng mỗi ngày thì cần gói Creator (100.000 credit/tháng). Báo anh Trung khi credit tháng còn dưới 5.000.
+- vidIQ: ~10–14 credit tìm video nền (gói 2.000 credit/tháng).
 - Nhạc nền: dùng lại thư viện, không tốn thêm.

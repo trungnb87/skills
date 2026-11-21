@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dựng video dọc 9:16 cho kênh TRUNGNB - BUÔN CHUYỆN BĐS từ một file spec JSON.
+"""Dựng video dọc 9:16 cho kênh TRUNG - BUÔN CHUYỆN BĐS từ một file spec JSON.
 
 Dùng:
   python3 build_video.py spec.json                  # xuất MP4
@@ -108,9 +108,11 @@ def build_html(spec, base, lines, scene_times, total):
         if ava:
             print(f"! Không thấy ảnh chân dung {ava_path}, dựng không có ảnh.")
         tpl = tpl.replace("__AVATAR__", "").replace("__WHOCLASS__", "noava")
-    scenes_html = "\n".join(f'<div class="scene">{sc["html"]}</div>' for sc in spec["scenes"])
+    scenes_html = "\n".join(
+        f'<div class="scene"' + (f' data-trans="{sc["trans"]}"' if sc.get("trans") else "") + f'>{sc["html"]}</div>'
+        for sc in spec["scenes"])
     rep = {
-        "__NAME_MAIN__": spec.get("name_main", "Trungnb"),
+        "__NAME_MAIN__": spec.get("name_main", "Trung"),
         "__NAME_SUB__": spec.get("name_sub", "- Buôn chuyện BĐS"),
         "__TAG__": spec.get("tag", "BẢN TIN BĐS"),
         "__DATE__": spec["date"],
@@ -190,7 +192,24 @@ def main():
         vi = n + 1
         music = spec.get("music")
         if music:
-            cmd += ["-stream_loop", "-1", "-i", str(base / music)]
+            mpath = base / music
+            if duration(mpath) < total + 1:
+                # nhạc ngắn hơn video: nối bản nhạc với chính nó, chồng mờ 3 giây ở chỗ nối cho khỏi giật
+                loop = work / "music_loop.wav"
+                n_rep = int(total // max(1.0, duration(mpath) - 3)) + 1
+                ins, chain = [], ""
+                for r in range(n_rep):
+                    ins += ["-i", str(mpath)]
+                prev = "[0:a]"
+                for r in range(1, n_rep):
+                    chain += f"{prev}[{r}:a]acrossfade=d=3:c1=tri:c2=tri[x{r}];"
+                    prev = f"[x{r}]"
+                if n_rep > 1:
+                    sh(["ffmpeg", "-y", "-loglevel", "error", *ins, "-filter_complex", chain.rstrip(";"),
+                        "-map", prev, str(loop)])
+                    if loop.exists():
+                        mpath = loop
+            cmd += ["-stream_loop", "-1", "-i", str(mpath)]
             mv = spec.get("music_volume", 0.32)
             fil += (f"[{vi}:a]apad,aformat=sample_rates=44100:channel_layouts=stereo,asplit=2[vo][sc];"
                     f"[{vi+1}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume={mv},"
