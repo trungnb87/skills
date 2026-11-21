@@ -47,7 +47,7 @@ def main():
         "__KICKBOTTOM__": "900",
         "__TITLE__": cv["title"],
         "__AVATAR__": ava_tag,
-        "__NAME_MAIN__": spec.get("name_main", "Trungnb"),
+        "__NAME_MAIN__": spec.get("name_main", "Trung"),
         "__NAME_SUB__": spec.get("name_sub", "- Buôn chuyện BĐS").lstrip("- ").strip(),
         "__DATE__": spec["date"],
     }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dựng video dọc 9:16 cho kênh TRUNGNB - BUÔN CHUYỆN BĐS từ một file spec JSON.
+"""Dựng video dọc 9:16 cho kênh TRUNG - BUÔN CHUYỆN BĐS từ một file spec JSON.
 
 Dùng:
   python3 build_video.py spec.json                  # xuất MP4
@@ -110,7 +110,7 @@ def build_html(spec, base, lines, scene_times, total):
         tpl = tpl.replace("__AVATAR__", "").replace("__WHOCLASS__", "noava")
     scenes_html = "\n".join(f'<div class="scene">{sc["html"]}</div>' for sc in spec["scenes"])
     rep = {
-        "__NAME_MAIN__": spec.get("name_main", "Trungnb"),
+        "__NAME_MAIN__": spec.get("name_main", "Trung"),
         "__NAME_SUB__": spec.get("name_sub", "- Buôn chuyện BĐS"),
         "__TAG__": spec.get("tag", "BẢN TIN BĐS"),
         "__DATE__": spec["date"],
