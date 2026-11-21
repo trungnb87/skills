@@ -40,28 +40,35 @@ def line_timings(voice, texts):
     sil = [s for s in sil if s[1] < total - 0.05]   # bỏ khoảng lặng cuối file
     if len(sil) < n_lines - 1:
         sys.exit(f"Chỉ tìm thấy {len(sil)} khoảng nghỉ cho {n_lines} câu. Tạo lại giọng đọc với [pause] giữa các câu.")
-    # vị trí dự kiến của mỗi ranh giới câu, theo tỷ lệ ký tự
+    # Quy hoạch động: chọn n-1 khoảng lặng theo thứ tự sao cho
+    #  (1) khoảng lặng càng dài càng tốt ([pause] giữa câu thường dài hơn dấu phẩy),
+    #  (2) thời lượng mỗi câu khớp với số ký tự của câu đó (tốc độ đọc trung bình của cả bài).
     lens = [len(t) for t in texts]
     speech = total - lead
-    exp, acc = [], 0
-    for L in lens[:-1]:
-        acc += L
-        exp.append(lead + speech * acc / sum(lens))
-    # quy hoạch động: chọn n-1 khoảng lặng theo thứ tự, điểm = độ dài khoảng lặng (x5) trừ độ lệch so với dự kiến
-    INF = float("-inf")
+    rate = speech / sum(lens)
     m, k = len(sil), n_lines - 1
+    pts = [lead] + [s for s, _ in sil]          # điểm kết thúc câu = đầu khoảng lặng
+    nxt = [lead] + [e for _, e in sil]          # câu sau bắt đầu ở cuối khoảng lặng
+    def cost_line(i, a, b):
+        d = pts[b] - nxt[a] if b > 0 else 0
+        exp_d = lens[i] * rate
+        return abs(d - exp_d) / exp_d
+    INF = float("-inf")
     best = [[INF] * (m + 1) for _ in range(k + 1)]
     prev = [[None] * (m + 1) for _ in range(k + 1)]
-    for j in range(m + 1):
-        best[0][j] = 0.0
+    best[0][0] = 0.0
     for i in range(1, k + 1):
-        for j in range(1, m + 1):
+        for j in range(i, m + 1):
             s, e = sil[j - 1]
-            score = 5.0 * (e - s) - abs((s + e) / 2 - exp[i - 1]) / max(1.0, speech / n_lines)
-            cand = [(best[i - 1][jj] + score, jj) for jj in range(j) if best[i - 1][jj] > INF]
-            if cand:
-                best[i][j], prev[i][j] = max(cand)
-    j = max(range(m + 1), key=lambda x: best[k][x])
+            for jj in range(i - 1, j):
+                if best[i - 1][jj] == INF:
+                    continue
+                sc = best[i - 1][jj] + 4.0 * (e - s) - 1.5 * cost_line(i - 1, jj, j)
+                if sc > best[i][j]:
+                    best[i][j], prev[i][j] = sc, jj
+    # câu cuối: từ khoảng lặng đã chọn tới hết file
+    j = max(range(k, m + 1), key=lambda x: best[k][x] - 1.5 * abs((total - nxt[x]) - lens[-1] * rate) / (lens[-1] * rate)
+            if best[k][x] > INF else INF)
     picked = []
     for i in range(k, 0, -1):
         picked.append(sil[j - 1]); j = prev[i][j]
