@@ -4,7 +4,7 @@ Kho lưu skill Claude dùng cho công việc bất động sản:
 
 | Skill | Việc làm |
 |---|---|
-| `video-diem-bao-bds` | Dựng video TikTok 9:16 dài ~2 phút có phân tích từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, 16 bản nhạc nền theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover |
+| `video-diem-bao-bds` | Dựng video TikTok 9:16 dài tối đa 1 phút 30 có phân tích từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, 16 bản nhạc nền theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover |
 
 ## Cài vào Claude Code (một lần)
 

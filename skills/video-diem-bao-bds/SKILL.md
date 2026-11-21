@@ -1,6 +1,6 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (~2 phút, có phân tích) từ một tin bất động sản cho kênh TRUNG - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo".
+description: Dựng video TikTok dọc 9:16 (tối đa 1 phút 30, có phân tích) từ một tin bất động sản cho kênh TRUNG - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo".
 ---
 
 # Video điểm báo BĐS
@@ -10,7 +10,7 @@ Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà N�
 Quy trình có **một bước duyệt bắt buộc**: viết xong kịch bản (Bước 2) thì gửi anh Trung duyệt (Bước 2b), anh OK mới tạo giọng và dựng.
 
 Kết quả mỗi lần chạy:
-1. `<ten-video>.mp4`: 1080×1920, 30 fps, ~1 phút 50 – 2 phút 10, âm lượng chuẩn TikTok (-14 LUFS).
+1. `<ten-video>.mp4`: 1080×1920, 30 fps, **không quá 1 phút 30** (mục tiêu 1 phút 15 – 1 phút 30), âm lượng chuẩn TikTok (-14 LUFS).
 2. `<ten-video>-cover.jpg`: ảnh cover TikTok 1080×1920.
 3. Caption + 5 hashtag, gửi trong tin nhắn.
 
@@ -36,7 +36,7 @@ Tên miền phải được cho phép trong claude.ai › Settings › Capabilit
 - Chỉ dùng số có trong bài. Phân biệt dự thảo, đề xuất, đã thông qua, đã có hiệu lực.
 - Không dự báo giá tăng/giảm chắc chắn, không khuyên mua bán, không quảng cáo dự án cụ thể, không trích nguyên văn quá 15 từ.
 
-## Bước 2 — Viết lời đọc: 12–16 câu, khoảng 1.800–2.200 ký tự (~2 phút)
+## Bước 2 — Viết lời đọc: 10–12 câu, khoảng 1.200–1.400 ký tự (tối đa 1 phút 30)
 
 Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với một cảnh (câu dài có thể chiếm cả cảnh). Khung chuẩn:
 1. **HOOK** (≤ 5 giây): một con số hoặc nghịch lý gây tò mò.
@@ -46,15 +46,15 @@ Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với
 13–14. **GÓC NHÌN** của anh Trung từ kinh nghiệm thị trường hạng sang: nên theo dõi gì tiếp, không phán giá, không khuyên mua bán.
 15. **KẾT**: hẹn cập nhật + kêu gọi theo dõi kênh.
 
-Viết số bằng chữ số như văn viết (6.188, 48%). Tổng 1.800–2.200 ký tự (≈ 1 phút 50 – 2 phút 10 sau khi script làm gọn nhịp). Nếu tin ít số liệu, đừng kéo dài bằng câu chung chung: thà video 1 phút 30 đủ chất còn hơn 2 phút loãng.
+Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi script làm gọn nhịp đọc khoảng 16 ký tự/giây, nên **tổng lời đọc không quá 1.400 ký tự** (≈ 1 phút 25 cả phần đuôi). Đếm ký tự trước khi gửi duyệt; vượt thì cắt bớt ý phụ (chi tiết kỹ thuật, câu nhắc lại), giữ HOOK, số liệu chính, 2–3 ý phân tích và KẾT. Phần TIN gọn trong 4–5 câu, PHÂN TÍCH và GÓC NHÌN 3–4 câu. Tin ít số liệu thì cứ để video 1 phút, đừng kéo dài bằng câu chung chung.
 
 ## Bước 2b — BẮT BUỘC: gửi kịch bản cho anh Trung duyệt, chờ "OK" rồi mới dựng
 
-Chưa được tạo giọng đọc, tìm video nền hay dựng gì khi anh Trung chưa duyệt kịch bản. Tạo giọng tốn ~2.000 credit ElevenLabs và không lấy lại được.
+Chưa được tạo giọng đọc, tìm video nền hay dựng gì khi anh Trung chưa duyệt kịch bản. Tạo giọng tốn ~1.200–1.400 credit ElevenLabs và không lấy lại được.
 
 1. Gửi cho anh (SendUserMessage nếu đang giữa lượt làm việc) **một tin duy nhất**, gồm:
    - **Tiêu đề TikTok** (IN HOA) và tiêu đề ảnh cover.
-   - **Lời đọc** đánh số từng câu, đúng nguyên văn sẽ đọc, kèm tổng số ký tự và thời lượng ước tính.
+   - **Lời đọc** đánh số từng câu, đúng nguyên văn sẽ đọc, kèm tổng số ký tự (≤ 1.400) và thời lượng ước tính (= số ký tự ÷ 16 giây, phải ≤ 90 giây).
    - **Kế hoạch cảnh** ngắn gọn: mỗi cảnh một dòng (câu nào · hiển thị gì · video nền định dùng).
    - **Nhạc nền** định dùng, **nguồn** đã đối chiếu, và các **lưu ý** (số liệu chỉ có 1 nguồn, ví dụ minh họa, chỗ còn băn khoăn).
    - Dòng cuối: *"Anh nhắn OK để em dựng, hoặc ghi chỗ cần sửa."*
@@ -75,13 +75,15 @@ Gọi `creative_generate_speech` (ElevenLabs) với:
 
 Chờ ~20–30 giây rồi gọi `creative_get_generations` (flow_id + generation_id) để lấy `full_res_url`, tải bằng `curl -o voice.mp3 "<url>"`. Không gọi tạo giọng lần hai để "thử lại": mỗi lần đều trừ credit.
 
+Sau khi tải giọng, chạy `build_video.py spec.json --preview 1` và đọc dòng "Mốc cảnh … tổng". **Tổng phải ≤ 90 giây.** Nếu lố, tăng `"voice_speed"` lên tối đa 1,15. Vẫn lố thì bỏ bớt câu khỏi `lines` và `scenes`, đồng thời cắt đoạn đó khỏi voice.mp3 bằng ffmpeg theo mốc câu script in ra (không tạo lại giọng, vì tốn credit).
+
 ## Bước 4 — Chọn video nền cho từng cảnh
 
-Video 2 phút có 10–14 cảnh, mỗi cảnh 8–12 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
+Video 1 phút 30 có 8–10 cảnh, mỗi cảnh 7–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
-Bản 07–16 dài ~2 phút, hợp với video 2 phút. Bản 01–06 dài ~1 phút, script tự nối vòng có chồng mờ 3 giây nên vẫn dùng được.
+Bản 07–16 dài ~2 phút, đủ cho cả video (script tự mờ dần nhạc ở cuối). Bản 01–06 dài ~1 phút, script tự nối vòng có chồng mờ 3 giây nên vẫn dùng được.
 
 | File | Mood | Dùng cho |
 |---|---|---|
@@ -91,7 +93,7 @@ Bản 07–16 dài ~2 phút, hợp với video 2 phút. Bản 01–06 dài ~1 ph
 | `04-truyen-cam-hung.mp3` | điện ảnh, lạc quan | hạ tầng, quy hoạch, cơ hội |
 | `05-kich-tinh-tin-nong.mp3` | khẩn trương, nghiêm túc | luật mới, siết tín dụng, biến động |
 | `06-thu-gian-lofi.mp3` | nhẹ nhàng | kiến thức, mẹo, nội dung cuối tuần |
-| `07-ban-tin-tai-chinh.mp3` | bản tin tài chính, chắc chắn | báo cáo thị trường, số liệu quý (mặc định cho video 2 phút) |
+| `07-ban-tin-tai-chinh.mp3` | bản tin tài chính, chắc chắn | báo cáo thị trường, số liệu quý (mặc định) |
 | `08-phan-tich-kinh-te.mp3` | tò mò, thông minh | giải thích chính sách, phân tích vĩ mô |
 | `09-tang-truong-cong-nghe.mp3` | lạc quan, tiến lên | tăng trưởng, FDI, khu công nghiệp, công nghệ |
 | `10-deep-house-sang-trong.mp3` | sang, hiện đại về đêm | hạng sang, căn hộ hàng hiệu, Tây Hồ |
@@ -102,7 +104,7 @@ Bản 07–16 dài ~2 phút, hợp với video 2 phút. Bản 01–06 dài ~1 ph
 | `15-neo-soul-chuyen-gia.mp3` | thư thả, tự tin | góc nhìn chuyên gia, kinh nghiệm mua nhà |
 | `16-kinh-te-a-dong.mp3` | Á Đông hiện đại | Việt Nam – Hàn – Trung – Nhật, dòng vốn châu Á |
 
-Đổi bản nhạc giữa các video liên tiếp, đừng dùng một bản nhiều ngày liền. Muốn thêm mood: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 130`), lưu vào `assets/nhac-nen/`.
+Đổi bản nhạc giữa các video liên tiếp, đừng dùng một bản nhiều ngày liền. Muốn thêm mood: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 100`), lưu vào `assets/nhac-nen/`.
 
 ## Bước 6 — Viết spec JSON
 
@@ -155,7 +157,7 @@ Tối đa ~3 khối thông tin mỗi cảnh, tổng chiều cao không quá 780p
 
 ```
 python3 <skill>/scripts/build_video.py spec.json --preview 3 15 30 45 60 75 90 105   # ảnh trong _build/, xem bằng Read
-python3 <skill>/scripts/build_video.py spec.json                        # ~6–7 phút cho video 2 phút
+python3 <skill>/scripts/build_video.py spec.json                        # ~5 phút cho video 1 phút 30
 python3 <skill>/scripts/make_cover.py spec.json                         # ra <out>-cover.jpg
 ```
 Kiểm tra ảnh xem trước: chữ không tràn, không chồng lên nhau, khối thông tin không đè phụ đề. Sau khi dựng, rút vài khung hình bằng ffmpeg để xem lại và xem ảnh cover. Script báo lỗi "không đủ khoảng nghỉ" thì tạo lại giọng với `[pause]` rõ hơn giữa các câu.
@@ -171,8 +173,8 @@ Kiểm tra ảnh xem trước: chữ không tràn, không chồng lên nhau, kh�
 - Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption 2–3 câu, 5 hashtag (luôn có `#batdongsanhanoi` và `#trungbds`), dòng "Video nền: Pexels", nguồn bài báo.
 - Chạy tự động theo lịch: báo ngắn tiêu đề video đã dựng, credit đã dùng và lỗi nếu có.
 
-## Chi phí mỗi video (2 phút)
+## Chi phí mỗi video (1 phút 30)
 
-- ElevenLabs: ~1.800–2.200 credit (khoảng 900 credit/1.000 ký tự). Gói Starter 40.000 credit/tháng ≈ 18–20 video; đăng mỗi ngày thì cần gói Creator (100.000 credit/tháng). Báo anh Trung khi credit tháng còn dưới 5.000.
-- vidIQ: ~10–14 credit tìm video nền (gói 2.000 credit/tháng).
+- ElevenLabs: ~1.200–1.400 credit (khoảng 900 credit/1.000 ký tự). Gói Starter 40.000 credit/tháng ≈ 28–30 video, đủ đăng gần như mỗi ngày. Báo anh Trung khi credit tháng còn dưới 5.000.
+- vidIQ: ~8–10 credit tìm video nền (gói 2.000 credit/tháng).
 - Nhạc nền: dùng lại thư viện, không tốn thêm.
