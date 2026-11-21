@@ -7,6 +7,8 @@ description: Dựng video TikTok dọc 9:16 (~2 phút, có phân tích) từ m�
 
 Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh **TRUNG - BUÔN CHUYỆN BĐS**. Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
 
+Quy trình có **một bước duyệt bắt buộc**: viết xong kịch bản (Bước 2) thì gửi anh Trung duyệt (Bước 2b), anh OK mới tạo giọng và dựng.
+
 Kết quả mỗi lần chạy:
 1. `<ten-video>.mp4`: 1080×1920, 30 fps, ~1 phút 50 – 2 phút 10, âm lượng chuẩn TikTok (-14 LUFS).
 2. `<ten-video>-cover.jpg`: ảnh cover TikTok 1080×1920.
@@ -45,6 +47,22 @@ Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với
 15. **KẾT**: hẹn cập nhật + kêu gọi theo dõi kênh.
 
 Viết số bằng chữ số như văn viết (6.188, 48%). Tổng 1.800–2.200 ký tự (≈ 1 phút 50 – 2 phút 10 sau khi script làm gọn nhịp). Nếu tin ít số liệu, đừng kéo dài bằng câu chung chung: thà video 1 phút 30 đủ chất còn hơn 2 phút loãng.
+
+## Bước 2b — BẮT BUỘC: gửi kịch bản cho anh Trung duyệt, chờ "OK" rồi mới dựng
+
+Chưa được tạo giọng đọc, tìm video nền hay dựng gì khi anh Trung chưa duyệt kịch bản. Tạo giọng tốn ~2.000 credit ElevenLabs và không lấy lại được.
+
+1. Gửi cho anh (SendUserMessage nếu đang giữa lượt làm việc) **một tin duy nhất**, gồm:
+   - **Tiêu đề TikTok** (IN HOA) và tiêu đề ảnh cover.
+   - **Lời đọc** đánh số từng câu, đúng nguyên văn sẽ đọc, kèm tổng số ký tự và thời lượng ước tính.
+   - **Kế hoạch cảnh** ngắn gọn: mỗi cảnh một dòng (câu nào · hiển thị gì · video nền định dùng).
+   - **Nhạc nền** định dùng, **nguồn** đã đối chiếu, và các **lưu ý** (số liệu chỉ có 1 nguồn, ví dụ minh họa, chỗ còn băn khoăn).
+   - Dòng cuối: *"Anh nhắn OK để em dựng, hoặc ghi chỗ cần sửa."*
+2. **Dừng lại và kết thúc lượt**, chờ anh trả lời. Không chạy trước Bước 3 "cho nhanh".
+3. Anh sửa thì cập nhật kịch bản, gửi lại phần đã đổi và chờ OK lần nữa. Chỉ coi là duyệt khi chính anh nhắn đồng ý ("OK", "duyệt", "dựng đi", "được"…) cho đúng bản kịch bản mới nhất.
+4. Chạy theo lịch hoặc không có ai trả lời: chỉ gửi kịch bản chờ duyệt, **không dựng video**. Khi anh nhắn OK ở lượt sau thì làm tiếp từ Bước 3.
+
+Ngoại lệ duy nhất: anh nói rõ trong chính yêu cầu là không cần duyệt (ví dụ "dựng luôn, không cần gửi kịch bản"), hoặc chỉ nhờ sửa hình, nhạc, bố cục của một video mà lời đọc đã được duyệt trước đó.
 
 ## Bước 3 — Tạo giọng đọc bằng giọng nhân bản
 
