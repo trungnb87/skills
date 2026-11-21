@@ -6,6 +6,7 @@ Kho lưu các skill Claude dùng cho công việc bất động sản:
 |---|---|
 | `diem-bao-bds` | Điểm báo BĐS cả nước, tối thiểu 50 bài mỗi lần, lọc theo địa phương và phân khúc, có cột mức độ quan trọng; chỉ lấy bài trực tiếp từ 23 báo |
 | `kich-ban-tiktok-bds` | Viết kịch bản TikTok BĐS Hà Nội từ đúng 5 tin nóng nhất 24–48 giờ qua |
+| `video-diem-bao-bds` | Dựng video TikTok 9:16 từ một tin BĐS: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, nhạc nền theo mood và ảnh cover |
 
 ## Cài vào Claude Code (một lần)
 
@@ -28,4 +29,6 @@ Muốn tự nhận bản mới mỗi khi repo cập nhật: gõ `/plugin`, vào 
 .claude-plugin/marketplace.json   khai báo kho plugin
 .claude-plugin/plugin.json        khai báo plugin bds-trung (có số phiên bản)
 skills/<tên-skill>/SKILL.md       nội dung từng skill
+skills/video-diem-bao-bds/scripts  script dựng video và cover
+skills/video-diem-bao-bds/assets   ảnh chân dung và 6 bản nhạc nền
 ```

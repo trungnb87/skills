@@ -1,12 +1,14 @@
 {
   "name": "trungnb87-skills",
   "description": "Kho skill bất động sản của Trung.",
-  "owner": { "name": "trungnb87" },
+  "owner": {
+    "name": "trungnb87"
+  },
   "plugins": [
     {
       "name": "bds-trung",
       "source": "./",
-      "description": "Điểm báo BĐS cả nước có lọc địa phương và kịch bản TikTok BĐS Hà Nội."
+      "description": "Điểm báo BĐS cả nước, kịch bản TikTok BĐS Hà Nội và dựng video TikTok bằng giọng nhân bản."
     }
   ]
 }
