@@ -1,6 +1,6 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (~2 phút, có phân tích) từ một tin bất động sản cho kênh TRUNG - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", hoặc khi skill kich-ban-tiktok-bds gọi đến để dựng video cho bài gợi ý quay trước.
+description: Dựng video TikTok dọc 9:16 (~2 phút, có phân tích) từ một tin bất động sản cho kênh TRUNG - BUÔN CHUYỆN BĐS của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo".
 ---
 
 # Video điểm báo BĐS
@@ -29,7 +29,7 @@ Tên miền phải được cho phép trong claude.ai › Settings › Capabilit
 
 ## Bước 1 — Đọc tin và kiểm số liệu
 
-(Bỏ qua bước này khi được gọi từ `kich-ban-tiktok-bds`: tin đã được kiểm chứng ở đó; chỉ rút kịch bản sẵn có thành bản đọc ở Bước 2.)
+(Nếu anh Trung đưa sẵn kịch bản đã kiểm chứng số liệu thì bỏ qua bước này; chỉ rút kịch bản đó thành bản đọc ở Bước 2.)
 
 
 - Đọc bài gốc bằng WebFetch. Ghi lại ngày đăng, nguồn dữ liệu (ví dụ Knight Frank, Bộ Xây dựng) và mọi con số.
