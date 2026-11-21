@@ -71,6 +71,24 @@
   @keyframes fade{from{opacity:0}to{opacity:1}}
   @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(var(--w))}}
   @keyframes pop{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+  @keyframes left{from{opacity:0;transform:translateX(-120px)}to{opacity:1;transform:none}}
+  @keyframes right{from{opacity:0;transform:translateX(120px)}to{opacity:1;transform:none}}
+  @keyframes drop{0%{opacity:0;transform:translateY(-90px)}60%{opacity:1;transform:translateY(10px)}100%{opacity:1;transform:none}}
+  @keyframes zoom{from{opacity:0;transform:scale(1.5);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+  @keyframes blur{from{opacity:0;filter:blur(22px)}to{opacity:1;filter:none}}
+  @keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes wipeup{from{clip-path:inset(100% 0 0 0);transform:translateY(30px)}to{clip-path:inset(0 0 0 0);transform:none}}
+  @keyframes flip{from{opacity:0;transform:perspective(900px) rotateX(85deg)}to{opacity:1;transform:perspective(900px) rotateX(0)}}
+  @keyframes rise{from{opacity:0;transform:translateY(40px) rotate(4deg)}to{opacity:1;transform:none}}
+  @keyframes tick{from{opacity:0}to{opacity:1}}
+  @keyframes marker{from{background-size:0% 40%}to{background-size:100% 40%}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  @keyframes shine{from{background-position:-150% 0}to{background-position:250% 0}}
+  @keyframes sweep{0%{transform:scaleX(0);transform-origin:left}45%{transform:scaleX(1);transform-origin:left}55%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+  .w,.ch{display:inline-block;white-space:pre}
+  .mk{background-image:linear-gradient(rgba(201,164,92,.75),rgba(201,164,92,.75));background-repeat:no-repeat;background-position:0 88%;background-size:0% 40%;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .shine{background:linear-gradient(100deg,var(--gold2) 40%,#fff 50%,var(--gold2) 60%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sweepbar{position:absolute;left:0;right:0;height:10px;background:linear-gradient(90deg,var(--gold),var(--gold2));transform:scaleX(0);z-index:5}
 </style>
 </head>
 <body>
@@ -89,17 +107,47 @@ __SCENES__
 const LINES = __LINES__;      // [{start,dur,text}] mốc thời gian lấy từ giọng đọc
 const SCENES = __SCENE_TIMES__; // [{in,out}]
 const TOTAL = __TOTAL__;
-// Gắn thời gian cho từng cảnh và hiệu ứng: data-fx (up|pop|fade|grow), data-at = giây tính từ đầu cảnh
-const DUR={up:.6,pop:.7,fade:.6,grow:1.0};
+// Gắn thời gian cho từng cảnh và hiệu ứng.
+//  data-fx  : up | pop | fade | grow | left | right | drop | zoom | blur | wipe | wipeup | flip   (cả khối)
+//             words (từng chữ nhô lên lần lượt) | type (gõ từng ký tự) | marker (bút dạ vàng tô dưới chữ)
+//  data-at  : giây tính từ đầu cảnh · data-dur: thời lượng · data-stagger: độ trễ giữa từng chữ (words/type)
+//  data-emph: pulse | shine   (nhấn mạnh sau khi hiện, cho số liệu lớn)
+//  Cảnh: data-trans = fade | slide | zoom | wipe | blur | rise (bỏ trống thì tự xoay vòng để cảnh nào cũng khác cảnh trước)
+const DUR={up:.6,pop:.7,fade:.6,grow:1.0,left:.6,right:.6,drop:.7,zoom:.7,blur:.8,wipe:.8,wipeup:.7,flip:.7,marker:.7};
+const TRANS=['slide','zoom','wipe','rise','blur','fade'];
+function splitText(el,cls){
+  const walk=n=>{[...n.childNodes].forEach(c=>{
+    if(c.nodeType===3){
+      const parts=cls==='w'?c.textContent.split(/(\s+)/):[...c.textContent];
+      const frag=document.createDocumentFragment();
+      parts.forEach(p=>{ if(!p) return; if(/^\s+$/.test(p)&&cls==='w'){frag.appendChild(document.createTextNode(p));return;}
+        const sp=document.createElement('span'); sp.className=cls; sp.textContent=p; frag.appendChild(sp);});
+      c.replaceWith(frag);
+    } else if(c.nodeType===1 && !c.classList.contains('w') && !c.classList.contains('ch')) walk(c);
+  });};
+  walk(el); return [...el.querySelectorAll('.'+cls)];
+}
+function anim(el,name,dur,delay){el.classList.add('fx');el.style.animation=`${name} ${dur}s ${delay}s`;}
 document.querySelectorAll('.scene').forEach((s,i)=>{
   s.dataset.in=SCENES[i].in; s.dataset.out=SCENES[i].out;
-  const len=SCENES[i].out-SCENES[i].in;
+  s.dataset.trans=s.dataset.trans||(i===0?'fade':TRANS[(i-1)%TRANS.length]);
+  const t0=SCENES[i].in, len=SCENES[i].out-SCENES[i].in;
+  // vạch vàng quét ngang mỗi khi sang cảnh mới
+  if(i>0){const b=document.createElement('div');b.className='sweepbar';b.style.top=(430+(i%2)*6)+'px';document.body.appendChild(b);anim(b,'sweep',.7,t0-.1);}
   s.querySelectorAll('[data-fx]').forEach(el=>{
-    const fx=el.dataset.fx, at=Math.min(parseFloat(el.dataset.at||0), Math.max(0,len-1));
-    el.classList.add('fx');
-    el.style.animation=`${fx} ${el.dataset.dur||DUR[fx]}s ${SCENES[i].in+at}s`;
+    const fx=el.dataset.fx, at=t0+Math.min(parseFloat(el.dataset.at||0), Math.max(0,len-1));
+    if(fx==='words'||fx==='type'){
+      const units=splitText(el,fx==='words'?'w':'ch');
+      const st=parseFloat(el.dataset.stagger||(fx==='words'?.09:.028));
+      units.forEach((u,k)=>anim(u,fx==='words'?'rise':'tick',fx==='words'?.5:.05,at+k*st));
+    } else if(fx==='marker'){
+      el.classList.add('mk'); anim(el,'marker',el.dataset.dur||.7,at);
+    } else anim(el,fx,el.dataset.dur||DUR[fx]||.6,at);
+    const em=el.dataset.emph;
+    if(em==='pulse'){const w=document.createElement('span');w.style.display='inline-block';while(el.firstChild)w.appendChild(el.firstChild);el.appendChild(w);anim(w,'pulse',.6,at+(DUR[fx]||.6)+.3);}
+    if(em==='shine'){const w=document.createElement('span');w.className='shine';while(el.firstChild)w.appendChild(el.firstChild);el.appendChild(w);anim(w,'shine',1.2,at+(DUR[fx]||.6)+.2);}
   });
-  s.querySelectorAll('[data-count]').forEach(el=>{el.dataset.t0=SCENES[i].in+parseFloat(el.dataset.at||0.2);});
+  s.querySelectorAll('[data-count]').forEach(el=>{el.dataset.t0=t0+parseFloat(el.dataset.at||0.2);});
 });
 // chia câu đọc thành các cụm phụ đề ngắn, thời lượng theo số ký tự
 const CHUNKS=[];
@@ -119,9 +167,17 @@ const ease=x=>1-Math.pow(1-x,3);
 window.render=function(t){
   for(const a of document.getAnimations()) a.currentTime=t*1000;
   for(const s of scenes){
-    const i=+s.dataset.in,o=+s.dataset.out; let op=0;
-    if(t>=i&&t<o){op=Math.min(1,(t-i)/0.25,(o-t)/0.25);}
-    s.style.opacity=Math.max(0,op);
+    const i=+s.dataset.in,o=+s.dataset.out;
+    if(t<i||t>=o){s.style.opacity=0;continue;}
+    const a=Math.min(1,(t-i)/0.4), b=Math.min(1,(o-t)/0.3);   // vào 0,4s, ra 0,3s
+    const ea=ease(a), tr=s.dataset.trans;
+    let tf='none', clip='none', fil='none', op=Math.min(ea,b);
+    if(tr==='slide') tf=`translateX(${(1-ea)*140 - (1-b)*140}px)`;
+    if(tr==='zoom')  tf=`scale(${1+(1-ea)*0.12-(1-b)*0.06})`;
+    if(tr==='rise')  tf=`translateY(${(1-ea)*90}px)`;
+    if(tr==='wipe'){ clip=`inset(0 ${(1-ea)*100}% 0 0)`; op=b; }
+    if(tr==='blur')  fil=`blur(${(1-ea)*16+(1-b)*10}px)`;
+    s.style.opacity=op; s.style.transform=tf; s.style.clipPath=clip; s.style.filter=fil;
   }
   for(const c of counters){
     const k=Math.max(0,Math.min(1,(t-+c.dataset.t0)/parseFloat(c.dataset.dur||2.2)));

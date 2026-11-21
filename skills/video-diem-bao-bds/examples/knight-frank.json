@@ -2,10 +2,14 @@
   "date": "21.11.2026",
   "source": "Nguồn: Knight Frank · VnExpress 19/11/2026",
   "voice": "voice.mp3",
-  "music": "nhac-nen/01-tin-tuc-chuyen-nghiep.mp3",
+  "music": "nhac-nen/16-kinh-te-a-dong.mp3",
   "avatar": "avatar.png",
   "out": "knight-frank-nguoi-han-mua-can-ho.mp4",
-  "highlight": ["Hàn Quốc", "Knight Frank", "hạng sang"],
+  "highlight": [
+    "Hàn Quốc",
+    "Knight Frank",
+    "hạng sang"
+  ],
   "cover": {
     "title": "Người Hàn mua gần <em>một nửa</em> căn hộ của khách ngoại",
     "kicker": "Knight Frank · 2026",
@@ -23,34 +27,54 @@
   ],
   "scenes": [
     {
-      "lines": [0],
-      "broll": "broll/12841504_1080_1920_30fps.mp4", "broll_offset": 8,
-      "html": "<div class=\"kick\" data-fx=\"up\" data-at=\"0.1\">Knight Frank · 2026</div><div class=\"huge\" data-fx=\"pop\" data-at=\"0.3\">48%</div><div class=\"h2\" data-fx=\"up\" data-at=\"1.0\" style=\"margin-top:30px\">căn hộ người nước ngoài mua tại Việt Nam thuộc về <span class=\"gold\">người Hàn Quốc</span></div>"
+      "lines": [
+        0
+      ],
+      "broll": "broll/12841504_1080_1920_30fps.mp4",
+      "broll_offset": 8,
+      "html": "<div class=\"kick\" data-fx=\"type\" data-at=\"0.1\">Knight Frank · 2026</div><div class=\"huge\" data-fx=\"zoom\" data-at=\"0.3\" data-emph=\"shine\">48%</div><div class=\"h2\" data-fx=\"words\" data-at=\"0.9\" style=\"margin-top:30px\">căn hộ người nước ngoài mua tại Việt Nam thuộc về <span class=\"gold\">người Hàn Quốc</span></div>"
     },
     {
-      "lines": [1],
-      "broll": "broll/14711711_1080_1920_60fps.mp4", "broll_offset": 1,
-      "html": "<div class=\"kick\" data-fx=\"up\" data-at=\"0.1\">Tính đến tháng 10/2026</div><div class=\"big\" data-count=\"6188\" data-at=\"0.3\" data-dur=\"2.2\">0</div><div class=\"h2\" data-fx=\"up\" data-at=\"0.9\" style=\"margin-top:24px\">căn hộ đã được <span class=\"gold\">người nước ngoài</span> mua tại Việt Nam</div>"
+      "lines": [
+        1
+      ],
+      "broll": "broll/14711711_1080_1920_60fps.mp4",
+      "broll_offset": 1,
+      "html": "<div class=\"kick\" data-fx=\"left\" data-at=\"0.1\">Tính đến tháng 10/2026</div><div class=\"big\" data-count=\"6188\" data-at=\"0.3\" data-dur=\"2.2\" data-fx=\"blur\" data-emph=\"pulse\">0</div><div class=\"h2\" data-fx=\"wipe\" data-at=\"0.8\" style=\"margin-top:24px\">căn hộ đã được <span class=\"gold\">người nước ngoài</span> mua tại Việt Nam</div>",
+      "trans": "zoom"
     },
     {
-      "lines": [2],
-      "broll": "broll/11987726_1080_1902_60fps.mp4", "broll_offset": 2,
-      "html": "<div class=\"kick\" data-fx=\"up\" data-at=\"0.1\">Người mua theo quốc tịch</div><div class=\"row\" data-fx=\"up\" data-at=\"0.3\"><div class=\"lab\">Hàn Quốc <b>48%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:1\" data-fx=\"grow\" data-at=\"0.5\"></div></div></div><div class=\"row\" data-fx=\"up\" data-at=\"2.2\"><div class=\"lab\">Trung Quốc đại lục <b>31%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.646\" data-fx=\"grow\" data-at=\"2.4\"></div></div></div><div class=\"row\" data-fx=\"up\" data-at=\"4.6\"><div class=\"lab\">Hong Kong &amp; Đài Loan <b>10%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.208\" data-fx=\"grow\" data-at=\"4.8\"></div></div></div><div class=\"row dim\" data-fx=\"up\" data-at=\"5.4\"><div class=\"lab\">Singapore <b>2%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.042\" data-fx=\"grow\" data-at=\"5.6\"></div></div></div><div class=\"row dim\" data-fx=\"up\" data-at=\"5.7\"><div class=\"lab\">Khác <b>9%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.1875\" data-fx=\"grow\" data-at=\"5.9\"></div></div></div><div class=\"badge\" data-fx=\"pop\" data-at=\"6.6\">4 nhóm Đông Á chiếm <span class=\"gold\">89%</span></div>"
+      "lines": [
+        2
+      ],
+      "broll": "broll/11987726_1080_1902_60fps.mp4",
+      "broll_offset": 2,
+      "html": "<div class=\"kick\" data-fx=\"type\" data-at=\"0.1\">Người mua theo quốc tịch</div><div class=\"row\" data-fx=\"up\" data-at=\"0.3\"><div class=\"lab\">Hàn Quốc <b>48%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:1\" data-fx=\"grow\" data-at=\"0.5\"></div></div></div><div class=\"row\" data-fx=\"up\" data-at=\"2.2\"><div class=\"lab\">Trung Quốc đại lục <b>31%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.646\" data-fx=\"grow\" data-at=\"2.4\"></div></div></div><div class=\"row\" data-fx=\"up\" data-at=\"4.6\"><div class=\"lab\">Hong Kong &amp; Đài Loan <b>10%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.208\" data-fx=\"grow\" data-at=\"4.8\"></div></div></div><div class=\"row dim\" data-fx=\"up\" data-at=\"5.4\"><div class=\"lab\">Singapore <b>2%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.042\" data-fx=\"grow\" data-at=\"5.6\"></div></div></div><div class=\"row dim\" data-fx=\"up\" data-at=\"5.7\"><div class=\"lab\">Khác <b>9%</b></div><div class=\"track\"><div class=\"fill\" style=\"--w:.1875\" data-fx=\"grow\" data-at=\"5.9\"></div></div></div><div class=\"badge\" data-fx=\"drop\" data-at=\"6.6\">4 nhóm Đông Á chiếm <span class=\"gold\">89%</span></div>"
     },
     {
-      "lines": [3],
-      "broll": "broll/15511563_1080_1920_25fps.mp4", "broll_offset": 0,
-      "html": "<div class=\"kick\" data-fx=\"up\" data-at=\"0.1\">TP Hồ Chí Minh · 6/2025 – 10/2026</div><div class=\"stat\" data-fx=\"up\" data-at=\"0.7\"><div class=\"n\">158</div><div class=\"t\">dự án đủ điều kiện bán cho người nước ngoài · hạn mức 15.841 căn</div></div><div class=\"stat\" data-fx=\"up\" data-at=\"4.0\"><div class=\"n\">~21%</div><div class=\"t\">hạn mức đã ký hợp đồng (3.297 căn)</div><div class=\"track\" style=\"margin-top:18px;width:760px\"><div class=\"fill\" style=\"--w:.21\" data-fx=\"grow\" data-at=\"4.4\"></div></div></div><div class=\"stat\" data-fx=\"up\" data-at=\"6.8\"><div class=\"n\">316</div><div class=\"t\">căn được cấp sổ · chỉ <span class=\"gold\">9,6%</span> số căn đã bán</div></div>"
+      "lines": [
+        3
+      ],
+      "broll": "broll/15511563_1080_1920_25fps.mp4",
+      "broll_offset": 0,
+      "html": "<div class=\"kick\" data-fx=\"right\" data-at=\"0.1\">TP Hồ Chí Minh · 6/2025 – 10/2026</div><div class=\"stat\" data-fx=\"flip\" data-at=\"0.6\"><div class=\"n\">158</div><div class=\"t\">dự án đủ điều kiện bán cho người nước ngoài · hạn mức 15.841 căn</div></div><div class=\"stat\" data-fx=\"wipeup\" data-at=\"3.5\"><div class=\"n\">~21%</div><div class=\"t\">hạn mức đã ký hợp đồng (3.297 căn)</div><div class=\"track\" style=\"margin-top:18px;width:760px\"><div class=\"fill\" style=\"--w:.21\" data-fx=\"grow\" data-at=\"4.4\"></div></div></div><div class=\"stat\" data-fx=\"flip\" data-at=\"6.0\"><div class=\"n\">316</div><div class=\"t\">căn được cấp sổ · chỉ <span class=\"gold\">9,6%</span> số căn đã bán</div></div>"
     },
     {
-      "lines": [4],
-      "broll": "broll/7646289-hd_1080_1920_25fps.mp4", "broll_offset": 1,
-      "html": "<div class=\"kick\" data-fx=\"up\" data-at=\"0.1\">Độ thuận lợi cho người mua nước ngoài · 6 nước ĐNÁ</div><div class=\"rank\" data-fx=\"up\" data-at=\"0.5\"><span class=\"no\">1</span>Thái Lan</div><div class=\"rank\" data-fx=\"up\" data-at=\"0.7\"><span class=\"no\">2</span>Malaysia</div><div class=\"rank\" data-fx=\"up\" data-at=\"0.9\"><span class=\"no\">3</span>Singapore</div><div class=\"rank me\" data-fx=\"pop\" data-at=\"1.4\"><span class=\"no\">4</span>Việt Nam</div><div class=\"rank\" data-fx=\"up\" data-at=\"1.9\"><span class=\"no\">5–6</span>Campuchia, Indonesia</div><div class=\"chips\"><div class=\"chip\" data-fx=\"up\" data-at=\"5.1\"><div class=\"k\">Rào cản lớn nhất</div><div class=\"v\">7,5/10</div><div class=\"s\">Quyền sở hữu</div></div><div class=\"chip\" data-fx=\"up\" data-at=\"7.5\"><div class=\"k\">Điểm mạnh</div><div class=\"v\">4 vs 9,5</div><div class=\"s\">Chi phí giao dịch: VN vs Singapore</div></div></div>"
+      "lines": [
+        4
+      ],
+      "broll": "broll/7646289-hd_1080_1920_25fps.mp4",
+      "broll_offset": 1,
+      "html": "<div class=\"kick\" data-fx=\"type\" data-at=\"0.1\">Độ thuận lợi cho người mua nước ngoài · 6 nước ĐNÁ</div><div class=\"rank\" data-fx=\"up\" data-at=\"0.5\"><span class=\"no\">1</span>Thái Lan</div><div class=\"rank\" data-fx=\"up\" data-at=\"0.7\"><span class=\"no\">2</span>Malaysia</div><div class=\"rank\" data-fx=\"up\" data-at=\"0.9\"><span class=\"no\">3</span>Singapore</div><div class=\"rank me\" data-fx=\"zoom\" data-at=\"1.4\"><span class=\"no\">4</span>Việt Nam</div><div class=\"rank\" data-fx=\"up\" data-at=\"1.9\"><span class=\"no\">5–6</span>Campuchia, Indonesia</div><div class=\"chips\"><div class=\"chip\" data-fx=\"wipeup\" data-at=\"5.1\"><div class=\"k\">Rào cản lớn nhất</div><div class=\"v\">7,5/10</div><div class=\"s\">Quyền sở hữu</div></div><div class=\"chip\" data-fx=\"wipeup\" data-at=\"7.5\"><div class=\"k\">Điểm mạnh</div><div class=\"v\">4 vs 9,5</div><div class=\"s\">Chi phí giao dịch: VN vs Singapore</div></div></div>"
     },
     {
-      "lines": [5, 6],
-      "broll": "broll/16745641_1080_1920_30fps.mp4", "broll_offset": 0,
-      "html": "<div class=\"kick\" data-fx=\"up\" data-at=\"0.1\">Nhận định</div><div class=\"h1\" data-fx=\"up\" data-at=\"0.3\">Dư địa<br><span class=\"gold\">còn rất lớn</span></div><div class=\"body\" data-fx=\"up\" data-at=\"1.9\" style=\"margin-top:40px\">Rút ngắn thủ tục cấp sổ → dòng tiền ngoại vào <span class=\"gold\">căn hộ hạng sang</span> sẽ còn tăng mạnh.</div><div class=\"badge\" data-fx=\"pop\" data-at=\"7.4\" style=\"margin-top:60px\">Theo dõi kênh · cập nhật thị trường mỗi ngày</div>"
+      "lines": [
+        5,
+        6
+      ],
+      "broll": "broll/16745641_1080_1920_30fps.mp4",
+      "broll_offset": 0,
+      "html": "<div class=\"kick\" data-fx=\"left\" data-at=\"0.1\">Nhận định</div><div class=\"h1\" data-fx=\"words\" data-at=\"0.3\" data-stagger=\"0.12\">Dư địa <span class=\"gold\">còn rất lớn</span></div><div class=\"body\" style=\"margin-top:36px\"><span data-fx=\"marker\" data-at=\"1.7\">Rút ngắn thủ tục cấp sổ → dòng tiền ngoại vào căn hộ hạng sang sẽ còn tăng mạnh.</span></div><div><div class=\"badge\" data-fx=\"drop\" data-at=\"6.5\" style=\"margin-top:50px\">Theo dõi kênh · cập nhật thị trường mỗi ngày</div></div>"
     }
   ]
 }

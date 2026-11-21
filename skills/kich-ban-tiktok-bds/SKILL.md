@@ -78,7 +78,7 @@ Khi chạy theo lịch tự động (không có ai theo dõi trực tiếp): g�
 
 Sau khi gửi kịch bản, dựng luôn một video hoàn chỉnh cho **bài đứng đầu** (bài gợi ý quay trước) theo skill `video-diem-bao-bds` (cùng bộ skill, file `skills/video-diem-bao-bds/SKILL.md`). Bắt đầu từ Bước 2 của skill đó, vì tin đã được kiểm chứng ở Bước 2 bên trên:
 
-- Rút kịch bản ~450 từ thành **bản đọc cho video: 6–8 câu, tổng dưới 1.000 ký tự**. Giữ HOOK, các con số chính và 2–3 tác động mạnh nhất, giữ câu KẾT. Không thêm số nào ngoài kịch bản đã kiểm chứng.
+- Chuyển kịch bản ~450 từ thành **bản đọc cho video 2 phút: 12–16 câu, khoảng 1.800–2.200 ký tự** theo khung ở Bước 2 của skill video (HOOK, TIN, BỐI CẢNH, PHÂN TÍCH TÁC ĐỘNG, GÓC NHÌN, KẾT). Giữ gần đủ các ý phân tích, chỉ gọt câu cho dễ đọc. Không thêm số nào ngoài kịch bản đã kiểm chứng.
 - Dùng **Tiêu đề** của kịch bản làm tiêu đề ảnh cover (rút gọn ≤ 9 từ nếu dài), con số nổi bật nhất làm `cover.number`.
 - Chọn nhạc nền theo mood của tin (bảng ở Bước 5 của skill video).
 - Gửi video, ảnh cover, tiêu đề, caption và hashtag cho anh Trung. Trong file lưu ở Bước 5, ghi thêm tên file video đã dựng.
