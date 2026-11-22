@@ -30,14 +30,18 @@ def line_timings(voice, texts):
     Chọn n-1 khoảng lặng vừa dài vừa nằm gần vị trí dự kiến (theo tỷ lệ số ký tự của từng câu)."""
     n_lines = len(texts)
     total = duration(voice)
-    err = sh(["ffmpeg", "-i", str(voice), "-af", "silencedetect=n=-35dB:d=0.3", "-f", "null", "-"]).stderr
-    starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", err)]
-    ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", err)]
-    sil = list(zip(starts, ends))
-    lead = 0.0
-    if sil and sil[0][0] < 0.05:          # khoảng lặng đầu file
-        lead = sil[0][1]; sil = sil[1:]
-    sil = [s for s in sil if s[1] < total - 0.05]   # bỏ khoảng lặng cuối file
+    # Giọng đọc năng lượng cao nghỉ rất ngắn giữa câu: dò khoảng lặng dài trước, thiếu thì hạ dần ngưỡng.
+    for dmin in (0.3, 0.22, 0.15, 0.1):
+        err = sh(["ffmpeg", "-i", str(voice), "-af", f"silencedetect=n=-35dB:d={dmin}", "-f", "null", "-"]).stderr
+        starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", err)]
+        ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", err)]
+        sil = list(zip(starts, ends))
+        lead = 0.0
+        if sil and sil[0][0] < 0.05:          # khoảng lặng đầu file
+            lead = sil[0][1]; sil = sil[1:]
+        sil = [x for x in sil if x[1] < total - 0.05]   # bỏ khoảng lặng cuối file
+        if len(sil) >= n_lines - 1:
+            break
     if len(sil) < n_lines - 1:
         sys.exit(f"Chỉ tìm thấy {len(sil)} khoảng nghỉ cho {n_lines} câu. Tạo lại giọng đọc với [pause] giữa các câu.")
     # Quy hoạch động: chọn n-1 khoảng lặng theo thứ tự sao cho
@@ -80,7 +84,7 @@ def line_timings(voice, texts):
     return bounds, total
 
 
-def tighten_voice(voice, bounds, out, gap=0.3, speed=1.08, pad=0.06):
+def tighten_voice(voice, bounds, out, gap=0.3, speed=1.08, pad=0.06, pitch=1.0):
     """Cho giọng gọn và nhanh hơn: cắt từng câu, nối lại với khoảng nghỉ ngắn `gap` giây,
     rồi tăng tốc `speed` lần (giữ nguyên cao độ giọng). Trả về mốc câu mới và độ dài mới."""
     total = duration(voice)
@@ -92,7 +96,7 @@ def tighten_voice(voice, bounds, out, gap=0.3, speed=1.08, pad=0.06):
         if i + 1 < len(segs):
             fil += f"anullsrc=r=44100:cl=mono,atrim=0:{gap}[g{i}];"
             labels.append(f"[g{i}]")
-    fil += "".join(labels) + f"concat=n={len(labels)}:v=0:a=1,atempo={speed}[out]"
+    fil += "".join(labels) + f"concat=n={len(labels)}:v=0:a=1," + (f"rubberband=tempo={speed}:pitch={pitch}:formant=preserved" if pitch != 1 else f"atempo={speed}") + "[out]"
     r = sh(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice), "-filter_complex", fil, "-map", "[out]", str(out)])
     if r.returncode != 0:
         sys.exit("Lỗi khi làm gọn giọng đọc: " + r.stderr[-500:])
@@ -151,7 +155,7 @@ def main():
     if spec.get("voice_gap", 0.3) is not None:
         tight = work / "voice_tight.wav"
         bounds, vdur = tighten_voice(voice, bounds, tight, gap=spec.get("voice_gap", 0.3),
-                                     speed=spec.get("voice_speed", 1.08))
+                                     speed=spec.get("voice_speed", 1.08), pitch=spec.get("voice_pitch", 1.04))
         voice = tight
     lines = [{"start": round(s, 3), "dur": round(e - s, 3), "text": t} for (s, e), t in zip(bounds, texts)]
     total = round(vdur + spec.get("tail", 0.8), 2)
