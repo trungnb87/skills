@@ -78,6 +78,8 @@ Chờ ~20–30 giây rồi gọi `creative_get_generations` (flow_id + generatio
 
 Sau khi tải giọng, chạy `build_video.py spec.json --preview 1` và đọc dòng "Mốc cảnh … tổng". **Tổng phải ≤ 90 giây.** Nếu lố, tăng `"voice_speed"` lên tối đa 1,15. Vẫn lố thì bỏ bớt câu khỏi `lines` và `scenes`, đồng thời cắt đoạn đó khỏi voice.mp3 bằng ffmpeg theo mốc câu script in ra (không tạo lại giọng, vì tốn credit).
 
+Kiểm tra dòng "Mốc cảnh": cảnh nào ngắn bất thường (dưới ~3 giây cho câu dài) là script ngắt câu sai, thường gặp khi câu có dấu hỏi giữa câu. Khi đó dò khoảng lặng bằng `ffmpeg -i voice.mp3 -af silencedetect=n=-35dB:d=0.1 -f null -`, chọn đúng điểm cuối mỗi câu (giây trong file giọng gốc) và ghi vào spec `"line_breaks": [6.06, 16.27, …]` (đủ số câu trừ 1).
+
 ## Bước 4 — Chọn video nền cho từng cảnh
 
 Video 1 phút 30 có 8–10 cảnh, mỗi cảnh 7–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.

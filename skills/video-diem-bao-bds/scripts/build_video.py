@@ -8,6 +8,7 @@ Dùng:
 Cần: ffmpeg, Google Chrome hoặc Chromium, Python playwright (pip install playwright --break-system-packages).
 Xem examples/knight-frank.json để biết cấu trúc spec.
 """
+import os
 import base64, json, os, re, subprocess, sys
 from pathlib import Path
 
@@ -25,13 +26,13 @@ def duration(path):
     return float(out.strip())
 
 
-def line_timings(voice, texts):
+def line_timings(voice, texts, breaks=None):
     """Tìm khoảng nghỉ giữa các câu trong giọng đọc để biết mỗi câu bắt đầu/kết thúc lúc nào.
     Chọn n-1 khoảng lặng vừa dài vừa nằm gần vị trí dự kiến (theo tỷ lệ số ký tự của từng câu)."""
     n_lines = len(texts)
     total = duration(voice)
     # Giọng đọc năng lượng cao nghỉ rất ngắn giữa câu: dò khoảng lặng dài trước, thiếu thì hạ dần ngưỡng.
-    for dmin in (0.3, 0.22, 0.15, 0.1):
+    for dmin in ((0.1,) if breaks else (0.3, 0.22, 0.15, 0.1)):
         err = sh(["ffmpeg", "-i", str(voice), "-af", f"silencedetect=n=-35dB:d={dmin}", "-f", "null", "-"]).stderr
         starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", err)]
         ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", err)]
@@ -44,6 +45,14 @@ def line_timings(voice, texts):
             break
     if len(sil) < n_lines - 1:
         sys.exit(f"Chỉ tìm thấy {len(sil)} khoảng nghỉ cho {n_lines} câu. Tạo lại giọng đọc với [pause] giữa các câu.")
+    if breaks:
+        # Mốc ngắt câu chỉnh tay (giây trong file giọng gốc): lấy khoảng lặng gần mỗi mốc nhất.
+        gaps = [min(sil, key=lambda x: abs(x[0] - t)) for t in breaks]
+        bounds, cur = [], lead
+        for s0, e0 in gaps:
+            bounds.append((cur, s0)); cur = e0
+        bounds.append((cur, total))
+        return bounds, total
     # Quy hoạch động: chọn n-1 khoảng lặng theo thứ tự sao cho
     #  (1) khoảng lặng càng dài càng tốt ([pause] giữa câu thường dài hơn dấu phẩy),
     #  (2) thời lượng mỗi câu khớp với số ký tự của câu đó (tốc độ đọc trung bình của cả bài).
@@ -53,11 +62,18 @@ def line_timings(voice, texts):
     m, k = len(sil), n_lines - 1
     pts = [lead] + [s for s, _ in sil]          # điểm kết thúc câu = đầu khoảng lặng
     nxt = [lead] + [e for _, e in sil]          # câu sau bắt đầu ở cuối khoảng lặng
+    import math
+    def dev(d, exp_d):
+        # lệch tuyến tính + phạt nặng câu bị nén/kéo quá mức (tỷ lệ log bình phương)
+        r = max(d, 0.2) / exp_d
+        return abs(d - exp_d) / exp_d + LW * math.log(r) ** 2
     def cost_line(i, a, b):
         d = pts[b] - nxt[a] if b > 0 else 0
         exp_d = lens[i] * rate
-        return abs(d - exp_d) / exp_d
+        return dev(d, exp_d)
     INF = float("-inf")
+    GW, DW = float(os.environ.get("GW", 4.0)), float(os.environ.get("DW", 1.5))
+    LW = float(os.environ.get("LW", 0.0))
     best = [[INF] * (m + 1) for _ in range(k + 1)]
     prev = [[None] * (m + 1) for _ in range(k + 1)]
     best[0][0] = 0.0
@@ -67,11 +83,11 @@ def line_timings(voice, texts):
             for jj in range(i - 1, j):
                 if best[i - 1][jj] == INF:
                     continue
-                sc = best[i - 1][jj] + 4.0 * (e - s) - 1.5 * cost_line(i - 1, jj, j)
+                sc = best[i - 1][jj] + GW * (e - s) - DW * cost_line(i - 1, jj, j)
                 if sc > best[i][j]:
                     best[i][j], prev[i][j] = sc, jj
     # câu cuối: từ khoảng lặng đã chọn tới hết file
-    j = max(range(k, m + 1), key=lambda x: best[k][x] - 1.5 * abs((total - nxt[x]) - lens[-1] * rate) / (lens[-1] * rate)
+    j = max(range(k, m + 1), key=lambda x: best[k][x] - DW * dev(total - nxt[x], lens[-1] * rate)
             if best[k][x] > INF else INF)
     picked = []
     for i in range(k, 0, -1):
@@ -148,7 +164,7 @@ def main():
 
     voice = base / spec["voice"]
     texts = spec["lines"]
-    bounds, vdur = line_timings(voice, texts)
+    bounds, vdur = line_timings(voice, texts, spec.get("line_breaks"))
     work = base / "_build"; work.mkdir(exist_ok=True)
     # Mặc định: rút khoảng nghỉ giữa câu còn 0,3 giây và đọc nhanh hơn 8% cho đỡ dềnh dàng.
     # Tắt bằng "voice_speed": 1.0 và "voice_gap": null trong spec.
