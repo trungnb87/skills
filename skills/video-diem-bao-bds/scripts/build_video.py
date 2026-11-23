@@ -47,7 +47,10 @@ def line_timings(voice, texts, breaks=None):
         sys.exit(f"Chỉ tìm thấy {len(sil)} khoảng nghỉ cho {n_lines} câu. Tạo lại giọng đọc với [pause] giữa các câu.")
     if breaks:
         # Mốc ngắt câu chỉnh tay (giây trong file giọng gốc): lấy khoảng lặng gần mỗi mốc nhất.
-        gaps = [min(sil, key=lambda x: abs(x[0] - t)) for t in breaks]
+        gaps = []
+        for t in breaks:
+            near = min(sil, key=lambda x: abs(x[0] - t)) if sil else None
+            gaps.append(near if near and abs(near[0] - t) < 0.3 else (t, t))   # không có khoảng lặng gần thì cắt đúng mốc
         bounds, cur = [], lead
         for s0, e0 in gaps:
             bounds.append((cur, s0)); cur = e0
