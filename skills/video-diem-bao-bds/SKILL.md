@@ -35,6 +35,7 @@ Tên miền phải được cho phép trong claude.ai › Settings › Capabilit
 - Đọc bài gốc bằng WebFetch. Ghi lại ngày đăng, nguồn dữ liệu (ví dụ Knight Frank, Bộ Xây dựng) và mọi con số.
 - Chỉ dùng số có trong bài. Phân biệt dự thảo, đề xuất, đã thông qua, đã có hiệu lực.
 - Không dự báo giá tăng/giảm chắc chắn, không khuyên mua bán, không quảng cáo dự án cụ thể, không trích nguyên văn quá 15 từ.
+- **Nhận định, dự báo, đề xuất của chuyên gia hay tổ chức phải nêu tên ngay trong lời đọc** ("theo ông…, Phó Chủ tịch…", "Knight Frank cảnh báo…", "theo đề xuất của HoREA…") và ghi tên đơn vị trên màn hình. Không viết lại thành câu khẳng định như thể đó là nhận định của anh Trung. Khi gửi kịch bản duyệt, đánh dấu câu nào là ý của ai.
 
 ## Bước 2 — Viết lời đọc: 10–12 câu, khoảng 1.200–1.400 ký tự (tối đa 1 phút 30)
 
@@ -43,7 +44,7 @@ Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với
 2–4. **TIN**: chuyện gì xảy ra, ai quyết định, khi nào, con số chính.
 5–7. **BỐI CẢNH / SỐ LIỆU**: so sánh trước–sau, với nước khác, với cùng kỳ; con số phụ giúp hiểu quy mô.
 8–12. **PHÂN TÍCH TÁC ĐỘNG** (mỗi câu một ý, đánh số "Thứ nhất…"): người mua ở thực · nhà đầu tư · khu vực/phân khúc nào chịu ảnh hưởng (ưu tiên Hà Nội) · dòng tiền, lãi suất, pháp lý · rủi ro cần lưu ý.
-13–14. **GÓC NHÌN** của anh Trung từ kinh nghiệm thị trường hạng sang: nên theo dõi gì tiếp, không phán giá, không khuyên mua bán.
+13–14. **GÓC NHÌN** của anh Trung từ kinh nghiệm thị trường hạng sang: nên theo dõi gì tiếp, lời khuyên thận trọng cho người mua. Không tự dự báo thị trường, không phán giá, không khuyên mua bán.
 15. **KẾT**: hẹn cập nhật + kêu gọi theo dõi kênh.
 
 Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi script làm gọn nhịp đọc khoảng 16 ký tự/giây, nên **tổng lời đọc không quá 1.400 ký tự** (≈ 1 phút 25 cả phần đuôi). Đếm ký tự trước khi gửi duyệt; vượt thì cắt bớt ý phụ (chi tiết kỹ thuật, câu nhắc lại), giữ HOOK, số liệu chính, 2–3 ý phân tích và KẾT. Phần TIN gọn trong 4–5 câu, PHÂN TÍCH và GÓC NHÌN 3–4 câu. Tin ít số liệu thì cứ để video 1 phút, đừng kéo dài bằng câu chung chung.
