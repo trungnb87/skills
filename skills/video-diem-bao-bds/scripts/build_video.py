@@ -238,8 +238,10 @@ def main():
                         mpath = loop
             cmd += ["-stream_loop", "-1", "-i", str(mpath)]
             # nhạc nền giữ âm lượng đều suốt video (không tự hạ khi có giọng)
-            mv = spec.get("music_volume", 0.18)
-            fil += (f"[{vi}:a]apad,aformat=sample_rates=44100:channel_layouts=stereo[vo];"
+            # giọng nén nhẹ cho đều và rõ, nhạc nền để thấp hẳn dưới giọng (âm lượng đều, không tự hạ)
+            mv = spec.get("music_volume", 0.10)
+            fil += (f"[{vi}:a]apad,aformat=sample_rates=44100:channel_layouts=stereo,"
+                    f"highpass=f=80,acompressor=threshold=0.08:ratio=3:attack=5:release=150:makeup=2[vo];"
                     f"[{vi+1}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume={mv},"
                     f"afade=t=out:st={max(0, total-3.5)}:d=3.5[mu];"
                     f"[vo][mu]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[aout]")

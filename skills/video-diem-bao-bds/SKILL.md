@@ -72,7 +72,7 @@ Gọi `creative_generate_speech` (ElevenLabs) với:
 - **Giọng tươi vui, mạnh mẽ, nhiều năng lượng (bắt buộc):** đặt thẻ cảm xúc ở **đầu từng câu**, không chỉ đầu bài, vì thiếu thẻ thì giọng bị nhạt. Câu HOOK và KẾT: `[excited] [energetic]`; câu tin và số liệu: `[energetic]`; câu "Thứ nhất/Thứ hai…": `[cheerful] [energetic]`; câu lưu ý, cảnh báo: `[confident]`. Câu HOOK, KẾT và các câu nhấn mạnh kết thúc bằng `!`. Không dùng `[slowly]`, `[calm]`.
 - Nếu giọng mở đầu có tiếng cười hay tiếng thở trước câu HOOK, cắt bỏ đoạn đó khỏi voice.mp3 bằng ffmpeg trước khi dựng.
 - Khi dựng, `build_video.py` tự rút khoảng nghỉ giữa các câu còn 0,3 giây và tăng tốc đọc 8% (giữ nguyên cao độ), cho video không bị dềnh dàng. Muốn chỉnh thì thêm vào spec `"voice_speed": 1.1` (nhanh hơn nữa, tối đa nên 1,15) hoặc `"voice_gap": 0.4`. Script cũng nâng cao độ giọng lên khoảng 0,7 cung (`"voice_pitch": 1.04`, giữ âm sắc) cho giọng sáng và trẻ hơn; muốn cao hơn nữa thì đặt 1,06, không vượt 1,08 để giọng không bị méo.
-- Nhạc nền giữ âm lượng đều suốt video, không tự hạ khi anh nói; mức mặc định `music_volume` 0,18 để giọng luôn nổi rõ hơn nhạc. Bản nhạc nào vẫn lấn giọng thì thêm vào spec `"music_volume": 0.14`; muốn nhạc rõ hơn thì nâng lên 0,22.
+- Nhạc nền giữ âm lượng đều suốt video, không tự hạ khi anh nói; mức mặc định `music_volume` 0,10 (thấp hẳn dưới giọng), giọng được nén nhẹ cho đều và rõ. Bản nhạc nào vẫn lấn giọng thì đặt `"music_volume": 0.08`; muốn nhạc rõ hơn ở video ít lời thì nâng lên 0,14.
 
 Chờ ~20–30 giây rồi gọi `creative_get_generations` (flow_id + generation_id) để lấy `full_res_url`, tải bằng `curl -o voice.mp3 "<url>"`. Không gọi tạo giọng lần hai để "thử lại": mỗi lần đều trừ credit.
 
