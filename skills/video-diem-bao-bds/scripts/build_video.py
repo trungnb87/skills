@@ -124,6 +124,19 @@ def tighten_voice(voice, bounds, out, gap=0.3, speed=1.08, pad=0.06, pitch=1.0):
     return new, duration(out)
 
 
+THEMES = {  # loại tin -> nhãn mặc định (màu nằm trong template.html / cover.html)
+    "luat": "LUẬT MỚI", "thitruong": "THỊ TRƯỜNG", "hatang": "HẠ TẦNG", "hangsang": "HẠNG SANG",
+}
+NAME_MAIN, NAME_SUB = "Trung", "- Buôn chuyện nhà đất"   # khớp tên kênh TikTok @trungbuonchuyennhadat
+
+
+def theme_of(spec):
+    th = spec.get("theme", "hangsang")
+    if th not in THEMES:
+        sys.exit(f"theme '{th}' không hợp lệ, chọn một trong: {', '.join(THEMES)}")
+    return th
+
+
 def build_html(spec, base, lines, scene_times, total):
     tpl = (HERE / "template.html").read_text(encoding="utf-8")
     ava = spec.get("avatar")
@@ -135,13 +148,27 @@ def build_html(spec, base, lines, scene_times, total):
         if ava:
             print(f"! Không thấy ảnh chân dung {ava_path}, dựng không có ảnh.")
         tpl = tpl.replace("__AVATAR__", "").replace("__WHOCLASS__", "noava")
-    scenes_html = "\n".join(
-        f'<div class="scene"' + (f' data-trans="{sc["trans"]}"' if sc.get("trans") else "") + f'>{sc["html"]}</div>'
-        for sc in spec["scenes"])
+    th = theme_of(spec)
+    hook = spec.get("hook", True)          # cảnh 1 là cảnh móc: chân dung lớn + câu móc chữ cực lớn
+    ava_tag = ""
+    if ava_path and ava_path.exists():
+        ava_tag = f'<img class="hookava" src="data:image/png;base64,{base64.b64encode(ava_path.read_bytes()).decode()}">'
+    parts = []
+    for i, sc in enumerate(spec["scenes"]):
+        cls = "scene hook" if (i == 0 and hook) else "scene"
+        attrs = (f' data-trans="{sc["trans"]}"' if sc.get("trans") else "") + (f' data-step="{sc["step"]}"' if sc.get("step") else "")
+        inner = sc["html"]
+        if i == 0 and hook:
+            name_sub = spec.get("name_sub", NAME_SUB).lstrip("- ").strip()
+            inner = (f'<div class="hookwho">{ava_tag}<div class="hookname">{spec.get("name_main", NAME_MAIN)}'
+                     f'<span>{name_sub}</span></div></div>' + inner)
+        parts.append(f'<div class="{cls}"{attrs}>{inner}</div>')
+    scenes_html = "\n".join(parts)
     rep = {
-        "__NAME_MAIN__": spec.get("name_main", "Trung"),
-        "__NAME_SUB__": spec.get("name_sub", "- Buôn chuyện BĐS"),
-        "__TAG__": spec.get("tag", "BẢN TIN BĐS"),
+        "__THEME__": f"theme-{th}",
+        "__NAME_MAIN__": spec.get("name_main", NAME_MAIN),
+        "__NAME_SUB__": spec.get("name_sub", NAME_SUB),
+        "__TAG__": spec.get("tag", THEMES[th]),
         "__DATE__": spec["date"],
         "__SOURCE__": spec["source"],
         "__SCENES__": scenes_html,
@@ -187,6 +214,10 @@ def main():
     page = work / "overlay.html"; page.write_text(html, encoding="utf-8")
     print("Mốc câu:", [(round(l["start"], 2), round(l["start"] + l["dur"], 2)) for l in lines])
     print("Mốc cảnh:", [s["in"] for s in scene_times], "tổng", total)
+    if bounds[0][1] - bounds[0][0] > 4.0:
+        print(f"! Câu móc dài {bounds[0][1] - bounds[0][0]:.1f}s, nên dưới 3,5s: rút câu 1 cho ngắn lại.")
+    if total > 75:
+        print(f"! Video dài {total}s, vượt mục tiêu 45–60s (tối đa 75s): cắt bớt ý.")
 
     from playwright.sync_api import sync_playwright
     chrome = next((p for p in ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"] if os.path.exists(p)), None)
