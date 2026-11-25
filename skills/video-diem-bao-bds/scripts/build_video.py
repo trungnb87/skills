@@ -171,7 +171,7 @@ def main():
     if spec.get("voice_gap", 0.3) is not None:
         tight = work / "voice_tight.wav"
         bounds, vdur = tighten_voice(voice, bounds, tight, gap=spec.get("voice_gap", 0.3),
-                                     speed=spec.get("voice_speed", 1.08), pitch=spec.get("voice_pitch", 1.04))
+                                     speed=spec.get("voice_speed", 1.08), pitch=spec.get("voice_pitch", 1.06))
         voice = tight
     lines = [{"start": round(s, 3), "dur": round(e - s, 3), "text": t} for (s, e), t in zip(bounds, texts)]
     total = round(vdur + spec.get("tail", 0.8), 2)
