@@ -5,15 +5,18 @@
 <!-- Ảnh cover TikTok 1080x1920. make_cover.py thay các chỗ __X__. -->
 <style>
   :root{--bg:#0A1322;--gold:#C9A45C;--gold2:#E7CF98;--mute:#9AA6B8}
+  body.theme-luat{--gold:#E5484D;--gold2:#FF9B8F}
+  body.theme-thitruong{--gold:#3D8BFD;--gold2:#9CC4FF}
+  body.theme-hatang{--gold:#1FB59A;--gold2:#86E3CF}
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
   body{position:relative;color:#fff;font-family:"Inter",sans-serif}
   .photo{position:absolute;inset:0;background:url("__BG__") center/cover no-repeat;filter:saturate(.85) brightness(.9)}
   .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,19,34,.55) 0%,rgba(10,19,34,.25) 30%,rgba(10,19,34,.55) 52%,rgba(10,19,34,.94) 72%,rgba(10,19,34,.98) 100%)}
-  .frame{position:absolute;inset:36px;border:2px solid rgba(201,164,92,.55)}
+  .frame{position:absolute;inset:36px;border:2px solid var(--gold);opacity:.6}
   /* tên kênh trên cùng */
   .brand{position:absolute;top:270px;left:100px;right:100px;display:flex;align-items:center;gap:18px}
-  .brand .line{flex:1;height:2px;background:rgba(201,164,92,.6)}
+  .brand .line{flex:1;height:2px;background:var(--gold);opacity:.6}
   .brand .t{font:800 30px "Montserrat";letter-spacing:.2em;color:var(--gold2);text-transform:uppercase;white-space:nowrap}
   /* con số lớn */
   .num{position:absolute;left:100px;right:100px;top:360px;font:900 300px/0.9 "Montserrat";color:var(--gold2);letter-spacing:-.04em;text-shadow:0 10px 40px rgba(0,0,0,.55)}
@@ -30,7 +33,7 @@
   .dt{font:500 28px "Inter";color:var(--mute);margin-top:10px;letter-spacing:.04em}
 </style>
 </head>
-<body>
+<body class="__THEME__">
 <div class="photo"></div><div class="shade"></div><div class="frame"></div>
 <div class="brand"><div class="t">__TAG__</div><div class="line"></div></div>
 __NUMBLOCK__

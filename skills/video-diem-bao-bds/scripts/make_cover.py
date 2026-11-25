@@ -16,6 +16,7 @@ import base64, json, subprocess, sys, tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 
 
 def main():
@@ -39,16 +40,19 @@ def main():
                if ava.exists() else "")
     num = cv.get("number")
     numblock = (f'<div class="num">{num}</div><div class="numlab">{cv.get("number_label", "")}</div>' if num else "")
+    from build_video import THEMES, NAME_MAIN, NAME_SUB, theme_of
+    th = theme_of(spec)
     rep = {
+        "__THEME__": f"theme-{th}",
         "__BG__": "data:image/jpeg;base64," + base64.b64encode(bg.read_bytes()).decode(),
-        "__TAG__": spec.get("tag", "BẢN TIN BĐS"),
+        "__TAG__": spec.get("tag", THEMES[th]),
         "__NUMBLOCK__": numblock,
-        "__KICKER__": cv.get("kicker", spec.get("tag", "BẢN TIN BĐS")),
+        "__KICKER__": cv.get("kicker", spec.get("tag", THEMES[th])),
         "__KICKBOTTOM__": "900",
         "__TITLE__": cv["title"],
         "__AVATAR__": ava_tag,
-        "__NAME_MAIN__": spec.get("name_main", "Trung"),
-        "__NAME_SUB__": spec.get("name_sub", "- Buôn chuyện BĐS").lstrip("- ").strip(),
+        "__NAME_MAIN__": spec.get("name_main", NAME_MAIN),
+        "__NAME_SUB__": spec.get("name_sub", NAME_SUB).lstrip("- ").strip(),
         "__DATE__": spec["date"],
     }
     for k, v in rep.items():
