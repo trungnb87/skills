@@ -30,7 +30,7 @@ Rút ra từ số liệu kênh 21–25/11/2026: video 56 giây về thuế đấ
 |---|---|
 | Giọng nhân bản "Trung BĐS" | ElevenLabs, `voice_id = LXjvSaudzF11FKObF2RB`, model `eleven_v4`. Cần kết nối ElevenLabs trong Claude. |
 | Ảnh chân dung (đã cắt tròn, làm sáng) | `assets/avatar.png` (ảnh gốc `assets/chan-dung-goc.jpg`; làm lại bằng `scripts/make_avatar.py`) |
-| 6 bản nhạc nền | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
+| 10 bản nhạc nền EPIC | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
 | Video nền | Pexels qua công cụ `vidiq_find_broll` (1 credit vidIQ/lần tìm). Nếu có thư mục `~/Movies/diem-bao-bds/broll-envato` trên máy anh thì ưu tiên lấy từ đó. |
 | Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages` |
 
@@ -56,9 +56,9 @@ Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với
 2. **TIN** (1 câu): chuyện gì, ai quyết định, từ khi nào, con số chính. Ghi rõ là dự thảo, đã thông qua hay đã có hiệu lực.
 3–5. **3 Ý** (mỗi câu một ý, mở bằng "Thứ nhất…", "Thứ hai…", "Thứ ba…"): ai chịu ảnh hưởng, ở đâu (ưu tiên Hà Nội), bao nhiêu tiền, cần làm gì hoặc theo dõi gì. Mỗi ý có ít nhất một con số hoặc ví dụ cụ thể.
 6. **GÓC NHÌN** của anh Trung (1 câu, không bắt buộc): kinh nghiệm thị trường; không phán giá, không khuyên mua bán.
-7. **CÂU HỎI KẾT**: hỏi thẳng người xem về trải nghiệm hoặc lựa chọn của họ, để họ trả lời trong bình luận. Ví dụ: "Anh chị đang giữ đất để không? Bình luận cho tôi biết nhé!". Không dùng câu "theo dõi kênh để cập nhật".
+7. **CÂU HỎI KẾT**: hỏi thẳng người xem về trải nghiệm hoặc lựa chọn của họ, để họ trả lời trong bình luận. Ví dụ: "Anh chị đang giữ đất để không? Bình luận nhé!". Không dùng câu "theo dõi kênh để cập nhật".
 
-**Xưng hô trong lời đọc:** anh Trung xưng **"tôi"** (ví dụ "Theo tôi…", "Bình luận cho tôi biết nhé"), gọi người xem là "anh chị" hoặc "cả nhà". **Không xưng "em"**.
+**Xưng hô trong lời đọc:** **không tự xưng** (không "em", "tôi", "Trung", không mở câu bằng "Theo tôi…"). Viết câu trung tính, nêu thẳng sự việc; gọi người xem là "anh chị" hoặc "cả nhà". Câu hỏi kết chỉ cần "Bình luận nhé!".
 
 Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi script làm gọn nhịp đọc khoảng 16 ký tự/giây, nên **tổng lời đọc 750–950 ký tự, tuyệt đối không quá 1.150** (≈ 75 giây). Đếm ký tự trước khi gửi duyệt. Nếu vượt thì cắt chi tiết kỹ thuật và câu nhắc lại, giữ MÓC, con số chính, 3 ý và CÂU HỎI KẾT. Tin ít số liệu thì cứ để 40–45 giây, đừng kéo dài bằng câu chung chung. Tin quá nhiều ý thì tách thành 2 video, mỗi video một khía cạnh, đăng cách nhau.
 
@@ -100,28 +100,24 @@ Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu hỏi), mỗi 
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
-Bản 07–16 dài ~2 phút, đủ cho cả video (script tự mờ dần nhạc ở cuối). Bản 01–06 dài ~1 phút, script tự nối vòng có chồng mờ 3 giây nên vẫn dùng được.
+**Nhạc nền chỉ dùng dòng EPIC, đúng phong cách bản mẫu anh Trung chọn** (video thuế Mỹ 35%, 26/11/2026): nhịp đều ~118 BPM, giọng Mi thứ, vòng hợp âm Em – C – G – D; dàn dây hoặc synth chạy liên tục nốt móc kép (16th) ngay từ giây đầu; bass rất sâu (sub ~35–45 Hz) đập đều nốt móc đơn; trống điện ảnh trầm, thưa nhưng to, nhịp chấm dôi; kèn đồng và hợp xướng ngân dài phía trên; cường độ giữ đều suốt bài, không có đoạn chùng. Không dùng nhạc lounge, lofi, jazz, deep house hay các kiểu chậm, nhẹ.
 
-| File | Mood | Dùng cho |
+Kho có 10 bản theo công thức trên, đã cắt dạo đầu nhỏ (vào mạnh ngay giây đầu); bản nào bass mỏng đã được tăng sub-bass. Bản 02 dài ~50 giây (script tự nối vòng), các bản còn lại 2–2,5 phút.
+
+| File | Sắc thái | Dùng cho |
 |---|---|---|
-| `01-tin-tuc-chuyen-nghiep.mp3` | chuyên nghiệp, chắc chắn | số liệu thị trường, báo cáo |
-| `02-vui-tuoi.mp3` | tươi sáng, năng động | mở bán, ưu đãi, tin tích cực |
-| `03-sang-trong-lounge.mp3` | jazz lounge sang trọng | dự án, phân khúc hạng sang |
-| `04-truyen-cam-hung.mp3` | điện ảnh, lạc quan | hạ tầng, quy hoạch, cơ hội |
-| `05-kich-tinh-tin-nong.mp3` | khẩn trương, nghiêm túc | luật mới, siết tín dụng, biến động |
-| `06-thu-gian-lofi.mp3` | nhẹ nhàng | kiến thức, mẹo, nội dung cuối tuần |
-| `07-ban-tin-tai-chinh.mp3` | bản tin tài chính, chắc chắn | báo cáo thị trường, số liệu quý (mặc định) |
-| `08-phan-tich-kinh-te.mp3` | tò mò, thông minh | giải thích chính sách, phân tích vĩ mô |
-| `09-tang-truong-cong-nghe.mp3` | lạc quan, tiến lên | tăng trưởng, FDI, khu công nghiệp, công nghệ |
-| `10-deep-house-sang-trong.mp3` | sang, hiện đại về đêm | hạng sang, căn hộ hàng hiệu, Tây Hồ |
-| `11-dieu-tra-rui-ro.mp3` | nghiêm, hồi hộp | cảnh báo rủi ro, sai phạm, pháp lý dự án |
-| `12-so-lieu-toi-gian.mp3` | tối giản, chính xác | tin nhiều biểu đồ, so sánh số liệu |
-| `13-ban-tin-sang-soi-dong.mp3` | sôi động, tích cực | điểm tin sáng, tin tốt ngắn |
-| `14-ha-tang-do-thi.mp3` | hoành tráng, hy vọng | metro, cầu, vành đai, quy hoạch đô thị |
-| `15-neo-soul-chuyen-gia.mp3` | thư thả, tự tin | góc nhìn chuyên gia, kinh nghiệm mua nhà |
-| `16-kinh-te-a-dong.mp3` | Á Đông hiện đại | Việt Nam – Hàn – Trung – Nhật, dòng vốn châu Á |
+| `01-epic-ban-tin-dan-day.mp3` | dàn dây dồn, kèn đồng, hợp xướng (sát bản mẫu nhất) | **mặc định**: luật mới, thuế, tin nóng |
+| `02-epic-synth-arp.mp3` | synth arpeggio dồn + dàn dây | tin ngắn, thị trường biến động |
+| `03-epic-taiko-horn.mp3` | taiko, horn Pháp, cello dồn | phân tích chính sách, vĩ mô |
+| `04-epic-toi-cang-thang.mp3` | tối, căng, sub-bass rất nặng | cảnh báo rủi ro, siết tín dụng, sai phạm |
+| `05-epic-hy-vong.mp3` | violin sáng, hy vọng | tin tích cực, người mua nhà |
+| `06-epic-dien-tu-hien-dai.mp3` | synth bass, trống điện tử, kèn | công nghệ, FDI, đô thị mới |
+| `07-epic-piano-dan-day.mp3` | piano dồn + dàn dây | góc nhìn, câu chuyện xã hội |
+| `08-epic-a-dong.mp3` | taiko, koto, nhị | Việt Nam – Trung – Hàn – Nhật, dòng vốn châu Á |
+| `09-epic-dem-nguoc.mp3` | tích tắc, va đập trầm | hạn chót, luật sắp hiệu lực |
+| `10-epic-khai-hoan.mp3` | khải hoàn, kèn fanfare | tăng trưởng, hạ tầng, cơ hội lớn |
 
-Đổi bản nhạc giữa các video liên tiếp, đừng dùng một bản nhiều ngày liền. Muốn thêm mood: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 100`), lưu vào `assets/nhac-nen/`.
+Đổi bản nhạc giữa các video liên tiếp (xoay vòng cả 10 bản, không dùng một bản 2 video liền). Muốn thêm bản mới: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 160`), prompt giữ nguyên công thức: "Epic cinematic hybrid news music at a steady 118 BPM in E minor, chord loop Em – C – G – D. Relentless sixteenth-note string ostinato from the first second, deep pulsing eighth-note sub-bass, big low cinematic toms in a syncopated dotted rhythm, sustained heroic brass and choir pads. Constant full intensity, no breakdown." rồi chỉ đổi nhạc cụ hoặc sắc thái. Nhạc tạo ra thường có 10–40 giây dạo đầu nhỏ: đo RMS và cắt bỏ đoạn đó (bắt đầu đúng phách, fade-in 0,05 giây); nếu bass mỏng thì tăng sub-bass (`bass=g=5:f=60`) trước khi lưu vào `assets/nhac-nen/`.
 
 ## Bước 6 — Viết spec JSON
 
@@ -136,7 +132,7 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
   `<div class="h0">Đất bỏ hoang: thuế <span class="gold">gấp 7 lần</span></div><div class="hooksub" data-fx="up" data-at="0.8">Ai đang giữ đất ở Hà Nội cần nghe ngay</div>`
   Khối `h0` (≤ 8 từ, in hoa tự động) **không gắn `data-fx`**, để chữ có ngay ở khung hình đầu tiên (TikTok lấy khung này làm ảnh xem trước trên bảng tin). Cảnh 1 chỉ bao câu MÓC.
 - Ở 3 cảnh ý: **không** thêm `"step"` (không hiện bộ đếm); mở cảnh bằng khối `kick` là câu hỏi ngắn của ý đó.
-- Cảnh cuối: `<div class="kick" …>Góc nhìn của Trung</div><div class="ask" data-fx="pop" data-at="0.3">Câu hỏi ngắn?<small>Bình luận cho tôi biết nhé</small></div>`.
+- Cảnh cuối: `<div class="kick" …>Góc nhìn của Trung</div><div class="ask" data-fx="pop" data-at="0.3">Câu hỏi ngắn?<small>Bình luận nhé</small></div>`.
 - `date` (dd.mm.yyyy hôm nay), `source` ("Nguồn: … · Tên báo dd/mm/yyyy"), `voice`, `music`, `avatar`, `out`.
 - `lines`: đúng các câu ở Bước 2, cùng thứ tự (dùng làm phụ đề).
 - `highlight`: từ khóa tô vàng trong phụ đề (số được tô tự động).

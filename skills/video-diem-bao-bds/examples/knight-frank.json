@@ -2,7 +2,7 @@
   "date": "21.11.2026",
   "source": "Nguồn: Knight Frank · VnExpress 19/11/2026",
   "voice": "voice.mp3",
-  "music": "nhac-nen/16-kinh-te-a-dong.mp3",
+  "music": "nhac-nen/01-epic-ban-tin-dan-day.mp3",
   "avatar": "avatar.png",
   "out": "knight-frank-nguoi-han-mua-can-ho.mp4",
   "highlight": [
@@ -22,7 +22,7 @@
     "Thứ nhất, Hàn Quốc chiếm 48%, Trung Quốc đại lục 31%. Bốn nhóm Đông Á chiếm tới 89%.",
     "Thứ hai, TP Hồ Chí Minh có 158 dự án đủ điều kiện, nhưng mới ký khoảng 21% hạn mức, chỉ 316 căn có sổ.",
     "Thứ ba, Việt Nam đứng thứ 4 Đông Nam Á về độ thuận lợi. Rào cản lớn nhất là quyền sở hữu, còn chi phí giao dịch rẻ hơn hẳn Singapore.",
-    "Nếu cấp sổ nhanh hơn, căn hộ hạng sang Hà Nội sẽ đón thêm dòng tiền ngoại. Anh chị có muốn bán căn hộ cho khách nước ngoài không? Bình luận cho tôi biết nhé!"
+    "Nếu cấp sổ nhanh hơn, căn hộ hạng sang Hà Nội sẽ đón thêm dòng tiền ngoại. Anh chị có muốn bán căn hộ cho khách nước ngoài không? Bình luận nhé!"
   ],
   "scenes": [
     {
@@ -72,7 +72,7 @@
       ],
       "broll": "broll/16745641_1080_1920_30fps.mp4",
       "broll_offset": 0,
-      "html": "<div class=\"kick\" data-fx=\"left\" data-at=\"0.1\">Góc nhìn của Trung</div><div class=\"h2\" data-fx=\"words\" data-at=\"0.3\">Cấp sổ nhanh hơn → <span class=\"gold\">dòng tiền ngoại</span> vào căn hộ hạng sang</div><div class=\"ask\" data-fx=\"pop\" data-at=\"4.5\">Anh chị có muốn bán căn hộ cho khách nước ngoài?<small>Bình luận cho tôi biết nhé</small></div>"
+      "html": "<div class=\"kick\" data-fx=\"left\" data-at=\"0.1\">Góc nhìn của Trung</div><div class=\"h2\" data-fx=\"words\" data-at=\"0.3\">Cấp sổ nhanh hơn → <span class=\"gold\">dòng tiền ngoại</span> vào căn hộ hạng sang</div><div class=\"ask\" data-fx=\"pop\" data-at=\"4.5\">Anh chị có muốn bán căn hộ cho khách nước ngoài?<small>Bình luận nhé</small></div>"
     }
   ],
   "theme": "thitruong"
