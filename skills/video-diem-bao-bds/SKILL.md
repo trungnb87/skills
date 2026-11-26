@@ -56,7 +56,9 @@ Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với
 2. **TIN** (1 câu): chuyện gì, ai quyết định, từ khi nào, con số chính. Ghi rõ là dự thảo, đã thông qua hay đã có hiệu lực.
 3–5. **3 Ý** (mỗi câu một ý, mở bằng "Thứ nhất…", "Thứ hai…", "Thứ ba…"): ai chịu ảnh hưởng, ở đâu (ưu tiên Hà Nội), bao nhiêu tiền, cần làm gì hoặc theo dõi gì. Mỗi ý có ít nhất một con số hoặc ví dụ cụ thể.
 6. **GÓC NHÌN** của anh Trung (1 câu, không bắt buộc): kinh nghiệm thị trường; không phán giá, không khuyên mua bán.
-7. **CÂU HỎI KẾT**: hỏi thẳng người xem về trải nghiệm hoặc lựa chọn của họ, để họ trả lời trong bình luận. Ví dụ: "Anh chị đang giữ đất để không? Bình luận cho em biết nhé!". Không dùng câu "theo dõi kênh để cập nhật".
+7. **CÂU HỎI KẾT**: hỏi thẳng người xem về trải nghiệm hoặc lựa chọn của họ, để họ trả lời trong bình luận. Ví dụ: "Anh chị đang giữ đất để không? Bình luận cho Trung biết nhé!". Không dùng câu "theo dõi kênh để cập nhật".
+
+**Xưng hô trong lời đọc:** anh Trung tự xưng là **"Trung"** (ví dụ "Theo Trung…", "Bình luận cho Trung biết nhé"), gọi người xem là "anh chị" hoặc "cả nhà". **Không xưng "em"**.
 
 Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi script làm gọn nhịp đọc khoảng 16 ký tự/giây, nên **tổng lời đọc 750–950 ký tự, tuyệt đối không quá 1.150** (≈ 75 giây). Đếm ký tự trước khi gửi duyệt. Nếu vượt thì cắt chi tiết kỹ thuật và câu nhắc lại, giữ MÓC, con số chính, 3 ý và CÂU HỎI KẾT. Tin ít số liệu thì cứ để 40–45 giây, đừng kéo dài bằng câu chung chung. Tin quá nhiều ý thì tách thành 2 video, mỗi video một khía cạnh, đăng cách nhau.
 
@@ -134,7 +136,7 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
   `<div class="h0">Đất bỏ hoang: thuế <span class="gold">gấp 7 lần</span></div><div class="hooksub" data-fx="up" data-at="0.8">Ai đang giữ đất ở Hà Nội cần nghe ngay</div>`
   Khối `h0` (≤ 8 từ, in hoa tự động) **không gắn `data-fx`**, để chữ có ngay ở khung hình đầu tiên (TikTok lấy khung này làm ảnh xem trước trên bảng tin). Cảnh 1 chỉ bao câu MÓC.
 - Ở 3 cảnh ý: **không** thêm `"step"` (không hiện bộ đếm); mở cảnh bằng khối `kick` là câu hỏi ngắn của ý đó.
-- Cảnh cuối: `<div class="kick" …>Góc nhìn của Trung</div><div class="ask" data-fx="pop" data-at="0.3">Câu hỏi ngắn?<small>Bình luận cho em biết nhé</small></div>`.
+- Cảnh cuối: `<div class="kick" …>Góc nhìn của Trung</div><div class="ask" data-fx="pop" data-at="0.3">Câu hỏi ngắn?<small>Bình luận cho Trung biết nhé</small></div>`.
 - `date` (dd.mm.yyyy hôm nay), `source` ("Nguồn: … · Tên báo dd/mm/yyyy"), `voice`, `music`, `avatar`, `out`.
 - `lines`: đúng các câu ở Bước 2, cùng thứ tự (dùng làm phụ đề).
 - `highlight`: từ khóa tô vàng trong phụ đề (số được tô tự động).
