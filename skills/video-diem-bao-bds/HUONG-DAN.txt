@@ -1,0 +1,68 @@
+BỘ DỰNG VIDEO TRÊN MÁY – TRUNG - BUÔN CHUYỆN NHÀ ĐẤT
+=====================================================
+
+Mục đích: Claude chỉ viết kịch bản và file spec.json (rẻ). Việc tạo giọng,
+tìm video nền, dựng video, làm cover do máy Mac tự làm, không tốn credit Claude.
+
+
+1. CÀI ĐẶT (làm 1 lần, khoảng 15 phút)
+--------------------------------------
+Mở ứng dụng Terminal (Cmd + Space, gõ "Terminal", Enter), dán dòng này rồi Enter:
+
+    bash ~/Movies/diem-bao-bds/_cong-cu/CAI-DAT.command
+
+- Nếu máy hỏi mật khẩu: gõ mật khẩu đăng nhập Mac (không hiện chữ), Enter.
+- Nếu Mac hỏi cài "Command Line Developer Tools": bấm Cài đặt, chờ xong.
+- Cài xong, TextEdit tự mở file cau-hinh.env để anh dán API key (mục 2).
+Từ lần sau, anh bấm đúp thẳng vào file .command trong Finder là được.
+
+
+2. LẤY 2 API KEY (1 lần)
+------------------------
+a) ElevenLabs (giọng nhân bản của anh):
+   elevenlabs.io > đăng nhập > Developers > API Keys > Create API Key
+   Bật quyền "Text to Speech", bấm Create, copy key.
+b) Pixabay (video nền, miễn phí):
+   Đăng nhập pixabay.com (đăng ký bằng Google cũng được), mở pixabay.com/api/docs/,
+   kéo xuống mục "Search images": dòng "key (required)" hiện API key màu xanh, copy key đó.
+   (Pexels đang tạm ngừng cấp key mới nên dùng Pixabay.)
+Dán 2 key vào cau-hinh.env ngay sau dấu =, lưu (Cmd+S).
+Key chỉ nằm trên máy anh. Không gửi key qua chat cho ai, kể cả Claude.
+
+
+3. MỖI LẦN LÀM VIDEO
+--------------------
+1) Gửi link bài báo cho Claude: "làm video tin này".
+2) Claude gửi kịch bản. Anh nhắn OK (hoặc ghi chỗ cần sửa).
+3) Claude lưu file spec.json vào thư mục mới trong ~/Movies/diem-bao-bds/
+   (ví dụ 2026-11-27-thue-dat-bo-hoang/spec.json).
+4) Anh bấm đúp DUNG-VIDEO.command. Máy tự:
+   - tạo giọng đọc (tốn credit ElevenLabs như trước, chỉ 1 lần mỗi video)
+   - tải video nền trên Pixabay
+   - chọn nhạc EPIC theo loại tin, không trùng 3 video gần nhất
+   - dựng video, cover, thong-tin.txt (caption + hashtag), rồi mở thư mục.
+   Video 1 phút dựng mất khoảng 3–6 phút. Có nhiều video chờ thì máy dựng lần lượt.
+
+Muốn xem trước bố cục trước khi dựng (nhanh, vài giây):
+    cd ~/Movies/diem-bao-bds/_cong-cu && .venv/bin/python dung.py ../<thư-mục-video> --xem-truoc
+
+
+4. SỬA VIDEO
+------------
+- Sửa chữ trên màn hình, đổi nhạc, đổi video nền: nhờ Claude sửa spec.json
+  (hoặc tự sửa bằng TextEdit), xóa file .mp4 cũ, bấm đúp DUNG-VIDEO.command.
+  Giọng đọc có sẵn sẽ được dùng lại, không tốn credit ElevenLabs.
+- Đổi một video nền: xóa dòng "broll" của cảnh đó trong spec.json, sửa "broll_query"
+  (từ khóa tiếng Anh), dựng lại.
+- Đổi lời đọc: phải tạo giọng mới (tốn credit):
+    .venv/bin/python dung.py ../<thư-mục-video> --lam-lai-giong
+
+
+5. LỖI THƯỜNG GẶP
+-----------------
+- "permission denied" khi bấm đúp: chạy lại lệnh ở mục 1 một lần.
+- "Chưa có ... API_KEY": mở cau-hinh.env, dán key, lưu.
+- "ElevenLabs báo hết credit": chờ tháng sau hoặc nâng gói.
+- "Chỉ tìm thấy ... khoảng nghỉ": giọng đọc thiếu chỗ ngắt câu.
+  Gửi Claude dòng lỗi, Claude sẽ thêm "line_breaks" vào spec.json.
+- Lỗi khác: chụp màn hình cửa sổ Terminal gửi Claude.

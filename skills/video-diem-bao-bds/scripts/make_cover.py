@@ -58,14 +58,14 @@ def main():
     for k, v in rep.items():
         html = html.replace(k, v)
     page = tmp / "cover.html"
-    page.write_text(html, encoding="utf-8")
+    from moitruong import add_fonts
+    page.write_text(add_fonts(html), encoding="utf-8")
 
     out = base / (Path(spec["out"]).stem + "-cover.jpg")
     from playwright.sync_api import sync_playwright
-    import os
-    chrome = next((p for p in ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"] if os.path.exists(p)), None)
+    from moitruong import launch_browser
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path=chrome) if chrome else p.chromium.launch()
+        b = launch_browser(p)
         pg = b.new_page(viewport={"width": 1080, "height": 1920})
         pg.goto(page.as_uri()); pg.evaluate("document.fonts.ready"); pg.wait_for_timeout(300)
         pg.screenshot(path=str(out), type="jpeg", quality=92)
