@@ -142,7 +142,7 @@ Mô tả `ban-do.json` (mẫu đầy đủ trong đầu file `make_map.py`):
 - `camera`: các mốc `{"t", "fit": [các điểm], "zoom"}`; script tự canh bản đồ vào vùng an toàn (tránh header TikTok và phụ đề).
 - `seconds`: bằng độ dài cảnh (xem "Mốc cảnh" khi chạy `--preview`).
 
-Trong spec video, cảnh bản đồ dùng `"broll": "broll/bando.mp4"` và `html` chỉ để 1 dòng `kick` ngắn (bản đồ đã có nhãn). Nhãn trên bản đồ chỉ ghi số liệu có nguồn hoặc tính từ OSRM (ghi "~"); không vẽ tuyến dự kiến nếu chưa có vị trí chính thức. Giữ dòng "© OpenStreetMap contributors" trên hình.
+Trong spec video, cảnh bản đồ dùng `"broll": "broll/bando.mp4"`, `"clear": true` (bỏ lớp phủ tối, không chỉnh màu, không zoom thêm) và `"html": ""` (bản đồ đã có nhãn; chữ thêm vào dễ đè lên điểm mốc). Đặt `seconds` bằng độ dài cảnh. Nhãn trên bản đồ chỉ ghi số liệu có nguồn hoặc tính từ OSRM (ghi "~"); không vẽ tuyến dự kiến nếu chưa có vị trí chính thức. Giữ dòng "© OpenStreetMap contributors" trên hình.
 
 **HyperFrames (HeyGen)**: dùng được qua kết nối `compose` để dựng cảnh đồ họa chuyển động dạng sơ đồ (không phải bản đồ thật) khi cần phong cách khác; render trên mây mất vài phút và tốn credit HeyGen. Bản đồ cần đúng vị trí thì luôn dùng Remotion ở trên.
 

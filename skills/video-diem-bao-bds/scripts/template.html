@@ -208,6 +208,8 @@ window.render=function(t){
   const hk=HOOK?Math.max(0,Math.min(1,(t-(+scenes[0].dataset.out))/0.4)):1;
   for(const e of HDR) e.style.opacity=hk;
   const cur=scenes.find(s=>t>=+s.dataset.in&&t<+s.dataset.out);
+  // cảnh "clear" (bản đồ…): làm nhạt lớp phủ tối để thấy rõ hình
+  const scr=document.querySelector('.scrim'); if(scr) scr.style.opacity=(cur&&cur.dataset.clear)?0.45:1;
   stepEl.textContent=cur&&cur.dataset.step?cur.dataset.step:'';
   const ch=(HOOK&&hk<1)?null:CHUNKS.find(c=>t>=c.s&&t<c.e);
   cap.innerHTML=ch?hl(ch.text):''; cap.style.display=ch?'inline':'none';
