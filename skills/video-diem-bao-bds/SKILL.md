@@ -16,7 +16,7 @@ Kết quả mỗi lần chạy:
 
 ## CHẾ ĐỘ MẶC ĐỊNH: DỰNG TRÊN MÁY ANH TRUNG (tiết kiệm credit Claude)
 
-Từ 27/11/2026 anh Trung dựng video bằng bộ công cụ trên Mac, ở `~/Movies/diem-bao-bds/_cong-cu/` (bản sao của chính thư mục skill này, có `dung.py`, `CAI-DAT.command`, `DUNG-VIDEO.command`, `HUONG-DAN.txt`). Máy tự tạo giọng (ElevenLabs API), tải video nền (Pexels API), chọn nhạc xoay vòng, dựng video, cover và `thong-tin.txt`. **Claude chỉ làm Bước 1, 2, 2b, rồi viết spec.json theo mục dưới đây.** Không gọi `creative_generate_speech`, `vidiq_find_broll`, không tải b-roll, không chạy `build_video.py`, không xem ảnh xem trước: những việc đó tốn nhiều credit Claude nhất.
+Từ 27/11/2026 anh Trung dựng video bằng bộ công cụ trên Mac, ở `~/Movies/diem-bao-bds/_cong-cu/` (bản sao của chính thư mục skill này, có `dung.py`, `CAI-DAT.command`, `DUNG-VIDEO.command`, `HUONG-DAN.txt`). Máy tự tạo giọng (ElevenLabs API), tải video nền (Pixabay API; Pexels nếu anh có key, vì Pexels tạm ngừng cấp key mới từ 11/2026), chọn nhạc xoay vòng, dựng video, cover và `thong-tin.txt`. **Claude chỉ làm Bước 1, 2, 2b, rồi viết spec.json theo mục dưới đây.** Không gọi `creative_generate_speech`, `vidiq_find_broll`, không tải b-roll, không chạy `build_video.py`, không xem ảnh xem trước: những việc đó tốn nhiều credit Claude nhất.
 
 Chỉ dùng quy trình dựng trên cloud (Bước 3–8 ở dưới) khi anh nói rõ "dựng trên cloud/dựng giúp anh", hoặc khi video cần bản đồ động (Bước 4c) hay ảnh báo chí (Bước 4b) mà máy anh chưa làm được.
 

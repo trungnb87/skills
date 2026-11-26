@@ -22,8 +22,10 @@ Từ lần sau, anh bấm đúp thẳng vào file .command trong Finder là đư
 a) ElevenLabs (giọng nhân bản của anh):
    elevenlabs.io > đăng nhập > Developers > API Keys > Create API Key
    Bật quyền "Text to Speech", bấm Create, copy key.
-b) Pexels (video nền, miễn phí):
-   pexels.com/api > đăng nhập > "Your API Key", copy key.
+b) Pixabay (video nền, miễn phí):
+   Đăng nhập pixabay.com (đăng ký bằng Google cũng được), mở pixabay.com/api/docs/,
+   kéo xuống mục "Search images": dòng "key (required)" hiện API key màu xanh, copy key đó.
+   (Pexels đang tạm ngừng cấp key mới nên dùng Pixabay.)
 Dán 2 key vào cau-hinh.env ngay sau dấu =, lưu (Cmd+S).
 Key chỉ nằm trên máy anh. Không gửi key qua chat cho ai, kể cả Claude.
 
@@ -36,7 +38,7 @@ Key chỉ nằm trên máy anh. Không gửi key qua chat cho ai, kể cả Clau
    (ví dụ 2026-11-27-thue-dat-bo-hoang/spec.json).
 4) Anh bấm đúp DUNG-VIDEO.command. Máy tự:
    - tạo giọng đọc (tốn credit ElevenLabs như trước, chỉ 1 lần mỗi video)
-   - tải video nền trên Pexels
+   - tải video nền trên Pixabay
    - chọn nhạc EPIC theo loại tin, không trùng 3 video gần nhất
    - dựng video, cover, thong-tin.txt (caption + hashtag), rồi mở thư mục.
    Video 1 phút dựng mất khoảng 3–6 phút. Có nhiều video chờ thì máy dựng lần lượt.

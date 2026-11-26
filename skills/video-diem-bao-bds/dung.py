@@ -4,7 +4,7 @@
 Claude chỉ viết kịch bản và file spec.json (đặt trong một thư mục video).
 Script này tự làm phần còn lại:
   1. Tạo giọng đọc bằng giọng nhân bản trên ElevenLabs (chỉ tạo 1 lần, có rồi thì dùng lại)
-  2. Tìm và tải video nền miễn phí trên Pexels theo từ khóa "broll_query" của từng cảnh
+  2. Tìm và tải video nền miễn phí trên Pixabay (hoặc Pexels nếu có key) theo từ khóa "broll_query" của từng cảnh
   3. Chọn nhạc nền EPIC theo loại tin, xoay vòng để không trùng video trước
   4. Dựng video MP4, ảnh cover và file thong-tin.txt (caption, hashtag)
 
@@ -62,7 +62,7 @@ def load_env():
             if line and not line.startswith("#") and "=" in line:
                 k, v = line.split("=", 1)
                 env[k.strip()] = v.strip().strip('"').strip("'")
-    for k in ("ELEVENLABS_API_KEY", "PEXELS_API_KEY", "ELEVEN_VOICE_ID", "ELEVEN_MODEL", "THU_MUC_VIDEO"):
+    for k in ("ELEVENLABS_API_KEY", "PEXELS_API_KEY", "PIXABAY_API_KEY", "ELEVEN_VOICE_ID", "ELEVEN_MODEL", "THU_MUC_VIDEO"):
         if os.environ.get(k):
             env[k] = os.environ[k]
     env.setdefault("ELEVEN_VOICE_ID", "LXjvSaudzF11FKObF2RB")
@@ -183,6 +183,35 @@ def pexels_search(query, key, page=1):
         return json.loads(r.read())
 
 
+def pixabay_search(query, key, page=1):
+    q = urllib.parse.urlencode({"key": key, "q": query[:100], "video_type": "film", "safesearch": "true",
+                                "per_page": 50, "page": page})
+    with http(f"https://pixabay.com/api/videos/?{q}") as r:
+        data = json.loads(r.read())
+    vids = []
+    for h in data.get("hits", []):
+        best = None
+        for name, f in (h.get("videos") or {}).items():
+            w, hh, url = f.get("width") or 0, f.get("height") or 0, f.get("url")
+            if not url or not w:
+                continue
+            # dọc 9:16 là tốt nhất; ngang thì phải đủ cao (4K) để cắt dọc vẫn nét
+            if hh > w and hh >= 1280:
+                score = 0 + abs(hh - 1920) / 1e4
+            elif hh >= 2000:
+                score = 1 + abs(hh - 2160) / 1e4
+            elif hh >= 1080:
+                score = 2
+            else:
+                continue
+            if best is None or score < best[0]:
+                best = (score, {"width": w, "height": hh, "link": url})
+        if best:
+            vids.append((best[0], {"id": f"px{h['id']}", "duration": h.get("duration", 0), "file": best[1]}))
+    vids.sort(key=lambda x: x[0])
+    return [v for _, v in vids]
+
+
 def get_broll(spec, base, env, st):
     used_now = set()
     need = [sc for sc in spec["scenes"] if not (sc.get("broll") and (base / sc["broll"]).exists())]
@@ -190,19 +219,37 @@ def get_broll(spec, base, env, st):
         say("• Video nền: đã đủ")
         return
     key = env.get("PEXELS_API_KEY", "")
-    if not key or key.startswith("dan-"):
-        fail("Chưa có PEXELS_API_KEY trong cau-hinh.env (miễn phí, xem HUONG-DAN.txt mục 2).")
+    key = "" if key.startswith("dan-") else key
+    pxb = env.get("PIXABAY_API_KEY", "")
+    pxb = "" if pxb.startswith("dan-") else pxb
+    if not key and not pxb:
+        fail("Chưa có PIXABAY_API_KEY (hoặc PEXELS_API_KEY) trong cau-hinh.env (miễn phí, xem HUONG-DAN.txt mục 2).")
     (base / "broll").mkdir(exist_ok=True)
     for sc in spec["scenes"]:
         if sc.get("broll") and (base / sc["broll"]).exists():
             used_now.add(Path(sc["broll"]).name)
-    say(f"• Tìm video nền cho {len(need)} cảnh trên Pexels…")
+    say(f"• Tìm video nền cho {len(need)} cảnh ({'Pexels' if key else 'Pixabay'})…")
     for sc in need:
         queries = sc.get("broll_query") or spec.get("broll_query") or "Hanoi city skyline aerial"
         queries = [queries] if isinstance(queries, str) else list(queries)
         chosen = None
         for q in queries:
             for page in (1, 2):
+                if not key:
+                    try:
+                        cands = pixabay_search(q, pxb, page)
+                    except urllib.error.HTTPError as e:
+                        fail("Pixabay từ chối API key, kiểm tra PIXABAY_API_KEY." if e.code in (400, 401, 403) else f"Pixabay lỗi {e.code}")
+                    except urllib.error.URLError as e:
+                        fail(f"Không kết nối được Pixabay ({e.reason}).")
+                    for v in cands:
+                        if v["id"] in st["pexels"] or f"{v['id']}.mp4" in used_now or v["duration"] < 6:
+                            continue
+                        chosen = (v["id"], v["file"], q)
+                        break
+                    if chosen:
+                        break
+                    continue
                 try:
                     res = pexels_search(q, key, page)
                 except urllib.error.HTTPError as e:
@@ -226,8 +273,8 @@ def get_broll(spec, base, env, st):
         if not chosen:
             fail(f"Không tìm được video nền dọc mới cho từ khóa {queries}. Thêm từ khóa khác vào broll_query.")
         vid, f, q = chosen
-        dest = base / "broll" / f"pexels-{vid}.mp4"
-        say(f"  ↓ \"{q}\" → pexels {vid} ({f['width']}x{f['height']})")
+        dest = base / "broll" / (f"{vid}.mp4" if vid.startswith("px") else f"pexels-{vid}.mp4")
+        say(f"  ↓ \"{q}\" → {vid} ({f['width']}x{f['height']})")
         download(f["link"], dest)
         sc["broll"] = f"broll/{dest.name}"
         sc.setdefault("broll_offset", 0)
@@ -267,7 +314,7 @@ def write_info(spec, base, out, chars):
     parts = [
         f"TIÊU ĐỀ: {title}", "",
         "CAPTION (copy dán thẳng):", cap + ("\n\n" + tags if tags else ""), "",
-        "Video nền: Pexels",
+        ("Video nền: Pexels" if any("pexels-" in str(sc.get("broll", "")) for sc in spec["scenes"]) else "Video nền: Pixabay"),
         spec.get("source", ""),
         f"Nhạc nền: {Path(spec['music']).name}",
         f"Credit ElevenLabs dùng lần này: ~{chars} ký tự" if chars else "Giọng đọc: dùng lại file có sẵn",
