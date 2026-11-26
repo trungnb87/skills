@@ -30,7 +30,7 @@ Rút ra từ số liệu kênh 21–25/11/2026: video 56 giây về thuế đấ
 |---|---|
 | Giọng nhân bản "Trung BĐS" | ElevenLabs, `voice_id = LXjvSaudzF11FKObF2RB`, model `eleven_v4`. Cần kết nối ElevenLabs trong Claude. |
 | Ảnh chân dung (đã cắt tròn, làm sáng) | `assets/avatar.png` (ảnh gốc `assets/chan-dung-goc.jpg`; làm lại bằng `scripts/make_avatar.py`) |
-| 6 bản nhạc nền | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
+| 9 bản nhạc nền mạnh mẽ | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
 | Video nền | Pexels qua công cụ `vidiq_find_broll` (1 credit vidIQ/lần tìm). Nếu có thư mục `~/Movies/diem-bao-bds/broll-envato` trên máy anh thì ưu tiên lấy từ đó. |
 | Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages` |
 
@@ -100,28 +100,23 @@ Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu hỏi), mỗi 
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
-Bản 07–16 dài ~2 phút, đủ cho cả video (script tự mờ dần nhạc ở cuối). Bản 01–06 dài ~1 phút, script tự nối vòng có chồng mờ 3 giây nên vẫn dùng được.
+**Nhạc nền phải mạnh mẽ, dồn dập, hứng khởi ngay từ giây đầu** (yêu cầu của anh Trung): kho chỉ giữ các bản nhịp nhanh, vào đủ lực ngay, không dạo đầu nhỏ. Các bản chậm, dề dà (lounge, lofi, neo-soul, deep house, tối giản…) đã bị loại; không dùng lại kiểu nhạc đó.
+
+Bản 07, 11, 13, 17–19 dài trên 2 phút, đủ cho cả video (script tự mờ dần nhạc ở cuối). Bản 01, 02, 05 dài ~1 phút, script tự nối vòng có chồng mờ 3 giây nên vẫn dùng được.
 
 | File | Mood | Dùng cho |
 |---|---|---|
-| `01-tin-tuc-chuyen-nghiep.mp3` | chuyên nghiệp, chắc chắn | số liệu thị trường, báo cáo |
-| `02-vui-tuoi.mp3` | tươi sáng, năng động | mở bán, ưu đãi, tin tích cực |
-| `03-sang-trong-lounge.mp3` | jazz lounge sang trọng | dự án, phân khúc hạng sang |
-| `04-truyen-cam-hung.mp3` | điện ảnh, lạc quan | hạ tầng, quy hoạch, cơ hội |
-| `05-kich-tinh-tin-nong.mp3` | khẩn trương, nghiêm túc | luật mới, siết tín dụng, biến động |
-| `06-thu-gian-lofi.mp3` | nhẹ nhàng | kiến thức, mẹo, nội dung cuối tuần |
-| `07-ban-tin-tai-chinh.mp3` | bản tin tài chính, chắc chắn | báo cáo thị trường, số liệu quý (mặc định) |
-| `08-phan-tich-kinh-te.mp3` | tò mò, thông minh | giải thích chính sách, phân tích vĩ mô |
-| `09-tang-truong-cong-nghe.mp3` | lạc quan, tiến lên | tăng trưởng, FDI, khu công nghiệp, công nghệ |
-| `10-deep-house-sang-trong.mp3` | sang, hiện đại về đêm | hạng sang, căn hộ hàng hiệu, Tây Hồ |
-| `11-dieu-tra-rui-ro.mp3` | nghiêm, hồi hộp | cảnh báo rủi ro, sai phạm, pháp lý dự án |
-| `12-so-lieu-toi-gian.mp3` | tối giản, chính xác | tin nhiều biểu đồ, so sánh số liệu |
+| `17-tin-nong-don-dap.mp3` | tin nóng dồn dập, dây staccato, trống mạnh (~128 BPM) | **mặc định**: luật mới, thuế, tin nóng, phân tích chính sách |
+| `18-dien-tu-hung-khoi.mp3` | điện tử sôi động, hứng khởi (~124 BPM) | thị trường, giá, mở bán, tin tích cực |
+| `19-dien-anh-manh-me.mp3` | điện ảnh hoành tráng, trống lớn, kèn đồng (~130 BPM) | hạ tầng, quy hoạch, vĩ mô, thương mại quốc tế |
 | `13-ban-tin-sang-soi-dong.mp3` | sôi động, tích cực | điểm tin sáng, tin tốt ngắn |
-| `14-ha-tang-do-thi.mp3` | hoành tráng, hy vọng | metro, cầu, vành đai, quy hoạch đô thị |
-| `15-neo-soul-chuyen-gia.mp3` | thư thả, tự tin | góc nhìn chuyên gia, kinh nghiệm mua nhà |
-| `16-kinh-te-a-dong.mp3` | Á Đông hiện đại | Việt Nam – Hàn – Trung – Nhật, dòng vốn châu Á |
+| `07-ban-tin-tai-chinh.mp3` | bản tin tài chính, chắc chắn | báo cáo thị trường, số liệu quý |
+| `05-kich-tinh-tin-nong.mp3` | khẩn trương, nghiêm túc | siết tín dụng, biến động |
+| `11-dieu-tra-rui-ro.mp3` | nghiêm, hồi hộp | cảnh báo rủi ro, sai phạm, pháp lý dự án |
+| `02-vui-tuoi.mp3` | tươi sáng, năng động | ưu đãi, hạng sang, tin vui |
+| `01-tin-tuc-chuyen-nghiep.mp3` | chuyên nghiệp, chắc chắn | số liệu thị trường, báo cáo |
 
-Đổi bản nhạc giữa các video liên tiếp, đừng dùng một bản nhiều ngày liền. Muốn thêm mood: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 100`), lưu vào `assets/nhac-nen/`.
+Đổi bản nhạc giữa các video liên tiếp (xoay vòng cả kho, không dùng một bản 2 video liền). Muốn thêm bản mới: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 160`), prompt ghi rõ nhịp nhanh 124–132 BPM, mạnh ngay từ đầu. Nhạc tạo ra thường vẫn có 10–20 giây dạo đầu nhỏ: đo RMS và cắt bỏ đoạn đó (bắt đầu đúng phách, fade-in 0,05 giây) trước khi lưu vào `assets/nhac-nen/`.
 
 ## Bước 6 — Viết spec JSON
 
