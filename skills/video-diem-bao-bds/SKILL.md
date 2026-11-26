@@ -20,7 +20,7 @@ Rút ra từ số liệu kênh 21–25/11/2026: video 56 giây về thuế đấ
 
 - **3 giây móc**: cảnh 1 là *cảnh móc*, gồm chân dung lớn của anh Trung và một câu móc chữ cực lớn, hiện ngay từ khung hình đầu tiên. Không có thanh tiêu đề, nguồn hay phụ đề. Script tự hiện header từ cảnh 2.
 - **3 ý**: thân video gồm đúng 3 ý, nói bằng lời "Thứ nhất…, Thứ hai…, Thứ ba…". **Trên màn hình không hiện bộ đếm hay chữ "Ý 1/3", "1/3"…** (anh Trung thấy quê); mỗi ý mở bằng một câu hỏi ngắn trong khối `kick`, ví dụ "Vì sao lại là Việt Nam?".
-- **1 câu hỏi**: kết bằng một câu hỏi cho người xem bình luận (khối `.ask`), không kết bằng câu "theo dõi kênh".
+- **1 câu kết**: kết bằng một câu chốt mạnh, tích cực, đọng lại ý chính (khối `.ask`). **Không kêu gọi bình luận** (không "Bình luận nhé", "Để lại bình luận", "Cho biết ý kiến") và không kết bằng câu "theo dõi kênh".
 - **Màu theo loại tin** (`"theme"`): `luat` đỏ · `thitruong` xanh lam · `hatang` xanh ngọc · `hangsang` vàng. Hai video đăng liền nhau không dùng cùng màu nếu khác loại tin, để lưới kênh không bị đồng một màu.
 - **Câu móc** dưới 3,5 giây đọc (≤ 14 từ, khoảng 60 ký tự). Câu móc nói ai được hay mất, mất bao nhiêu, ví dụ: "Ai đang giữ đất bỏ hoang ở Hà Nội, từ năm sau mất gấp 7 lần tiền thuế!". Cấm mở bằng "Theo…", "Mới đây…", "Bản tin hôm nay…", hay tên luật hoặc nghị định.
 
@@ -32,7 +32,7 @@ Rút ra từ số liệu kênh 21–25/11/2026: video 56 giây về thuế đấ
 | Ảnh chân dung (đã cắt tròn, làm sáng) | `assets/avatar.png` (ảnh gốc `assets/chan-dung-goc.jpg`; làm lại bằng `scripts/make_avatar.py`) |
 | 10 bản nhạc nền EPIC | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
 | Video nền | Pexels qua công cụ `vidiq_find_broll` (1 credit vidIQ/lần tìm). Nếu có thư mục `~/Movies/diem-bao-bds/broll-envato` trên máy anh thì ưu tiên lấy từ đó. |
-| Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages` |
+| Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages`; Node.js 18+ cho bản đồ động (Remotion tự cài khi chạy lần đầu) |
 
 Tên miền phải được cho phép trong claude.ai › Settings › Capabilities (thiếu cái nào thì tải sẽ báo 403, nhắc anh Trung thêm đúng tên miền đó):
 `videos.pexels.com`, `api.elevenlabs.io`, `elevenlabsusercontent.com`, `assets.vidiq.com`, `ai-music-tracks.s3.us-east-1.amazonaws.com`.
@@ -56,11 +56,11 @@ Mỗi "câu" là một đoạn đọc liền mạch 1–2 câu văn, ứng với
 2. **TIN** (1 câu): chuyện gì, ai quyết định, từ khi nào, con số chính. Ghi rõ là dự thảo, đã thông qua hay đã có hiệu lực.
 3–5. **3 Ý** (mỗi câu một ý, mở bằng "Thứ nhất…", "Thứ hai…", "Thứ ba…"): ai chịu ảnh hưởng, ở đâu (ưu tiên Hà Nội), bao nhiêu tiền, cần làm gì hoặc theo dõi gì. Mỗi ý có ít nhất một con số hoặc ví dụ cụ thể.
 6. **GÓC NHÌN** của anh Trung (1 câu, không bắt buộc): kinh nghiệm thị trường; không phán giá, không khuyên mua bán.
-7. **CÂU HỎI KẾT**: hỏi thẳng người xem về trải nghiệm hoặc lựa chọn của họ, để họ trả lời trong bình luận. Ví dụ: "Anh chị đang giữ đất để không? Bình luận nhé!". Không dùng câu "theo dõi kênh để cập nhật".
+7. **CÂU KẾT**: một câu chốt tích cực, gói lại ý chính hoặc mốc cần theo dõi. Ví dụ: "Một cuộc sống mới, rộng rãi hơn, đang dần thành hình ở Thư Lâm!". **Không kêu gọi bình luận**, không hỏi người xem để họ trả lời; không dùng câu "theo dõi kênh để cập nhật".
 
-**Xưng hô trong lời đọc:** **không tự xưng** (không "em", "tôi", "Trung", không mở câu bằng "Theo tôi…"). Viết câu trung tính, nêu thẳng sự việc; gọi người xem là "anh chị" hoặc "cả nhà". Câu hỏi kết chỉ cần "Bình luận nhé!".
+**Xưng hô trong lời đọc:** **không tự xưng** (không "em", "tôi", "Trung", không mở câu bằng "Theo tôi…"). Viết câu trung tính, nêu thẳng sự việc; gọi người xem là "anh chị" hoặc "cả nhà".
 
-Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi script làm gọn nhịp đọc khoảng 16 ký tự/giây, nên **tổng lời đọc 750–950 ký tự, tuyệt đối không quá 1.150** (≈ 75 giây). Đếm ký tự trước khi gửi duyệt. Nếu vượt thì cắt chi tiết kỹ thuật và câu nhắc lại, giữ MÓC, con số chính, 3 ý và CÂU HỎI KẾT. Tin ít số liệu thì cứ để 40–45 giây, đừng kéo dài bằng câu chung chung. Tin quá nhiều ý thì tách thành 2 video, mỗi video một khía cạnh, đăng cách nhau.
+Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi script làm gọn nhịp đọc khoảng 16 ký tự/giây, nên **tổng lời đọc 750–950 ký tự, tuyệt đối không quá 1.150** (≈ 75 giây). Đếm ký tự trước khi gửi duyệt. Nếu vượt thì cắt chi tiết kỹ thuật và câu nhắc lại, giữ MÓC, con số chính, 3 ý và CÂU KẾT. Tin ít số liệu thì cứ để 40–45 giây, đừng kéo dài bằng câu chung chung. Tin quá nhiều ý thì tách thành 2 video, mỗi video một khía cạnh, đăng cách nhau.
 
 ## Bước 2b — BẮT BUỘC: gửi kịch bản cho anh Trung duyệt, chờ "OK" rồi mới dựng
 
@@ -96,7 +96,33 @@ Kiểm tra dòng "Mốc cảnh": cảnh nào ngắn bất thường (dưới ~3 
 
 ## Bước 4 — Chọn video nền cho từng cảnh
 
-Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu hỏi), mỗi cảnh 5–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
+Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu kết), mỗi cảnh 5–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
+
+### 4b — Ảnh báo chí (khi cần hình thật của địa điểm trong tin)
+
+Khi video nền miễn phí không có hình đúng địa điểm (khu tái định cư, dự án, công trình cụ thể), lấy ảnh trong chính các bài báo đã dẫn:
+- Chụp khung đầu bài (tiêu đề, tác giả, ngày đăng) và tải ảnh trong bài bằng Playwright (mở trang, cuộn hết, lấy `img` rộng từ 700px, giữ nguyên watermark của báo).
+- Hiện ảnh trong **khung trắng bo góc** ngay trong `html` của cảnh, có dòng nguồn "Ảnh: Báo Tiền Phong" (hoặc "Báo X · dd/mm/yyyy" cho khung đầu bài). Mỗi cảnh tối đa 1 ảnh, cao 380–470px, đặt cùng 1–2 khối chữ.
+- Chỉ dùng ảnh nhà cửa, đường sá, công trình, toàn cảnh. **Không dùng ảnh có mặt người dân** hay chân dung quan chức; không dùng ảnh quảng cáo chèn trong trang.
+- Ghi tên báo vào `source` của spec và dòng nguồn trong `thong-tin.txt`.
+
+### 4c — Bản đồ động có đường chạy (khi tin nói về vị trí, quãng đường, tuyến mới)
+
+Dùng `scripts/ban-do/make_map.py` (Remotion + nền OpenStreetMap) để xuất một đoạn mp4 1080×1920 làm video nền cho cảnh:
+```
+python3 <skill>/scripts/ban-do/make_map.py ban-do.json            # xuất mp4 (lần đầu tự cài Remotion, ~2 phút)
+python3 <skill>/scripts/ban-do/make_map.py ban-do.json --still 7  # xem trước 1 khung ở giây 7
+```
+Mô tả `ban-do.json` (mẫu đầy đủ trong đầu file `make_map.py`):
+- `points`: tên điểm → [vĩ độ, kinh độ]. Lấy tọa độ bằng Nominatim (`https://nominatim.openstreetmap.org/search?format=json&countrycodes=vn&q=...`, có User-Agent, mỗi lần cách nhau 1 giây). Công trình đang xây (cầu, đường mới) thường có trong OSM với loại `construction`.
+- `routes`: `"road"` đi theo đường thật (OSRM, in ra số km và phút ô tô để đối chiếu); `"line"` nối thẳng, dùng cho cầu, tuyến đang xây hoặc dự kiến. Đường hiện tại màu trắng `#e2e8f0`, đường mới/dự kiến màu vàng `#f5c542`. `start`/`end` tính bằng giây.
+- `markers` (điểm mốc có nhãn, `side` trái/phải, `ly` đẩy nhãn lên/xuống khi chồng nhau, `pulse` cho điểm chính) và `chips` (nhãn số liệu, ví dụ "~20 km · xe buýt ~30 phút").
+- `camera`: các mốc `{"t", "fit": [các điểm], "zoom"}`; script tự canh bản đồ vào vùng an toàn (tránh header TikTok và phụ đề).
+- `seconds`: bằng độ dài cảnh (xem "Mốc cảnh" khi chạy `--preview`).
+
+Trong spec video, cảnh bản đồ dùng `"broll": "broll/bando.mp4"` và `html` chỉ để 1 dòng `kick` ngắn (bản đồ đã có nhãn). Nhãn trên bản đồ chỉ ghi số liệu có nguồn hoặc tính từ OSRM (ghi "~"); không vẽ tuyến dự kiến nếu chưa có vị trí chính thức. Giữ dòng "© OpenStreetMap contributors" trên hình.
+
+**HyperFrames (HeyGen)**: dùng được qua kết nối `compose` để dựng cảnh đồ họa chuyển động dạng sơ đồ (không phải bản đồ thật) khi cần phong cách khác; render trên mây mất vài phút và tốn credit HeyGen. Bản đồ cần đúng vị trí thì luôn dùng Remotion ở trên.
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
@@ -132,7 +158,7 @@ Viết `spec.json` theo mẫu `examples/knight-frank.json`:
   `<div class="h0">Đất bỏ hoang: thuế <span class="gold">gấp 7 lần</span></div><div class="hooksub" data-fx="up" data-at="0.8">Ai đang giữ đất ở Hà Nội cần nghe ngay</div>`
   Khối `h0` (≤ 8 từ, in hoa tự động) **không gắn `data-fx`**, để chữ có ngay ở khung hình đầu tiên (TikTok lấy khung này làm ảnh xem trước trên bảng tin). Cảnh 1 chỉ bao câu MÓC.
 - Ở 3 cảnh ý: **không** thêm `"step"` (không hiện bộ đếm); mở cảnh bằng khối `kick` là câu hỏi ngắn của ý đó.
-- Cảnh cuối: `<div class="kick" …>Góc nhìn của Trung</div><div class="ask" data-fx="pop" data-at="0.3">Câu hỏi ngắn?<small>Bình luận nhé</small></div>`.
+- Cảnh cuối: `<div class="kick" …>Góc nhìn của Trung</div><div class="ask" data-fx="pop" data-at="0.3">Câu chốt ngắn!</div>`.
 - `date` (dd.mm.yyyy hôm nay), `source` ("Nguồn: … · Tên báo dd/mm/yyyy"), `voice`, `music`, `avatar`, `out`.
 - `lines`: đúng các câu ở Bước 2, cùng thứ tự (dùng làm phụ đề).
 - `highlight`: từ khóa tô vàng trong phụ đề (số được tô tự động).
@@ -192,7 +218,7 @@ Kiểm tra ảnh xem trước: ảnh giây 0 phải thấy ngay chân dung và c
 - **Caption** (đặt lên đầu `thong-tin.txt` và tin nhắn để anh copy dán thẳng; **không bao giờ dùng tên file hay slug làm caption**):
   - Dòng 1: nhắc lại câu móc, có con số.
   - Dòng 2: một câu nói rõ người xem được gì khi xem hết ("3 nhóm bị ảnh hưởng, nhóm thứ 3 nhiều người không biết").
-  - Dòng 3: câu hỏi kết, giống câu cuối trong video.
+  - Dòng 3: câu chốt, giống câu cuối trong video (không kêu gọi bình luận).
   - Hashtag: 4–5 thẻ đúng chủ đề, luôn có `#batdongsanhanoi` và `#buonchuyennhadat`, cộng 2–3 thẻ theo tin (ví dụ `#luatdatdai` `#thuedat` `#chungcuhanoi`). **Không dùng** `#xuhuong`, `#xuhuongtiktok`, `#trendingnow`: các thẻ này không giúp TikTok hiểu video thuộc chủ đề nào.
 - Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption ở trên, dòng "Video nền: Pexels", nguồn bài báo, và gợi ý giờ đăng (11h30–12h30 hoặc 19h30–21h30, tối đa 2 video/ngày, cách nhau ít nhất 4 tiếng).
 - Chạy tự động theo lịch: báo ngắn tiêu đề video đã dựng, credit đã dùng và lỗi nếu có.

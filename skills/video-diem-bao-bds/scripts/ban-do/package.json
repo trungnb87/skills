@@ -1,0 +1,11 @@
+{
+  "name": "ban-do-dong",
+  "private": true,
+  "description": "Bản đồ động có đường chạy cho video điểm báo BĐS (Remotion)",
+  "dependencies": {
+    "@remotion/cli": "^4",
+    "react": "^18",
+    "react-dom": "^18",
+    "remotion": "^4"
+  }
+}
