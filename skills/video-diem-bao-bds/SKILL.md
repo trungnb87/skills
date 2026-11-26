@@ -55,11 +55,11 @@ Rút ra từ số liệu kênh 21–25/11/2026: video 56 giây về thuế đấ
 | Giọng nhân bản "Trung BĐS" | ElevenLabs, `voice_id = LXjvSaudzF11FKObF2RB`, model `eleven_v4`. Cần kết nối ElevenLabs trong Claude. |
 | Ảnh chân dung (đã cắt tròn, làm sáng) | `assets/avatar.png` (ảnh gốc `assets/chan-dung-goc.jpg`; làm lại bằng `scripts/make_avatar.py`) |
 | 10 bản nhạc nền EPIC | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
-| Video nền | Pexels qua công cụ `vidiq_find_broll` (1 credit vidIQ/lần tìm). Nếu có thư mục `~/Movies/diem-bao-bds/broll-envato` trên máy anh thì ưu tiên lấy từ đó. |
+| Video nền | **Chế độ máy anh (mặc định):** `dung.py` tự tìm trên **Pixabay** (API miễn phí, `PIXABAY_API_KEY` trong `cau-hinh.env`), dùng **Pexels** thay nếu có `PEXELS_API_KEY`; Claude chỉ ghi `broll_query` cho từng cảnh. **Chế độ cloud:** Pexels qua công cụ `vidiq_find_broll` (1 credit vidIQ/lần tìm). Nếu có thư mục `~/Movies/diem-bao-bds/broll-envato` trên máy anh thì ưu tiên lấy từ đó. |
 | Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages`; Node.js 18+ cho bản đồ động (Remotion tự cài khi chạy lần đầu) |
 
 Tên miền phải được cho phép trong claude.ai › Settings › Capabilities (thiếu cái nào thì tải sẽ báo 403, nhắc anh Trung thêm đúng tên miền đó):
-`videos.pexels.com`, `api.elevenlabs.io`, `elevenlabsusercontent.com`, `assets.vidiq.com`, `ai-music-tracks.s3.us-east-1.amazonaws.com`.
+`videos.pexels.com`, `api.elevenlabs.io`, `elevenlabsusercontent.com`, `assets.vidiq.com`, `ai-music-tracks.s3.us-east-1.amazonaws.com` (chế độ cloud). Chế độ máy anh gọi thẳng `pixabay.com`, `api.pexels.com`, `api.elevenlabs.io` từ Mac nên không cần cấu hình gì trong Claude.
 
 ## Bước 1 — Chọn tin, kiểm trùng, đọc tin và kiểm số liệu
 
@@ -120,7 +120,10 @@ Kiểm tra dòng "Mốc cảnh": cảnh nào ngắn bất thường (dưới ~3 
 
 ## Bước 4 — Chọn video nền cho từng cảnh
 
-Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu kết), mỗi cảnh 5–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
+Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu kết), mỗi cảnh 5–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro...
+
+- **Chế độ máy anh:** không tìm video, chỉ ghi `"broll_query": ["từ khóa chính", "từ khóa dự phòng"]` (tiếng Anh) cho từng cảnh; `dung.py` tự tìm trên Pixabay (hoặc Pexels nếu có key), chọn clip dọc và không lặp. Từ khóa nên có "Vietnam"/"Hanoi" khi cảnh cần bối cảnh Việt Nam, và một từ khóa dự phòng chung hơn.
+- **Chế độ cloud:** tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
 
 ### 4b — Ảnh báo chí (khi cần hình thật của địa điểm trong tin)
 
@@ -236,7 +239,7 @@ Kiểm tra ảnh xem trước: ảnh giây 0 phải thấy ngay chân dung và c
 - Mỗi video có **một thư mục riêng** trong `~/Movies/diem-bao-bds/`, đặt tên `YYYY-MM-DD-<ten-video>` (ngày dựng + tên không dấu, ví dụ `2026-11-21-xang-giam-30-nha-dat-duoc-loi-gi`). Trong thư mục có đủ:
   - `<ten-video>.mp4`: video
   - `<ten-video>-cover.jpg`: ảnh cover
-  - `thong-tin.txt`: tiêu đề TikTok, caption, hashtag, dòng "Video nền: Pexels", nguồn bài báo, credit đã dùng
+  - `thong-tin.txt`: tiêu đề TikTok, caption, hashtag, dòng "Video nền: Pixabay" hoặc "Pexels" (đúng nguồn đã dùng), nguồn bài báo, credit đã dùng
   Các bản sửa của cùng một video (v2, v3…) để chung thư mục đó, không để file lẻ ở ngoài thư mục `diem-bao-bds`.
 - Gửi video, cover và `thong-tin.txt` bằng SendUserFile. Nếu máy anh đang kết nối, lưu cả ba vào thư mục riêng ở trên bằng `device_commit_files` (dùng `fileUuid` từ SendUserFile, `devicePath` = `~/Movies/diem-bao-bds/<thu-muc>/<ten-file>`; công cụ tự tạo thư mục). Nếu máy không kết nối, báo anh rằng file chỉ có trong chat.
 - **Caption** (đặt lên đầu `thong-tin.txt` và tin nhắn để anh copy dán thẳng; **không bao giờ dùng tên file hay slug làm caption**):
@@ -244,11 +247,11 @@ Kiểm tra ảnh xem trước: ảnh giây 0 phải thấy ngay chân dung và c
   - Dòng 2: một câu nói rõ người xem được gì khi xem hết ("3 nhóm bị ảnh hưởng, nhóm thứ 3 nhiều người không biết").
   - Dòng 3: câu chốt, giống câu cuối trong video (không kêu gọi bình luận).
   - Hashtag: 4–5 thẻ đúng chủ đề, luôn có `#batdongsanhanoi` và `#buonchuyennhadat`, cộng 2–3 thẻ theo tin (ví dụ `#luatdatdai` `#thuedat` `#chungcuhanoi`). **Không dùng** `#xuhuong`, `#xuhuongtiktok`, `#trendingnow`: các thẻ này không giúp TikTok hiểu video thuộc chủ đề nào.
-- Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption ở trên, dòng "Video nền: Pexels", nguồn bài báo, và gợi ý giờ đăng (11h30–12h30 hoặc 19h30–21h30, tối đa 2 video/ngày, cách nhau ít nhất 4 tiếng).
+- Kèm trong tin nhắn: tiêu đề TikTok (IN HOA), caption ở trên, dòng nguồn video nền (Pixabay/Pexels), nguồn bài báo, và gợi ý giờ đăng (11h30–12h30 hoặc 19h30–21h30, tối đa 2 video/ngày, cách nhau ít nhất 4 tiếng).
 - Chạy tự động theo lịch: báo ngắn tiêu đề video đã dựng, credit đã dùng và lỗi nếu có.
 
 ## Chi phí mỗi video (45–60 giây)
 
 - ElevenLabs (`eleven_v4`, tính cả thẻ cảm xúc): khoảng **1.300 credit/1.000 ký tự lời đọc** (đo thực tế 26/11/2026: Thư Lâm 1.119 ký tự = 1.474 credit). Video 45–60 giây ≈ 1.100–1.300 credit; 1 phút ≈ 1.500; 2,5 phút ≈ 2.500. Ghi ước tính này trong tin gửi duyệt. Chép lời để căn mốc câu: 0 credit. Báo anh Trung khi credit tháng còn dưới 5.000.
-- vidIQ: ~5–7 credit tìm video nền (gói 2.000 credit/tháng).
+- Video nền: chế độ máy anh dùng Pixabay/Pexels API, miễn phí; chế độ cloud tốn ~8–15 credit vidIQ (1 credit/lần tìm, gói 2.000 credit/tháng).
 - Nhạc nền: dùng lại thư viện, không tốn thêm.
