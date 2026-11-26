@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Trình sửa video · Trung - Buôn chuyện nhà đất</title>
+<style>
+body{margin:0;background:#0b1220;color:#e5e9f0;font:15px/1.5 -apple-system,"Inter",system-ui,sans-serif}
+.wrap{max-width:820px;margin:40px auto;padding:0 20px}
+h1{font-size:24px;margin:0 0 4px}.sub{color:#8b97ab;margin-bottom:24px}
+a.v{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;margin:8px 0;background:#141e30;border:1px solid #223049;border-radius:12px;color:#e5e9f0;text-decoration:none}
+a.v:hover{border-color:#f5c542}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:#223049;color:#9fb0c8}
+.tag.ok{background:#16382c;color:#5be3b0}
+.empty{color:#8b97ab;padding:30px 0}
+</style></head><body><div class="wrap">
+<h1>Trình sửa video</h1><div class="sub">Chọn video để sửa chữ, hiệu ứng, video nền, độ dài, nhạc, rồi dựng lại ngay trên máy.</div>
+<div id="list"></div></div>
+<script>
+fetch('/api/videos').then(r=>r.json()).then(vs=>{
+  const L=document.getElementById('list');
+  if(!vs.length){L.innerHTML='<div class="empty">Chưa có video nào trong thư mục diem-bao-bds.</div>';return;}
+  vs.forEach(v=>{const a=document.createElement('a');a.className='v';
+    a.href=v.ready?'/edit?d='+encodeURIComponent(v.name):'#';
+    if(!v.ready)a.onclick=e=>{e.preventDefault();alert('Video này chưa dựng lần nào. Bấm đúp DUNG-VIDEO.command trước, rồi quay lại sửa.');};
+    a.innerHTML=`<span>${v.name}</span><span class="tag ${v.mp4?'ok':''}">${v.mp4?'đã dựng':(v.ready?'có giọng, chưa có video':'chưa dựng')}</span>`;
+    L.appendChild(a);});
+});
+</script></body></html>

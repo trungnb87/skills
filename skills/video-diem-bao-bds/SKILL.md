@@ -35,7 +35,8 @@ Sau khi anh OK kịch bản:
 2. Lưu vào máy anh: `~/Movies/diem-bao-bds/YYYY-MM-DD-<ten-khong-dau>/spec.json` bằng `device_commit_files` (viết file vào `/mnt/user-data/outputs/` trước). Nếu thư mục `~/Movies/diem-bao-bds` chưa được kết nối với phiên chat, gọi `device_request_folder_access` cho đúng thư mục đó. Máy không kết nối được thì gửi `spec.json` bằng SendUserFile và dặn anh bỏ vào thư mục mới trong `~/Movies/diem-bao-bds/`.
 3. Nhắn anh ngắn gọn: tên thư mục, **"Anh bấm đúp DUNG-VIDEO.command để dựng"**, và caption để sẵn (đã có trong thong-tin.txt sau khi dựng).
 4. Anh nhờ sửa video: chỉ sửa `spec.json` (đọc bản trên máy anh bằng `device_stage_files` nếu cần, vì máy đã ghi thêm tên file b-roll vào đó), lưu lại, dặn anh xóa file .mp4 cũ rồi bấm đúp DUNG-VIDEO.command. Giọng có sẵn được dùng lại. Đổi lời đọc thì dặn anh chạy với `--lam-lai-giong` (tốn credit ElevenLabs).
-5. Anh báo lỗi "Chỉ tìm thấy … khoảng nghỉ": nhờ anh gửi dòng "Mốc câu" hoặc file voice.mp3, rồi thêm `"line_breaks"` vào spec (Bước 3).
+5. Anh muốn tự chỉnh sau khi dựng (chữ, hiệu ứng, video nền, độ dài, nhạc): nhắc anh bấm đúp **`SUA-VIDEO.command`** (trình sửa trong trình duyệt, xem trước trực tiếp, lưu `spec.json` kèm bản sao lưu trong `_edit/`, dựng lại ngay; không tốn credit). Trình sửa dùng `build_video.py --prep` để xem trước và `"drop_lines": [chỉ số câu]` để cắt câu khỏi video mà không tạo lại giọng.
+6. Anh báo lỗi "Chỉ tìm thấy … khoảng nghỉ": nhờ anh gửi dòng "Mốc câu" hoặc file voice.mp3, rồi thêm `"line_breaks"` vào spec (Bước 3).
 
 Khi sửa script trong thư mục skill này (`dung.py`, `scripts/`, `assets/`), nhắc anh cập nhật bản `_cong-cu` trên máy (Claude chép đè các file đã đổi bằng `device_commit_files`, **không ghi đè `cau-hinh.env`, `.venv`, `.trang-thai.json`**).
 

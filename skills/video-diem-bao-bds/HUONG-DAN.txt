@@ -67,3 +67,16 @@ Muốn xem trước bố cục trước khi dựng (nhanh, vài giây):
 - "Chỉ tìm thấy ... khoảng nghỉ": giọng đọc thiếu chỗ ngắt câu.
   Gửi Claude dòng lỗi, Claude sẽ thêm "line_breaks" vào spec.json.
 - Lỗi khác: chụp màn hình cửa sổ Terminal gửi Claude.
+
+5. SỬA VIDEO SAU KHI DỰNG (kiểu CapCut, không tốn credit)
+   Bấm đúp SUA-VIDEO.command → trình duyệt mở trang "Trình sửa video" → chọn video.
+   - Bên trái: xem trước có giọng, nhạc, video nền, chữ y như bản dựng; bấm ▶ hoặc phím cách để chạy,
+     bấm số cảnh trên thanh thời gian để nhảy tới cảnh đó.
+   - Tab "Cảnh đang chọn": sửa chữ trên màn hình, hiệu ứng, lúc hiện, cỡ chữ, nhấn mạnh; thêm/xóa khối chữ;
+     bỏ dấu tích một câu để cắt hẳn câu đó (video ngắn lại); đổi video nền, đoạn bắt đầu, kiểu chuyển cảnh.
+   - Tab "Cài đặt chung": tốc độ đọc, khoảng nghỉ, nhạc nền, âm lượng nhạc, màu loại tin, dòng nguồn, cover, caption.
+   - Bấm "Lưu & dựng lại video": máy dựng lại (3–6 phút), xong có nút "Xem video mới".
+   Mỗi lần lưu, bản spec cũ được cất trong thư mục _edit của video. Sửa chữ phụ đề không đổi giọng đọc;
+   muốn đổi lời đọc thì nhờ Claude sửa kịch bản rồi dựng với --lam-lai-giong.
+   Giữ cửa sổ Terminal mở trong lúc sửa; đóng cửa sổ để tắt trình sửa.
+
