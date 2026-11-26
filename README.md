@@ -5,7 +5,7 @@ Kho lưu skill Claude dùng cho công việc bất động sản:
 | Skill | Việc làm |
 |---|---|
 | `kich-ban-tiktok-bds` | Viết kịch bản TikTok BĐS Hà Nội để Trung tự đọc: 5 tin nóng 24–48 giờ, hoặc 1 bài phân tích vĩ mô – vi mô – luật pháp tác động tới BĐS Việt Nam, Hà Nội và 4 phân khúc (thấp, trung, cao cấp, hạng sang). Kiểm chứng số liệu, có mốc so sánh, viết văn nói. Chỉ viết kịch bản, không tự dựng video |
-| `video-diem-bao-bds` | Dựng video TikTok 9:16 dài 45–60 giây theo công thức hiển thị 3–3–1 (3 giây móc có chân dung, 3 ý đánh số, 1 câu chốt kết; màu theo loại tin) từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, 10 bản nhạc nền EPIC theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover |
+| `video-diem-bao-bds` | Dựng video TikTok 9:16 dài 45–60 giây theo công thức hiển thị 3–3–1 (3 giây móc có chân dung, 3 ý, 1 câu chốt kết; màu theo loại tin) từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, ảnh báo chí có dẫn nguồn, bản đồ động có đường chạy (Remotion), 10 bản nhạc nền EPIC theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover |
 
 ## Cài vào Claude Code (một lần)
 

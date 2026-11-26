@@ -32,7 +32,7 @@ Rút ra từ số liệu kênh 21–25/11/2026: video 56 giây về thuế đấ
 | Ảnh chân dung (đã cắt tròn, làm sáng) | `assets/avatar.png` (ảnh gốc `assets/chan-dung-goc.jpg`; làm lại bằng `scripts/make_avatar.py`) |
 | 10 bản nhạc nền EPIC | `assets/nhac-nen/` (bảng chọn mood ở Bước 5) |
 | Video nền | Pexels qua công cụ `vidiq_find_broll` (1 credit vidIQ/lần tìm). Nếu có thư mục `~/Movies/diem-bao-bds/broll-envato` trên máy anh thì ưu tiên lấy từ đó. |
-| Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages` |
+| Phần mềm | ffmpeg, Google Chrome/Chromium, `pip install playwright --break-system-packages`; Node.js 18+ cho bản đồ động (Remotion tự cài khi chạy lần đầu) |
 
 Tên miền phải được cho phép trong claude.ai › Settings › Capabilities (thiếu cái nào thì tải sẽ báo 403, nhắc anh Trung thêm đúng tên miền đó):
 `videos.pexels.com`, `api.elevenlabs.io`, `elevenlabsusercontent.com`, `assets.vidiq.com`, `ai-music-tracks.s3.us-east-1.amazonaws.com`.
@@ -97,6 +97,32 @@ Kiểm tra dòng "Mốc cảnh": cảnh nào ngắn bất thường (dưới ~3 
 ## Bước 4 — Chọn video nền cho từng cảnh
 
 Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu kết), mỗi cảnh 5–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro... Tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
+
+### 4b — Ảnh báo chí (khi cần hình thật của địa điểm trong tin)
+
+Khi video nền miễn phí không có hình đúng địa điểm (khu tái định cư, dự án, công trình cụ thể), lấy ảnh trong chính các bài báo đã dẫn:
+- Chụp khung đầu bài (tiêu đề, tác giả, ngày đăng) và tải ảnh trong bài bằng Playwright (mở trang, cuộn hết, lấy `img` rộng từ 700px, giữ nguyên watermark của báo).
+- Hiện ảnh trong **khung trắng bo góc** ngay trong `html` của cảnh, có dòng nguồn "Ảnh: Báo Tiền Phong" (hoặc "Báo X · dd/mm/yyyy" cho khung đầu bài). Mỗi cảnh tối đa 1 ảnh, cao 380–470px, đặt cùng 1–2 khối chữ.
+- Chỉ dùng ảnh nhà cửa, đường sá, công trình, toàn cảnh. **Không dùng ảnh có mặt người dân** hay chân dung quan chức; không dùng ảnh quảng cáo chèn trong trang.
+- Ghi tên báo vào `source` của spec và dòng nguồn trong `thong-tin.txt`.
+
+### 4c — Bản đồ động có đường chạy (khi tin nói về vị trí, quãng đường, tuyến mới)
+
+Dùng `scripts/ban-do/make_map.py` (Remotion + nền OpenStreetMap) để xuất một đoạn mp4 1080×1920 làm video nền cho cảnh:
+```
+python3 <skill>/scripts/ban-do/make_map.py ban-do.json            # xuất mp4 (lần đầu tự cài Remotion, ~2 phút)
+python3 <skill>/scripts/ban-do/make_map.py ban-do.json --still 7  # xem trước 1 khung ở giây 7
+```
+Mô tả `ban-do.json` (mẫu đầy đủ trong đầu file `make_map.py`):
+- `points`: tên điểm → [vĩ độ, kinh độ]. Lấy tọa độ bằng Nominatim (`https://nominatim.openstreetmap.org/search?format=json&countrycodes=vn&q=...`, có User-Agent, mỗi lần cách nhau 1 giây). Công trình đang xây (cầu, đường mới) thường có trong OSM với loại `construction`.
+- `routes`: `"road"` đi theo đường thật (OSRM, in ra số km và phút ô tô để đối chiếu); `"line"` nối thẳng, dùng cho cầu, tuyến đang xây hoặc dự kiến. Đường hiện tại màu trắng `#e2e8f0`, đường mới/dự kiến màu vàng `#f5c542`. `start`/`end` tính bằng giây.
+- `markers` (điểm mốc có nhãn, `side` trái/phải, `ly` đẩy nhãn lên/xuống khi chồng nhau, `pulse` cho điểm chính) và `chips` (nhãn số liệu, ví dụ "~20 km · xe buýt ~30 phút").
+- `camera`: các mốc `{"t", "fit": [các điểm], "zoom"}`; script tự canh bản đồ vào vùng an toàn (tránh header TikTok và phụ đề).
+- `seconds`: bằng độ dài cảnh (xem "Mốc cảnh" khi chạy `--preview`).
+
+Trong spec video, cảnh bản đồ dùng `"broll": "broll/bando.mp4"` và `html` chỉ để 1 dòng `kick` ngắn (bản đồ đã có nhãn). Nhãn trên bản đồ chỉ ghi số liệu có nguồn hoặc tính từ OSRM (ghi "~"); không vẽ tuyến dự kiến nếu chưa có vị trí chính thức. Giữ dòng "© OpenStreetMap contributors" trên hình.
+
+**HyperFrames (HeyGen)**: dùng được qua kết nối `compose` để dựng cảnh đồ họa chuyển động dạng sơ đồ (không phải bản đồ thật) khi cần phong cách khác; render trên mây mất vài phút và tốn credit HeyGen. Bản đồ cần đúng vị trí thì luôn dùng Remotion ở trên.
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
