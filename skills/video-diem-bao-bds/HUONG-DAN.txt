@@ -38,7 +38,8 @@ Key chỉ nằm trên máy anh. Không gửi key qua chat cho ai, kể cả Clau
    (ví dụ 2026-11-27-thue-dat-bo-hoang/spec.json).
 4) Anh bấm đúp DUNG-VIDEO.command. Máy tự:
    - tạo giọng đọc (tốn credit ElevenLabs như trước, chỉ 1 lần mỗi video)
-   - tải video nền trên Pixabay, dựng bản đồ động nếu kịch bản có cảnh bản đồ (lần đầu tự cài thêm, mất vài phút)
+   - tải video nền trên Pixabay, dựng bản đồ động nếu kịch bản có cảnh bản đồ
+     (cần cài Remotion 1 lần: bấm đúp CAI-BAN-DO.command; chưa cài thì lần dựng bản đồ đầu tiên tự cài)
    - chọn nhạc EPIC theo loại tin, không trùng 3 video gần nhất
    - dựng video, cover, thong-tin.txt (caption + hashtag), rồi mở thư mục.
    Video 1 phút dựng mất khoảng 3–6 phút. Có nhiều video chờ thì máy dựng lần lượt.
