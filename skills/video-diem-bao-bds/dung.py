@@ -4,7 +4,8 @@
 Claude chỉ viết kịch bản và file spec.json (đặt trong một thư mục video).
 Script này tự làm phần còn lại:
   1. Tạo giọng đọc bằng giọng nhân bản trên ElevenLabs (chỉ tạo 1 lần, có rồi thì dùng lại)
-  2. Tìm và tải video nền miễn phí trên Pixabay (hoặc Pexels nếu có key) theo từ khóa "broll_query" của từng cảnh
+  2. Tìm và tải video nền miễn phí trên Pixabay (hoặc Pexels nếu có key) theo từ khóa "broll_query" của từng cảnh;
+     cảnh nào có "ban_do" thì dựng bản đồ động có đường chạy (Remotion + OpenStreetMap)
   3. Chọn nhạc nền EPIC theo loại tin, xoay vòng để không trùng video trước
   4. Dựng video MP4, ảnh cover và file thong-tin.txt (caption, hashtag)
 
@@ -212,6 +213,31 @@ def pixabay_search(query, key, page=1):
     return [v for _, v in vids]
 
 
+def make_maps(spec, base):
+    """Cảnh nào có "ban_do" (mô tả như ban-do.json, xem scripts/ban-do/make_map.py) thì dựng bản đồ động bằng Remotion."""
+    jobs = [(i, sc) for i, sc in enumerate(spec["scenes"]) if sc.get("ban_do")]
+    if not jobs:
+        return
+    env = dict(os.environ)
+    env["PATH"] = "/opt/homebrew/bin:/usr/local/bin:" + env.get("PATH", "")
+    if not shutil.which("npx", path=env["PATH"]):
+        fail("Chưa có Node.js để dựng bản đồ. Bấm đúp CAI-DAT.command để cài lại.")
+    (base / "broll").mkdir(exist_ok=True)
+    for i, sc in jobs:
+        rel = f"broll/bando-{i + 1}.mp4"
+        sc["broll"], sc["broll_offset"], sc["clear"] = rel, 0, True
+        sc.setdefault("html", "")
+        if (base / rel).exists():
+            continue
+        say(f"• Dựng bản đồ động cho cảnh {i + 1} (lần đầu tự cài Remotion, ~2–4 phút)…")
+        m = dict(sc["ban_do"]); m["out"] = rel; m.setdefault("seconds", 12)
+        mj = base / f"ban-do-{i + 1}.json"
+        mj.write_text(json.dumps(m, ensure_ascii=False, indent=1), encoding="utf-8")
+        r = subprocess.run([PY, str(SCRIPTS / "ban-do" / "make_map.py"), str(mj)], env=env)
+        if r.returncode or not (base / rel).exists():
+            fail(f"Dựng bản đồ cảnh {i + 1} lỗi (xem dòng phía trên). Chụp màn hình gửi Claude.")
+
+
 def get_broll(spec, base, env, st):
     used_now = set()
     need = [sc for sc in spec["scenes"] if not (sc.get("broll") and (base / sc["broll"]).exists())]
@@ -316,6 +342,7 @@ def write_info(spec, base, out, chars):
         "CAPTION (copy dán thẳng):", cap + ("\n\n" + tags if tags else ""), "",
         ("Video nền: Pexels" if any("pexels-" in str(sc.get("broll", "")) for sc in spec["scenes"]) else "Video nền: Pixabay"),
         spec.get("source", ""),
+        *(["Bản đồ: © OpenStreetMap contributors"] if any(sc.get("ban_do") for sc in spec["scenes"]) else []),
         f"Nhạc nền: {Path(spec['music']).name}",
         f"Credit ElevenLabs dùng lần này: ~{chars} ký tự" if chars else "Giọng đọc: dùng lại file có sẵn",
         "Gợi ý giờ đăng: 11h30–12h30 hoặc 19h30–21h30, tối đa 2 video/ngày, cách nhau ít nhất 4 tiếng.",
@@ -352,6 +379,7 @@ def run_job(base, env, preview=False, redo_voice=False):
         (base / spec["voice"]).unlink()
 
     chars = make_voice(spec, base, env)
+    make_maps(spec, base)
     get_broll(spec, base, env, st)
     say(f"• Nhạc nền: {Path(spec['music']).name}")
     spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
