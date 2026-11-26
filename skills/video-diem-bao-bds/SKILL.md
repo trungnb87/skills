@@ -1,18 +1,40 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (45–60 giây, tối đa 75 giây, công thức hiển thị 3–3–1) từ một tin bất động sản cho kênh TRUNG - buôn chuyện nhà đất của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo".
+description: Dựng video TikTok dọc 9:16 (45–60 giây, tối đa 75 giây, công thức hiển thị 3–3–1) từ một tin bất động sản cho kênh TRUNG - buôn chuyện nhà đất của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Mặc định Claude chỉ viết kịch bản và spec.json, máy Mac của anh tự tạo giọng và dựng (tiết kiệm credit Claude). Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo".
 ---
 
 # Video điểm báo BĐS
 
 Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh TikTok **TRUNG - buôn chuyện nhà đất** (@trungbuonchuyennhadat). Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
 
-Quy trình có **một bước duyệt bắt buộc**: viết xong kịch bản (Bước 2) thì gửi anh Trung duyệt (Bước 2b), anh OK mới tạo giọng và dựng.
+Quy trình có **một bước duyệt bắt buộc**: viết xong kịch bản (Bước 2) thì gửi anh Trung duyệt (Bước 2b), anh OK mới viết spec (chế độ máy anh) hoặc tạo giọng và dựng (chế độ cloud).
 
 Kết quả mỗi lần chạy:
 1. `<ten-video>.mp4`: 1080×1920, 30 fps, **mục tiêu 45–60 giây, tối đa 75 giây**, âm lượng chuẩn TikTok (-14 LUFS).
 2. `<ten-video>-cover.jpg`: ảnh cover TikTok 1080×1920.
 3. Caption theo công thức ở Bước 8 + 4–5 hashtag, gửi trong tin nhắn.
+
+## CHẾ ĐỘ MẶC ĐỊNH: DỰNG TRÊN MÁY ANH TRUNG (tiết kiệm credit Claude)
+
+Từ 27/11/2026 anh Trung dựng video bằng bộ công cụ trên Mac, ở `~/Movies/diem-bao-bds/_cong-cu/` (bản sao của chính thư mục skill này, có `dung.py`, `CAI-DAT.command`, `DUNG-VIDEO.command`, `HUONG-DAN.txt`). Máy tự tạo giọng (ElevenLabs API), tải video nền (Pexels API), chọn nhạc xoay vòng, dựng video, cover và `thong-tin.txt`. **Claude chỉ làm Bước 1, 2, 2b, rồi viết spec.json theo mục dưới đây.** Không gọi `creative_generate_speech`, `vidiq_find_broll`, không tải b-roll, không chạy `build_video.py`, không xem ảnh xem trước: những việc đó tốn nhiều credit Claude nhất.
+
+Chỉ dùng quy trình dựng trên cloud (Bước 3–8 ở dưới) khi anh nói rõ "dựng trên cloud/dựng giúp anh", hoặc khi video cần bản đồ động (Bước 4c) hay ảnh báo chí (Bước 4b) mà máy anh chưa làm được.
+
+Sau khi anh OK kịch bản:
+1. Viết `spec.json` theo mẫu `examples/mau-spec-may-nha.json`. Khác với spec cloud:
+   - Mỗi cảnh **không có `broll`**, thay bằng `"broll_query": ["từ khóa tiếng Anh chính", "từ khóa dự phòng"]` (cảnh dọc, đúng chủ đề cảnh; không người nói vào camera).
+   - `"music": "auto"` (máy tự chọn theo `theme`, tránh 3 bản dùng gần nhất); chỉ ghi tên file cụ thể, ví dụ `"04-epic-toi-cang-thang.mp3"`, khi tin cần sắc thái đặc biệt.
+   - Bỏ `voice`, `avatar`, `out`, `date` (máy tự điền; tên video lấy theo tên thư mục).
+   - Thêm `"tiktok_title"` (IN HOA), `"caption"` (mảng 3 dòng theo Bước 8), `"hashtags"` (mảng 4–5 thẻ).
+   - Lời đọc: máy tự gắn thẻ cảm xúc theo quy tắc ở Bước 3 (`[excited] [energetic]` cho câu móc, câu "Thứ nhất/hai/ba", câu kết; `[energetic]` cho câu "Lưu ý…"; còn lại `[cheerful] [energetic]`) và `[pause]` giữa các câu. Chỉ khi cần khác thì ghi `"voice_prompt"` đầy đủ.
+   - Các mục khác (`theme`, `source`, `highlight`, `cover`, `lines`, `scenes[].lines`, `scenes[].html`, `trans`, `voice_speed`…) giữ nguyên như Bước 6. Chữ trên màn hình vẫn phải theo các quy tắc 3–3–1 và vùng an toàn.
+   - Kiểm JSON hợp lệ (`python3 -m json.tool`) trước khi lưu.
+2. Lưu vào máy anh: `~/Movies/diem-bao-bds/YYYY-MM-DD-<ten-khong-dau>/spec.json` bằng `device_commit_files` (viết file vào `/mnt/user-data/outputs/` trước). Nếu thư mục `~/Movies/diem-bao-bds` chưa được kết nối với phiên chat, gọi `device_request_folder_access` cho đúng thư mục đó. Máy không kết nối được thì gửi `spec.json` bằng SendUserFile và dặn anh bỏ vào thư mục mới trong `~/Movies/diem-bao-bds/`.
+3. Nhắn anh ngắn gọn: tên thư mục, **"Anh bấm đúp DUNG-VIDEO.command để dựng"**, và caption để sẵn (đã có trong thong-tin.txt sau khi dựng).
+4. Anh nhờ sửa video: chỉ sửa `spec.json` (đọc bản trên máy anh bằng `device_stage_files` nếu cần, vì máy đã ghi thêm tên file b-roll vào đó), lưu lại, dặn anh xóa file .mp4 cũ rồi bấm đúp DUNG-VIDEO.command. Giọng có sẵn được dùng lại. Đổi lời đọc thì dặn anh chạy với `--lam-lai-giong` (tốn credit ElevenLabs).
+5. Anh báo lỗi "Chỉ tìm thấy … khoảng nghỉ": nhờ anh gửi dòng "Mốc câu" hoặc file voice.mp3, rồi thêm `"line_breaks"` vào spec (Bước 3).
+
+Khi sửa script trong thư mục skill này (`dung.py`, `scripts/`, `assets/`), nhắc anh cập nhật bản `_cong-cu` trên máy (Claude chép đè các file đã đổi bằng `device_commit_files`, **không ghi đè `cau-hinh.env`, `.venv`, `.trang-thai.json`**).
 
 ## Công thức hiển thị 3–3–1 (bắt buộc)
 

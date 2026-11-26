@@ -1,0 +1,5 @@
+cau-hinh.env
+.venv/
+.trang-thai.json
+__pycache__/
+_build/

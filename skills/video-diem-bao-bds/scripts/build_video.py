@@ -13,6 +13,8 @@ import base64, json, os, re, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+import sys as _s; _s.path.insert(0, str(HERE))
+from moitruong import add_fonts, launch_browser, has_rubberband
 FPS = 30
 W, H = 1080, 1920
 
@@ -112,7 +114,8 @@ def tighten_voice(voice, bounds, out, gap=0.3, speed=1.08, pad=0.06, pitch=1.0):
         if i + 1 < len(segs):
             fil += f"anullsrc=r=44100:cl=mono,atrim=0:{gap}[g{i}];"
             labels.append(f"[g{i}]")
-    fil += "".join(labels) + f"concat=n={len(labels)}:v=0:a=1," + (f"rubberband=tempo={speed}:pitch={pitch}:formant=preserved" if pitch != 1 else f"atempo={speed}") + "[out]"
+    fil += "".join(labels) + f"concat=n={len(labels)}:v=0:a=1," + (f"rubberband=tempo={speed}:pitch={pitch}:formant=preserved" if pitch != 1 and has_rubberband()
+         else (f"asetrate={44100*pitch:.0f},aresample=44100,atempo={speed/pitch:.4f}" if pitch != 1 else f"atempo={speed}")) + "[out]"
     r = sh(["ffmpeg", "-y", "-loglevel", "error", "-i", str(voice), "-filter_complex", fil, "-map", "[out]", str(out)])
     if r.returncode != 0:
         sys.exit("Lỗi khi làm gọn giọng đọc: " + r.stderr[-500:])
@@ -179,7 +182,7 @@ def build_html(spec, base, lines, scene_times, total):
     }
     for k, v in rep.items():
         tpl = tpl.replace(k, v)
-    return tpl
+    return add_fonts(tpl)
 
 
 def main():
@@ -220,9 +223,8 @@ def main():
         print(f"! Video dài {total}s, vượt mục tiêu 45–60s (tối đa 75s): cắt bớt ý.")
 
     from playwright.sync_api import sync_playwright
-    chrome = next((p for p in ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"] if os.path.exists(p)), None)
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path=chrome) if chrome else p.chromium.launch()
+        b = launch_browser(p)
         pg = b.new_page(viewport={"width": W, "height": H})
         pg.goto(page.as_uri()); pg.evaluate("document.fonts.ready")
 
