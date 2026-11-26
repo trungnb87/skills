@@ -100,22 +100,24 @@ Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu hỏi), mỗi 
 
 ## Bước 5 — Chọn nhạc nền theo mood của tin
 
-**Nhạc nền chỉ dùng dòng EPIC: mạnh mẽ, dồn dập, hứng khởi ngay từ giây đầu** (yêu cầu của anh Trung). Kho gồm 10 bản epic, nhịp 123–136 BPM, đã cắt dạo đầu nhỏ, dài 2–2,5 phút (đủ cho cả video; script tự mờ dần nhạc ở cuối). Không dùng nhạc lounge, lofi, jazz, deep house hay các kiểu chậm, nhẹ.
+**Nhạc nền chỉ dùng dòng EPIC, đúng phong cách bản mẫu anh Trung chọn** (video thuế Mỹ 35%, 26/11/2026): nhịp đều ~118 BPM, giọng Mi thứ, vòng hợp âm Em – C – G – D; dàn dây hoặc synth chạy liên tục nốt móc kép (16th) ngay từ giây đầu; bass rất sâu (sub ~35–45 Hz) đập đều nốt móc đơn; trống điện ảnh trầm, thưa nhưng to, nhịp chấm dôi; kèn đồng và hợp xướng ngân dài phía trên; cường độ giữ đều suốt bài, không có đoạn chùng. Không dùng nhạc lounge, lofi, jazz, deep house hay các kiểu chậm, nhẹ.
 
-| File | Sắc thái epic | Dùng cho |
+Kho có 10 bản theo công thức trên, đã cắt dạo đầu nhỏ (vào mạnh ngay giây đầu); bản nào bass mỏng đã được tăng sub-bass. Bản 02 dài ~50 giây (script tự nối vòng), các bản còn lại 2–2,5 phút.
+
+| File | Sắc thái | Dùng cho |
 |---|---|---|
-| `01-epic-trong-tran.mp3` | trống trận, dây dồn, kèn đồng anh hùng, hợp xướng | **mặc định**: luật mới, thuế, tin nóng |
-| `02-epic-hanh-dong-hien-dai.mp3` | hành động, bass synth, kèn horn | thị trường biến động, phân tích chính sách |
-| `03-epic-khai-hoan.mp3` | khải hoàn, tươi sáng, hợp xướng | tin tích cực, tăng trưởng, mở bán |
-| `04-epic-cang-thang.mp3` | tối, căng thẳng, trống trận, đồng hồ tích tắc | cảnh báo rủi ro, siết tín dụng, sai phạm |
-| `05-epic-a-dong.mp3` | taiko, nhị, sáo, chiêng | Việt Nam – Trung – Hàn – Nhật, dòng vốn châu Á |
-| `06-epic-rock-the-thao.mp3` | guitar điện, trống mạnh, dàn nhạc | tin bùng nổ, kỷ lục, cuộc đua giá |
-| `07-epic-bass-tuong-lai.mp3` | bass nặng, synth hiện đại, dàn nhạc | công nghệ, FDI, khu công nghiệp, đô thị mới |
-| `08-epic-phieu-luu.mp3` | phiêu lưu, dây phi nước đại, horn bay bổng | hạ tầng, metro, vành đai, cơ hội lớn |
-| `09-epic-piano-hy-vong.mp3` | piano dồn, dây nhanh, hy vọng | góc nhìn, người mua nhà, câu chuyện xã hội |
-| `10-epic-dem-nguoc-tin-nong.mp3` | đếm ngược, tích tắc, va đập lớn | hạn chót, luật sắp hiệu lực, mốc thời gian |
+| `01-epic-ban-tin-dan-day.mp3` | dàn dây dồn, kèn đồng, hợp xướng (sát bản mẫu nhất) | **mặc định**: luật mới, thuế, tin nóng |
+| `02-epic-synth-arp.mp3` | synth arpeggio dồn + dàn dây | tin ngắn, thị trường biến động |
+| `03-epic-taiko-horn.mp3` | taiko, horn Pháp, cello dồn | phân tích chính sách, vĩ mô |
+| `04-epic-toi-cang-thang.mp3` | tối, căng, sub-bass rất nặng | cảnh báo rủi ro, siết tín dụng, sai phạm |
+| `05-epic-hy-vong.mp3` | violin sáng, hy vọng | tin tích cực, người mua nhà |
+| `06-epic-dien-tu-hien-dai.mp3` | synth bass, trống điện tử, kèn | công nghệ, FDI, đô thị mới |
+| `07-epic-piano-dan-day.mp3` | piano dồn + dàn dây | góc nhìn, câu chuyện xã hội |
+| `08-epic-a-dong.mp3` | taiko, koto, nhị | Việt Nam – Trung – Hàn – Nhật, dòng vốn châu Á |
+| `09-epic-dem-nguoc.mp3` | tích tắc, va đập trầm | hạn chót, luật sắp hiệu lực |
+| `10-epic-khai-hoan.mp3` | khải hoàn, kèn fanfare | tăng trưởng, hạ tầng, cơ hội lớn |
 
-Đổi bản nhạc giữa các video liên tiếp (xoay vòng cả 10 bản, không dùng một bản 2 video liền). Muốn thêm bản mới: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 160`), prompt bắt đầu bằng "Epic …", ghi nhịp nhanh 124–134 BPM, mạnh ngay từ đầu. Nhạc tạo ra thường vẫn có vài đến vài chục giây dạo đầu nhỏ: đo RMS và cắt bỏ đoạn đó (bắt đầu đúng phách, fade-in 0,05 giây) trước khi lưu vào `assets/nhac-nen/`.
+Đổi bản nhạc giữa các video liên tiếp (xoay vòng cả 10 bản, không dùng một bản 2 video liền). Muốn thêm bản mới: `vidiq_generate_music` (25 credit vidIQ, `instrumental: true`, `durationSeconds: 160`), prompt giữ nguyên công thức: "Epic cinematic hybrid news music at a steady 118 BPM in E minor, chord loop Em – C – G – D. Relentless sixteenth-note string ostinato from the first second, deep pulsing eighth-note sub-bass, big low cinematic toms in a syncopated dotted rhythm, sustained heroic brass and choir pads. Constant full intensity, no breakdown." rồi chỉ đổi nhạc cụ hoặc sắc thái. Nhạc tạo ra thường có 10–40 giây dạo đầu nhỏ: đo RMS và cắt bỏ đoạn đó (bắt đầu đúng phách, fade-in 0,05 giây); nếu bass mỏng thì tăng sub-bass (`bass=g=5:f=60`) trước khi lưu vào `assets/nhac-nen/`.
 
 ## Bước 6 — Viết spec JSON
 
