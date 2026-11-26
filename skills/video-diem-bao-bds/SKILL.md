@@ -7,6 +7,8 @@ description: Dựng video TikTok dọc 9:16 (45–60 giây, tối đa 75 giây, 
 
 Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh TikTok **TRUNG - buôn chuyện nhà đất** (@trungbuonchuyennhadat). Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
 
+**Trước khi viết kịch bản, đọc `NOI-DUNG.md` (cùng thư mục)**: cách chọn góc, giọng văn, hình ảnh, mẫu tin duyệt mà anh Trung đã chốt. Khi anh chỉ gửi một đường link, làm theo mục 1 của file đó.
+
 Quy trình có **một bước duyệt bắt buộc**: viết xong kịch bản (Bước 2) thì gửi anh Trung duyệt (Bước 2b), anh OK mới viết spec (chế độ máy anh) hoặc tạo giọng và dựng (chế độ cloud).
 
 Kết quả mỗi lần chạy:
@@ -86,7 +88,7 @@ Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi
 
 ## Bước 2b — BẮT BUỘC: gửi kịch bản cho anh Trung duyệt, chờ "OK" rồi mới dựng
 
-Chưa được tạo giọng đọc, tìm video nền hay dựng gì khi anh Trung chưa duyệt kịch bản. Tạo giọng tốn ~700–1.000 credit ElevenLabs và không lấy lại được.
+Chưa được tạo giọng đọc, tìm video nền hay dựng gì khi anh Trung chưa duyệt kịch bản. Tạo giọng tốn ~1.300 credit ElevenLabs cho mỗi 1.000 ký tự và không lấy lại được.
 
 1. Gửi cho anh (SendUserMessage nếu đang giữa lượt làm việc) **một tin duy nhất**, gồm:
    - **Loại tin / màu** (`theme`), **câu móc** chữ lớn ở cảnh 1, tiêu đề ảnh cover và **caption** soạn sẵn theo Bước 8.
@@ -142,7 +144,7 @@ Mô tả `ban-do.json` (mẫu đầy đủ trong đầu file `make_map.py`):
 - `camera`: các mốc `{"t", "fit": [các điểm], "zoom"}`; script tự canh bản đồ vào vùng an toàn (tránh header TikTok và phụ đề).
 - `seconds`: bằng độ dài cảnh (xem "Mốc cảnh" khi chạy `--preview`).
 
-Trong spec video, cảnh bản đồ dùng `"broll": "broll/bando.mp4"` và `html` chỉ để 1 dòng `kick` ngắn (bản đồ đã có nhãn). Nhãn trên bản đồ chỉ ghi số liệu có nguồn hoặc tính từ OSRM (ghi "~"); không vẽ tuyến dự kiến nếu chưa có vị trí chính thức. Giữ dòng "© OpenStreetMap contributors" trên hình.
+Trong spec video, cảnh bản đồ dùng `"broll": "broll/bando.mp4"`, `"clear": true` (bỏ lớp phủ tối, không chỉnh màu, không zoom thêm) và `"html": ""` (bản đồ đã có nhãn; chữ thêm vào dễ đè lên điểm mốc). Đặt `seconds` bằng độ dài cảnh. Nhãn trên bản đồ chỉ ghi số liệu có nguồn hoặc tính từ OSRM (ghi "~"); không vẽ tuyến dự kiến nếu chưa có vị trí chính thức. Giữ dòng "© OpenStreetMap contributors" trên hình.
 
 **HyperFrames (HeyGen)**: dùng được qua kết nối `compose` để dựng cảnh đồ họa chuyển động dạng sơ đồ (không phải bản đồ thật) khi cần phong cách khác; render trên mây mất vài phút và tốn credit HeyGen. Bản đồ cần đúng vị trí thì luôn dùng Remotion ở trên.
 
@@ -247,6 +249,6 @@ Kiểm tra ảnh xem trước: ảnh giây 0 phải thấy ngay chân dung và c
 
 ## Chi phí mỗi video (45–60 giây)
 
-- ElevenLabs: ~700–1.000 credit (khoảng 900 credit/1.000 ký tự). Gói Starter 40.000 credit/tháng ≈ 40–50 video. Báo anh Trung khi credit tháng còn dưới 5.000.
+- ElevenLabs (`eleven_v4`, tính cả thẻ cảm xúc): khoảng **1.300 credit/1.000 ký tự lời đọc** (đo thực tế 26/11/2026: Thư Lâm 1.119 ký tự = 1.474 credit). Video 45–60 giây ≈ 1.100–1.300 credit; 1 phút ≈ 1.500; 2,5 phút ≈ 2.500. Ghi ước tính này trong tin gửi duyệt. Chép lời để căn mốc câu: 0 credit. Báo anh Trung khi credit tháng còn dưới 5.000.
 - vidIQ: ~5–7 credit tìm video nền (gói 2.000 credit/tháng).
 - Nhạc nền: dùng lại thư viện, không tốn thêm.

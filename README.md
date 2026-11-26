@@ -5,7 +5,7 @@ Kho lưu skill Claude dùng cho công việc bất động sản:
 | Skill | Việc làm |
 |---|---|
 | `kich-ban-tiktok-bds` | Viết kịch bản TikTok BĐS Hà Nội để Trung tự đọc: 5 tin nóng 24–48 giờ, hoặc 1 bài phân tích vĩ mô – vi mô – luật pháp tác động tới BĐS Việt Nam, Hà Nội và 4 phân khúc (thấp, trung, cao cấp, hạng sang). Kiểm chứng số liệu, có mốc so sánh, viết văn nói. Chỉ viết kịch bản, không tự dựng video |
-| `video-diem-bao-bds` | Dựng video TikTok 9:16 dài 45–60 giây theo công thức hiển thị 3–3–1 (3 giây móc có chân dung, 3 ý, 1 câu chốt kết; màu theo loại tin) từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, ảnh báo chí có dẫn nguồn, bản đồ động có đường chạy (Remotion), 10 bản nhạc nền EPIC theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover. Mặc định Claude chỉ viết kịch bản + spec.json, máy Mac tự dựng bằng `dung.py` (xem `HUONG-DAN.txt`) để tiết kiệm credit Claude |
+| `video-diem-bao-bds` | Dựng video TikTok 9:16 dài 45–60 giây theo công thức hiển thị 3–3–1 (3 giây móc có chân dung, 3 ý, 1 câu chốt kết; màu theo loại tin) từ một tin BĐS, gửi kịch bản để anh duyệt trước khi dựng: giọng nhân bản của Trung (ElevenLabs), ảnh chân dung, video nền, phụ đề, ảnh báo chí có dẫn nguồn, bản đồ động có đường chạy (Remotion), 10 bản nhạc nền EPIC theo mood, bộ hiệu ứng chữ và chuyển cảnh đa dạng, ảnh cover. Cách triển khai nội dung đã chốt (góc, giọng văn, hình ảnh, mẫu tin duyệt) nằm ở `NOI-DUNG.md`. Mặc định Claude chỉ viết kịch bản + spec.json, máy Mac tự dựng bằng `dung.py` (xem `HUONG-DAN.txt`) để tiết kiệm credit Claude |
 
 ## Cài vào Claude Code (một lần)
 

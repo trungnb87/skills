@@ -76,7 +76,7 @@ export const MapRoute: React.FC<MapProps> = (p) => {
         return <div key={k} style={{position: 'absolute', left: cxs, top: y + (c.dy ?? 0), transform: `translate(-50%,-50%) scale(${sp})`, whiteSpace: 'nowrap',
           background: c.color, color: '#0b1220', fontSize: 34, fontWeight: 800, borderRadius: 999, padding: '10px 26px', boxShadow: '0 8px 24px rgba(0,0,0,.5)'}}>{c.text}</div>;
       })}
-      <div style={{position: 'absolute', right: 70, bottom: 250, color: 'rgba(255,255,255,.55)', fontSize: 20}}>{p.attribution ?? '© OpenStreetMap contributors'}</div>
+      <div style={{position: 'absolute', left: 110, top: 1240, color: 'rgba(255,255,255,.6)', fontSize: 20}}>{p.attribution ?? '© OpenStreetMap contributors'}</div>
     </AbsoluteFill>
   );
 };
