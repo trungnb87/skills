@@ -156,7 +156,7 @@ def build_html(spec, base, lines, scene_times, total):
     parts = []
     for i, sc in enumerate(spec["scenes"]):
         cls = "scene hook" if (i == 0 and hook) else "scene"
-        attrs = (f' data-trans="{sc["trans"]}"' if sc.get("trans") else "") + (f' data-step="{sc["step"]}"' if sc.get("step") else "")
+        attrs = (f' data-trans="{sc["trans"]}"' if sc.get("trans") else "") + (f' data-step="{sc["step"]}"' if sc.get("step") else "") + (' data-clear="1"' if sc.get("clear") else "")
         inner = sc["html"]
         if i == 0 and hook:
             name_sub = spec.get("name_sub", NAME_SUB).lstrip("- ").strip()
@@ -240,9 +240,11 @@ def main():
         for i, sc in enumerate(spec["scenes"]):
             ln = round(scene_times[i]["out"] - scene_times[i]["in"], 3) if i + 1 < n else round(total - scene_times[i]["in"], 3)
             cmd += ["-stream_loop", "-1", "-ss", str(sc.get("broll_offset", 0)), "-t", str(ln), "-i", str(base / sc["broll"])]
+            # cảnh "clear" (bản đồ, đồ họa tự dựng): giữ nguyên khung hình, không chỉnh màu, không zoom
+            look = "" if sc.get("clear") else f"eq=saturation=0.85,"
+            zoom = "null" if sc.get("clear") else f"zoompan=z='min(1.0+0.0007*on,1.08)':d=1:s={W}x{H}:fps={FPS}"
             fil += (f"[{i}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1,"
-                    f"eq=saturation=0.85,trim=duration={ln},setpts=PTS-STARTPTS,"
-                    f"zoompan=z='min(1.0+0.0007*on,1.08)':d=1:s={W}x{H}:fps={FPS}[v{i}];")
+                    f"{look}trim=duration={ln},setpts=PTS-STARTPTS,{zoom}[v{i}];")
         fil += "".join(f"[v{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0[bg];"
         cmd += ["-f", "image2pipe", "-framerate", str(FPS), "-i", "-"]
         fil += f"[{n}:v]format=rgba[ov];[bg][ov]overlay=0:0:format=auto[vid];"

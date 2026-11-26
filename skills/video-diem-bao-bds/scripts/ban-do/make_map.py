@@ -20,7 +20,7 @@ import json, math, os, subprocess, sys, urllib.request, shutil, glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FPS = 30
-BOX = (90, 330, 990, 1430)   # vùng an toàn để đặt bản đồ: tránh header TikTok phía trên và phụ đề phía dưới
+BOX = (110, 540, 970, 1220)   # vùng an toàn để đặt các điểm: dưới header kênh (~500px) và trên phụ đề (~1280px)
 
 def chrome():
     for p in glob.glob('/opt/pw-browsers/chromium-*/chrome-linux64/chrome') + glob.glob(os.path.expanduser('~/.cache/ms-playwright/chromium-*/chrome-linux*/chrome')) + ['/usr/bin/google-chrome', '/usr/bin/chromium']:
@@ -47,28 +47,27 @@ def main(path):
         coords = coords[::max(1, len(coords) // 300)] + [coords[-1]]
         routes.append({'coords': coords, 'color': r.get('color', '#f5c542'), 'width': r.get('width', 13), 'from': round(r['start'] * FPS), 'to': round(r['end'] * FPS), 'dash': r.get('dash', False)})
     lats = [p[0] for p in allp]; lons = [p[1] for p in allp]
-    pad = 0.35
-    la0, la1 = min(lats) - (max(lats) - min(lats)) * pad - 0.01, max(lats) + (max(lats) - min(lats)) * pad + 0.01
-    lo0, lo1 = min(lons) - (max(lons) - min(lons)) * pad - 0.03, max(lons) + (max(lons) - min(lons)) * pad + 0.03
-    span = max(la1 - la0, lo1 - lo0)
-    z = 15 if span < 0.12 else 14 if span < 0.3 else 13 if span < 0.6 else 12 if span < 1.2 else 10
+    span = max(max(lats) - min(lats), max(lons) - min(lons))
+    z = 15 if span < 0.05 else 14 if span < 0.25 else 13 if span < 0.5 else 12 if span < 1.0 else 10
+    n = 2 ** z * 256
+    def gproj(lat, lon):   # tọa độ pixel toàn cầu ở mức zoom z
+        r = math.radians(lat); return ((lon + 180) / 360 * n, (1 - math.log(math.tan(r) + 1 / math.cos(r)) / math.pi) / 2 * n)
+    def gunproj(x, y):
+        return [math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * y / n)))), x / n * 360 - 180]
+    def fit(names, zoom=1.0):
+        xs, ys = zip(*[gproj(*pt(x)) for x in names])
+        s = min((BOX[2] - BOX[0]) / max(max(xs) - min(xs), 1), (BOX[3] - BOX[1]) / max(max(ys) - min(ys), 1)) * zoom
+        bx, by = (BOX[0] + BOX[2]) / 2 - 540, (BOX[1] + BOX[3]) / 2 - 960
+        return ((min(xs) + max(xs)) / 2 - bx / s, (min(ys) + max(ys)) / 2 - by / s), 1080 / s
+    gcams = [(c, *fit(c['fit'], c.get('zoom', 1.0))) for c in spec.get('camera', [{'t': 0, 'fit': list(P)}])]
+    # tải ô bản đồ phủ kín mọi khung hình camera (thêm lề 15%)
+    vx0 = min(cx - w / 2 * 1.15 for _, (cx, cy), w in gcams); vx1 = max(cx + w / 2 * 1.15 for _, (cx, cy), w in gcams)
+    vy0 = min(cy - w * 1920 / 1080 / 2 * 1.15 for _, (cx, cy), w in gcams); vy1 = max(cy + w * 1920 / 1080 / 2 * 1.15 for _, (cx, cy), w in gcams)
+    la1, lo0 = gunproj(vx0, vy0); la0, lo1 = gunproj(vx1, vy1)
     pub = os.path.join(HERE, 'public'); os.makedirs(pub, exist_ok=True)
     subprocess.run([sys.executable, os.path.join(HERE, 'tiles.py'), str(la0), str(lo0), str(la1), str(lo1), str(z), pub], check=True)
     M = json.load(open(os.path.join(pub, 'map.json')))
-    def proj(lat, lon):
-        n = 2 ** M['z'] * 256; r = math.radians(lat)
-        return ((lon + 180) / 360 * n - M['x0'] * 256, (1 - math.log(math.tan(r) + 1 / math.cos(r)) / math.pi) / 2 * n - M['y0'] * 256)
-    def unproj(x, y):
-        n = 2 ** M['z'] * 256; lon = (x + M['x0'] * 256) / n * 360 - 180
-        yy = (y + M['y0'] * 256) / n; return [math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * yy)))), lon]
-    def fit(names, zoom=1.0):
-        ps = [pt(x) for x in names]; xs, ys = zip(*[proj(*p) for p in ps])
-        s = min((BOX[2] - BOX[0]) / max(max(xs) - min(xs), 1), (BOX[3] - BOX[1]) / max(max(ys) - min(ys), 1)) * zoom
-        bx, by = (BOX[0] + BOX[2]) / 2 - 540, (BOX[1] + BOX[3]) / 2 - 960
-        return unproj((min(xs) + max(xs)) / 2 - bx / s, (min(ys) + max(ys)) / 2 - by / s), 1080 / s
-    cams = []
-    for c in spec.get('camera', [{'t': 0, 'fit': list(P)}]):
-        center, w = fit(c['fit'], c.get('zoom', 1.0)); cams.append({'f': round(c['t'] * FPS), 'center': center, 'width': w})
+    cams = [{'f': round(c['t'] * FPS), 'center': gunproj(cx, cy), 'width': w} for c, (cx, cy), w in gcams]
     props = {'durationInFrames': round(spec['seconds'] * FPS), 'fps': FPS, 'map': {'src': 'map.png', **M}, 'camera': cams, 'routes': routes,
              'markers': [{**{k: v for k, v in m.items() if k not in ('t', 'at')}, 'at': pt(m['at']), 'f': round(m['t'] * FPS)} for m in spec.get('markers', [])],
              'chips': [{**{k: v for k, v in c.items() if k not in ('t', 'at')}, 'at': pt(c['at']), 'f': round(c['t'] * FPS)} for c in spec.get('chips', [])],
