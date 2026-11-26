@@ -4,6 +4,7 @@
 Dùng:
   python3 build_video.py spec.json                  # xuất MP4
   python3 build_video.py spec.json --preview 3 20   # chỉ chụp khung hình tại giây 3 và 20 (kiểm tra bố cục)
+  python3 build_video.py spec.json --prep           # trình sửa video: chỉ làm giọng gọn + lớp chữ vào _edit/
 
 Cần: ffmpeg, Google Chrome hoặc Chromium, Python playwright (pip install playwright --break-system-packages).
 Xem examples/knight-frank.json để biết cấu trúc spec.
@@ -195,7 +196,20 @@ def main():
     voice = base / spec["voice"]
     texts = spec["lines"]
     bounds, vdur = line_timings(voice, texts, spec.get("line_breaks"))
-    work = base / "_build"; work.mkdir(exist_ok=True)
+    # "drop_lines": bỏ hẳn các câu này khỏi video (cắt cả giọng), để rút ngắn mà không phải tạo giọng lại
+    drop = set(spec.get("drop_lines") or [])
+    if drop:
+        keep = [i for i in range(len(texts)) if i not in drop]
+        remap = {old: new for new, old in enumerate(keep)}
+        bounds = [bounds[i] for i in keep]; texts = [texts[i] for i in keep]
+        scenes = []
+        for sc in spec["scenes"]:
+            ls = [remap[i] for i in sc["lines"] if i in remap]
+            if ls:
+                scenes.append({**sc, "lines": ls})
+        spec["scenes"] = scenes
+    prep = "--prep" in args   # dùng cho trình sửa video: chỉ làm giọng + lớp chữ, không chụp khung hình
+    work = base / ("_edit" if prep else "_build"); work.mkdir(exist_ok=True)
     # Mặc định: rút khoảng nghỉ giữa câu còn 0,3 giây và đọc nhanh hơn 8% cho đỡ dềnh dàng.
     # Tắt bằng "voice_speed": 1.0 và "voice_gap": null trong spec.
     if spec.get("voice_gap", 0.3) is not None:
@@ -221,6 +235,15 @@ def main():
         print(f"! Câu móc dài {bounds[0][1] - bounds[0][0]:.1f}s, nên dưới 3,5s: rút câu 1 cho ngắn lại.")
     if total > 75:
         print(f"! Video dài {total}s, vượt mục tiêu 45–60s (tối đa 75s): cắt bớt ý.")
+    if prep:
+        meta = {"total": total, "lines": lines, "scene_times": scene_times,
+                "voice": os.path.relpath(voice, base), "overlay": os.path.relpath(page, base),
+                "scenes": [{"broll": sc.get("broll"), "broll_offset": sc.get("broll_offset", 0), "clear": bool(sc.get("clear"))}
+                           for sc in spec["scenes"]],
+                "music": spec.get("music"), "music_volume": spec.get("music_volume", 0.10)}
+        (work / "meta.json").write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+        print("Đã chuẩn bị bản xem trước:", work)
+        return
 
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:

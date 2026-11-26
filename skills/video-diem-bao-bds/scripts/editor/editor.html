@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Sửa video</title>
+<style>
+:root{--bg:#0b1220;--pn:#121b2b;--ln:#223049;--tx:#e5e9f0;--mu:#8b97ab;--gd:#f5c542;--ok:#5be3b0;--er:#ff7a7a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 -apple-system,"Inter",system-ui,sans-serif;height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--ln);background:#0e1726}
+header a{color:var(--mu);text-decoration:none}header .nm{font-weight:700}
+header .sp{flex:1}
+button{background:#1c2940;color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
+button:hover{border-color:var(--gd)}button.pri{background:var(--gd);color:#0b1220;border-color:var(--gd);font-weight:700}
+button.sm{padding:3px 8px;font-size:12px}button.del{color:var(--er)}
+main{flex:1;display:flex;min-height:0}
+.left{width:420px;padding:14px;border-right:1px solid var(--ln);display:flex;flex-direction:column;align-items:center;gap:10px;overflow:auto}
+.phone{position:relative;width:367px;height:653px;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 10px 40px rgba(0,0,0,.5);flex:none}
+.phone video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.phone iframe{position:absolute;left:0;top:0;width:1080px;height:1920px;border:0;transform:scale(.34);transform-origin:0 0;background:transparent;pointer-events:none}
+.ctl{display:flex;align-items:center;gap:8px;width:367px}
+.ctl input[type=range]{flex:1}
+.tl{position:relative;width:367px;height:34px;display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--ln);flex:none}
+.tl div{border-right:1px solid #0b1220;background:#1c2940;font-size:11px;color:var(--mu);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;white-space:nowrap}
+.tl div.on{background:#3a3216;color:var(--gd)}
+.tl .ph{position:absolute;top:0;bottom:0;width:2px;background:var(--gd);pointer-events:none;border:0}
+.info{font-size:12px;color:var(--mu);width:367px}
+.warn{color:var(--gd)}.err{color:var(--er);white-space:pre-wrap;font-size:12px}
+.right{flex:1;overflow:auto;padding:14px 20px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button.on{border-color:var(--gd);color:var(--gd)}
+fieldset{border:1px solid var(--ln);border-radius:10px;margin:0 0 12px;padding:10px 12px;background:var(--pn)}
+legend{color:var(--gd);font-weight:700;padding:0 6px}
+label{display:block;margin:6px 0 2px;color:var(--mu);font-size:12px}
+input[type=text],input[type=number],textarea,select{width:100%;background:#0b1220;color:var(--tx);border:1px solid var(--ln);border-radius:6px;padding:6px 8px;font:inherit}
+textarea{min-height:44px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row3{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;align-items:end}
+.blk{border:1px solid var(--ln);border-radius:8px;padding:8px 10px;margin:8px 0;background:#0f1828}
+.blk .hd{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:13px}
+.blk.sub{margin-left:18px}
+.ln{display:flex;gap:8px;align-items:flex-start;margin:6px 0}.ln textarea{flex:1}
+.ln input{margin-top:10px}.ln.off textarea{opacity:.4;text-decoration:line-through}
+.rng{display:flex;align-items:center;gap:8px}.rng input{flex:1}.rng span{width:48px;text-align:right}
+.note{font-size:12px;color:var(--mu);margin:4px 0}
+#busy{color:var(--gd);font-size:12px}
+#log{white-space:pre-wrap;font:11px/1.4 ui-monospace,Menlo,monospace;color:var(--mu);max-height:180px;overflow:auto;background:#0b1220;border:1px solid var(--ln);border-radius:6px;padding:6px;display:none;width:367px}
+</style></head><body>
+<header><a href="/">← Danh sách</a><span class="nm" id="nm"></span><span id="busy"></span><span class="sp"></span>
+<span id="dirty" class="warn"></span><button id="save">Lưu</button><button class="pri" id="render">Lưu & dựng lại video</button></header>
+<main>
+<section class="left">
+  <div class="phone"><video id="bg" muted playsinline preload="auto"></video><iframe id="ov"></iframe></div>
+  <div class="ctl"><button id="play">▶</button><input type="range" id="seek" min="0" step="0.01" value="0"><span id="tm">0.0s</span></div>
+  <div class="tl" id="tl"></div>
+  <div class="info" id="info"></div>
+  <div id="log"></div>
+  <audio id="vo" preload="auto"></audio><audio id="mu" preload="auto" loop></audio>
+</section>
+<section class="right"><div class="tabs"><button id="tScene" class="on">Cảnh đang chọn</button><button id="tAll">Cài đặt chung</button></div><div id="panel"></div></section>
+</main>
+<script>
+const D=new URLSearchParams(location.search).get('d');
+const $=id=>document.getElementById(id);
+const fileURL=p=>`/api/file?d=${encodeURIComponent(D)}&p=${encodeURIComponent(p)}`;
+let S,M,BROLL=[],MUSIC=[],MP4=null,sel=0,tab='scene',dirty=false;
+let t=0,playing=false,t0=0,w0=0,curBg=-1,prepTimer=null,prepSeq=0;
+const FX=[['','(không hiệu ứng)'],['up','Hiện từ dưới lên'],['left','Trượt từ trái'],['right','Trượt từ phải'],['drop','Rơi xuống'],['flip','Lật'],['fade','Mờ dần'],['wipe','Quét từ trái'],['wipeup','Lộ từ dưới'],['zoom','Phóng to'],['blur','Mờ thành nét'],['pop','Bật ra'],['words','Từng chữ nhô lên'],['type','Gõ từng ký tự'],['marker','Bút dạ vàng'],['grow','Thanh dài dần']];
+const EMPH=[['','(không)'],['pulse','Đập nhẹ'],['shine','Ánh sáng lướt']];
+const TRANS=[['','Tự động'],['slide','Trượt'],['zoom','Phóng'],['wipe','Quét'],['rise','Nhô lên'],['blur','Mờ'],['fade','Mờ dần']];
+const NAMES={h0:'Câu móc lớn',hooksub:'Dòng phụ câu móc',kick:'Nhãn nhỏ',h1:'Tiêu đề lớn',h2:'Tiêu đề',body:'Đoạn chữ',huge:'Số cực lớn',big:'Số chạy',badge:'Khung kết luận',ask:'Câu chốt',chips:'Nhóm ô số liệu',chip:'Ô số liệu',k:'Nhãn ô',v:'Số trong ô',s:'Ghi chú ô',stat:'Số liệu',n:'Số',t:'Chú thích',rank:'Dòng xếp hạng',row:'Thanh so sánh',lab:'Nhãn thanh',fill:'Thanh',no:'Số thứ tự'};
+const ADD={kick:'<div class="kick" data-fx="type" data-at="0.2">Nhãn mới</div>',h2:'<div class="h2" data-fx="words" data-at="0.5">Tiêu đề mới</div>',body:'<div class="body" data-fx="fade" data-at="0.8">Đoạn chữ mới</div>',huge:'<div class="huge" data-fx="zoom" data-emph="pulse" data-at="0.5">100%</div>',badge:'<div class="badge" data-fx="drop" data-at="1">Kết luận ngắn</div>',ask:'<div class="ask" data-fx="pop" data-at="0.5">Câu chốt!</div>'};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+async function load(){
+  const r=await (await fetch('/api/spec?d='+encodeURIComponent(D))).json();
+  S=r.spec;BROLL=r.broll;MUSIC=r.music;MP4=r.mp4;$('nm').textContent=D;
+  S.drop_lines=S.drop_lines||[];
+  await prep(true);panel();requestAnimationFrame(frame);
+}
+function markDirty(){dirty=true;$('dirty').textContent='● Chưa lưu';}
+function change(needPrep=true){markDirty();if(needPrep){clearTimeout(prepTimer);prepTimer=setTimeout(()=>prep(),650);}}
+async function prep(first){
+  const my=++prepSeq;$('busy').textContent='Đang cập nhật xem trước…';
+  const r=await fetch('/api/prep?d='+encodeURIComponent(D),{method:'POST',body:JSON.stringify(S)});
+  const j=await r.json();if(my!==prepSeq)return;
+  if(j.error){$('busy').textContent='';$('info').innerHTML='<div class="err">Lỗi xem trước:\n'+esc(j.error)+'</div>';return;}
+  M=j;$('busy').textContent='';
+  const keepT=Math.min(t,M.total);
+  $('vo').src=fileURL(M.voice)+'&v='+Date.now();
+  if(M.music){const mv=fileURL(M.music);if($('mu').dataset.src!==mv){$('mu').src=mv;$('mu').dataset.src=mv;}}
+  $('mu').volume=Math.min(1,(M.music_volume||.1)*2.2);
+  $('ov').onload=()=>{seek(keepT);};
+  $('ov').src=fileURL(M.overlay)+'&v='+Date.now();
+  $('seek').max=M.total;curBg=-1;timeline();info();
+}
+function keptScenes(){const drop=new Set(S.drop_lines||[]);const out=[];S.scenes.forEach((sc,i)=>{if(sc.lines.some(l=>!drop.has(l)))out.push(i);});return out;}
+function metaIndexOf(specIdx){return keptScenes().indexOf(specIdx);}
+function timeline(){
+  const tl=$('tl');tl.innerHTML='';const ks=keptScenes();
+  M.scene_times.forEach((st,i)=>{const out=i+1<M.scene_times.length?M.scene_times[i+1].in:M.total;
+    const d=document.createElement('div');d.style.width=((out-st.in)/M.total*100)+'%';d.textContent=(i+1);
+    d.title=`Cảnh ${ks[i]+1}: ${st.in.toFixed(1)}–${out.toFixed(1)}s`;d.onclick=()=>{sel=ks[i];seek(st.in+.05);panel();};
+    if(ks[i]===sel)d.className='on';tl.appendChild(d);});
+  const ph=document.createElement('div');ph.className='ph';ph.id='ph';tl.appendChild(ph);
+}
+function info(){
+  const w=(M.warn||[]).map(x=>`<div class="warn">${esc(x)}</div>`).join('');
+  $('info').innerHTML=`Độ dài video: <b>${M.total.toFixed(1)} giây</b> · ${M.scene_times.length} cảnh · ${M.lines.length} câu${w}`;
+}
+// ---------- xem trước ----------
+function sceneAt(x){let i=0;while(i+1<M.scene_times.length&&x>=M.scene_times[i+1].in)i++;return i;}
+function syncBg(force){
+  if(!M)return;const i=sceneAt(t);const bg=$('bg');
+  if(i!==curBg||force){curBg=i;const sc=M.scenes[i];
+    const want=fileURL(sc.broll||'');bg.style.filter=sc.clear?'none':'saturate(.85)';
+    const place=()=>{const dur=bg.duration||1e9;bg.currentTime=((sc.broll_offset||0)+(t-M.scene_times[i].in))%dur;if(playing)bg.play().catch(()=>{});};
+    if(bg.dataset.src!==want){bg.dataset.src=want;bg.src=want;bg.onloadedmetadata=place;}else place();}
+}
+function draw(){
+  const w=$('ov').contentWindow;try{w&&w.render&&w.render(t);}catch(e){}
+  syncBg(false);$('tm').textContent=t.toFixed(1)+'s';$('seek').value=t;
+  const ph=$('ph');if(ph&&M)ph.style.left=(t/M.total*100)+'%';
+  if(M){const ks=keptScenes();const s=ks[sceneAt(t)];document.querySelectorAll('#tl div').forEach((d,k)=>{if(d.id!=='ph')d.className=(ks[k]===sel?'on':'');});}
+}
+function frame(){if(playing){t=t0+(performance.now()-w0)/1000;if(t>=M.total){t=M.total;pause();}}draw();requestAnimationFrame(frame);}
+function play(){if(!M)return;if(t>=M.total-.05)t=0;playing=true;t0=t;w0=performance.now();$('play').textContent='❚❚';
+  const vo=$('vo');vo.currentTime=t;vo.play().catch(()=>{});const mu=$('mu');if(mu.src){mu.currentTime=t%(mu.duration||1e9);mu.play().catch(()=>{});}syncBg(true);}
+function pause(){playing=false;$('play').textContent='▶';$('vo').pause();$('mu').pause();$('bg').pause();}
+function seek(x){t=Math.max(0,Math.min(x,M?M.total:0));if(playing){t0=t;w0=performance.now();$('vo').currentTime=t;}syncBg(true);draw();}
+$('play').onclick=()=>playing?pause():play();
+$('seek').oninput=e=>{seek(parseFloat(e.target.value));};
+$('seek').onchange=()=>{if(!playing){sel=keptScenes()[sceneAt(t)];panel();}};
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();playing?pause():play();}});
+// ---------- bảng sửa ----------
+$('tScene').onclick=()=>{tab='scene';panel();};$('tAll').onclick=()=>{tab='all';panel();};
+function panel(){$('tScene').className=tab==='scene'?'on':'';$('tAll').className=tab==='all'?'on':'';
+  const P=$('panel');P.innerHTML='';(tab==='scene'?scenePanel:allPanel)(P);if(M)timeline();}
+function el(html){const d=document.createElement('div');d.innerHTML=html.trim();return d.firstElementChild;}
+function field(label,input){const w=document.createElement('div');w.innerHTML=`<label>${label}</label>`;w.appendChild(input);return w;}
+function inp(val,on,type='text',attrs={}){const i=document.createElement(type==='textarea'?'textarea':'input');if(type!=='textarea')i.type=type;i.value=val??'';Object.assign(i,attrs);i.oninput=()=>on(type==='number'?parseFloat(i.value):i.value);return i;}
+function sel_(opts,val,on){const s=document.createElement('select');opts.forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;if(String(v)===String(val??''))o.selected=true;s.appendChild(o);});s.onchange=()=>on(s.value);return s;}
+function range(label,val,min,max,step,on,fmt=v=>v){const w=el(`<div><label>${label}</label><div class="rng"><input type="range" min="${min}" max="${max}" step="${step}" value="${val}"><span>${fmt(val)}</span></div></div>`);
+  const r=w.querySelector('input'),sp=w.querySelector('span');r.oninput=()=>{sp.textContent=fmt(parseFloat(r.value));};r.onchange=()=>on(parseFloat(r.value));return w;}
+
+function scenePanel(P){
+  const sc=S.scenes[sel];if(!sc){P.textContent='Chọn một cảnh ở thanh thời gian bên trái.';return;}
+  const mi=metaIndexOf(sel);const st=M&&mi>=0?M.scene_times[mi]:null;
+  const nav=el(`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><button class="sm">◀ Cảnh trước</button><b>Cảnh ${sel+1}/${S.scenes.length}</b><span class="note">${st?st.in.toFixed(1)+'s → '+(mi+1<M.scene_times.length?M.scene_times[mi+1].in:M.total).toFixed(1)+'s':'(đang bị bỏ)'}</span><button class="sm">Cảnh sau ▶</button></div>`);
+  const [pv,nx]=nav.querySelectorAll('button');pv.onclick=()=>{if(sel>0){sel--;panel();goSel();}};nx.onclick=()=>{if(sel<S.scenes.length-1){sel++;panel();goSel();}};P.appendChild(nav);
+  // câu đọc & phụ đề
+  const f1=el('<fieldset><legend>Câu đọc và phụ đề</legend><div class="note">Bỏ dấu tích để cắt hẳn câu đó (cả giọng) cho video ngắn lại. Sửa chữ ở đây chỉ đổi phụ đề, không đổi giọng đọc.</div></fieldset>');
+  sc.lines.forEach(li=>{const off=S.drop_lines.includes(li);const row=el(`<div class="ln ${off?'off':''}"><input type="checkbox" ${off?'':'checked'} title="Giữ câu này"></div>`);
+    const ta=inp(S.lines[li],v=>{S.lines[li]=v;change();},'textarea');row.appendChild(ta);
+    row.querySelector('input').onchange=e=>{const k=new Set(S.drop_lines);e.target.checked?k.delete(li):k.add(li);S.drop_lines=[...k].sort((a,b)=>a-b);row.className='ln '+(e.target.checked?'':'off');change();};
+    f1.appendChild(row);});
+  P.appendChild(f1);
+  // khối chữ
+  const f2=el('<fieldset><legend>Chữ và hiệu ứng trên màn hình</legend><div class="note">"Lúc hiện" tính bằng giây từ đầu cảnh. Cỡ chữ để trống là cỡ mặc định.</div></fieldset>');
+  const root=document.createElement('div');root.innerHTML=sc.html||'';
+  const commit=()=>{sc.html=root.innerHTML;change();};
+  const leaf=n=>![...n.children].some(c=>!/^(SPAN|B|EM|SMALL|BR|STRONG|I)$/.test(c.tagName)||c.hasAttribute('data-fx'));
+  const nameOf=n=>{for(const c of n.classList)if(NAMES[c])return NAMES[c];return n.dataset.fx==='marker'?'Tô bút dạ':(n.tagName==='SPAN'?'Đoạn nhấn':'Khối');};
+  const walk=(node,depth)=>{[...node.children].forEach(n=>{
+    const isText=leaf(n)&&n.textContent.trim()!=='';const hasFx=n.hasAttribute('data-fx');
+    const isImg=n.querySelector('img')||/url\(/.test(n.getAttribute('style')||'');
+    if(!isText&&!hasFx&&!n.children.length)return;
+    const b=el(`<div class="blk ${depth?'sub':''}"><div class="hd"><span>${nameOf(n)}${isImg?' (có ảnh)':''}</span><span></span></div></div>`);
+    const tools=b.querySelector('.hd span:last-child');
+    if(depth<=1){const del=el('<button class="sm del">Xóa</button>');del.onclick=()=>{if(confirm('Xóa khối này?')){n.remove();commit();panel();}};tools.appendChild(del);}
+    if(isText){const ta=inp(n.innerHTML,v=>{n.innerHTML=v;commit();},'textarea');b.appendChild(field('Nội dung (giữ được thẻ <span class="gold"> để tô vàng)',ta));}
+    const row=el('<div class="row3"></div>');
+    row.appendChild(field('Hiệu ứng',sel_(FX,n.dataset.fx||'',v=>{v?n.setAttribute('data-fx',v):n.removeAttribute('data-fx');commit();})));
+    row.appendChild(field('Lúc hiện (giây)',inp(n.dataset.at||'',v=>{isNaN(v)?n.removeAttribute('data-at'):n.setAttribute('data-at',v);commit();},'number',{step:0.1,min:0})));
+    row.appendChild(field('Nhấn mạnh',sel_(EMPH,n.dataset.emph||'',v=>{v?n.setAttribute('data-emph',v):n.removeAttribute('data-emph');commit();})));
+    const fs=parseFloat(n.style.fontSize)||'';
+    row.appendChild(field('Cỡ chữ (px)',inp(fs,v=>{n.style.fontSize=isNaN(v)?'':v+'px';commit();},'number',{step:2,min:12})));
+    if(hasFx||isText)b.appendChild(row);
+    if(n.classList.contains('fill')){const w=parseFloat(n.style.getPropertyValue('--w'))||1;b.appendChild(range('Độ dài thanh',w,.05,1,.01,v=>{n.style.setProperty('--w',v);commit();},v=>Math.round(v*100)+'%'));}
+    f2.appendChild(b);
+    if(!isText)walk(n,depth+1);
+  });};
+  walk(root,0);
+  const add=el('<div style="display:flex;gap:8px;margin-top:8px"></div>');let addType='kick';
+  add.appendChild(sel_([['kick','Nhãn nhỏ'],['h2','Tiêu đề'],['body','Đoạn chữ'],['huge','Số cực lớn'],['badge','Khung kết luận'],['ask','Câu chốt']],'kick',v=>addType=v));
+  const ab=el('<button>+ Thêm khối chữ</button>');ab.onclick=()=>{root.insertAdjacentHTML('beforeend',ADD[addType]);commit();panel();};add.appendChild(ab);f2.appendChild(add);
+  const raw=el('<details style="margin-top:10px"><summary class="note">Sửa HTML trực tiếp (nâng cao)</summary></details>');
+  const rt=inp(sc.html,v=>{sc.html=v;change();},'textarea');rt.style.minHeight='140px';rt.style.fontFamily='ui-monospace,Menlo,monospace';rt.style.fontSize='12px';raw.appendChild(rt);raw.ontoggle=()=>{rt.value=sc.html;};f2.appendChild(raw);
+  P.appendChild(f2);
+  // video nền & chuyển cảnh
+  const f3=el('<fieldset><legend>Video nền và chuyển cảnh</legend></fieldset>');
+  if(sc.ban_do)f3.appendChild(el('<div class="note">Cảnh này là bản đồ động: video nền do máy tự dựng từ mục "ban_do".</div>'));
+  const list=[...new Set([...(sc.broll?[sc.broll]:[]),...BROLL])].map(b=>[b,b.replace(/^broll\//,'')]);
+  const r2=el('<div class="row2"></div>');
+  r2.appendChild(field('Video nền',sel_(list,sc.broll,v=>{sc.broll=v;change();})));
+  r2.appendChild(field('Bắt đầu từ giây',inp(sc.broll_offset||0,v=>{sc.broll_offset=isNaN(v)?0:v;change();},'number',{step:0.5,min:0})));
+  f3.appendChild(r2);
+  const r3=el('<div class="row2"></div>');
+  r3.appendChild(field('Chuyển cảnh khi vào',sel_(TRANS,sc.trans||'',v=>{v?sc.trans=v:delete sc.trans;change();})));
+  const cb=el(`<label style="margin-top:22px"><input type="checkbox" ${sc.clear?'checked':''}> Giữ nguyên màu video nền (không phủ tối)</label>`);
+  cb.querySelector('input').onchange=e=>{e.target.checked?sc.clear=true:delete sc.clear;change();};r3.appendChild(cb);
+  f3.appendChild(r3);P.appendChild(f3);
+}
+function goSel(){if(!M)return;const mi=metaIndexOf(sel);if(mi>=0)seek(M.scene_times[mi].in+.05);}
+
+function allPanel(P){
+  const set=(k,v)=>{v===''||v===null||(typeof v==='number'&&isNaN(v))?delete S[k]:S[k]=v;change();};
+  const f1=el('<fieldset><legend>Giọng đọc và độ dài</legend><div class="note">Không tạo lại giọng, không tốn credit: chỉ cắt khoảng nghỉ và đổi tốc độ.</div></fieldset>');
+  f1.appendChild(range('Tốc độ đọc',S.voice_speed??1.08,1,1.2,.01,v=>set('voice_speed',v),v=>v.toFixed(2)+'×'));
+  f1.appendChild(range('Khoảng nghỉ giữa các câu',S.voice_gap??0.3,.05,.8,.05,v=>set('voice_gap',v),v=>v.toFixed(2)+'s'));
+  f1.appendChild(range('Cao độ giọng',S.voice_pitch??1.06,1,1.08,.01,v=>set('voice_pitch',v),v=>v.toFixed(2)));
+  f1.appendChild(range('Đuôi video sau câu cuối',S.tail??0.8,.2,3,.1,v=>set('tail',v),v=>v.toFixed(1)+'s'));
+  P.appendChild(f1);
+  const f2=el('<fieldset><legend>Nhạc nền</legend></fieldset>');
+  const base=x=>String(x||'').split('/').pop();const cur=MUSIC.find(m=>base(m)===base(S.music))||S.music;
+  f2.appendChild(field('Bản nhạc',sel_(MUSIC.map(m=>[m,base(m)]),cur,v=>set('music',v))));
+  f2.appendChild(range('Âm lượng nhạc',S.music_volume??0.10,.03,.2,.01,v=>set('music_volume',v),v=>Math.round(v*100)+'%'));
+  P.appendChild(f2);
+  const f3=el('<fieldset><legend>Khung video</legend></fieldset>');const r=el('<div class="row2"></div>');
+  r.appendChild(field('Loại tin (màu)',sel_([['luat','Luật (đỏ)'],['thitruong','Thị trường (xanh lam)'],['hatang','Hạ tầng (xanh ngọc)'],['hangsang','Hạng sang (vàng)']],S.theme,v=>set('theme',v))));
+  r.appendChild(field('Nhãn loại tin (để trống = mặc định)',inp(S.tag,v=>set('tag',v))));
+  r.appendChild(field('Ngày',inp(S.date,v=>set('date',v))));
+  r.appendChild(field('Từ tô vàng trong phụ đề (cách nhau dấu phẩy)',inp((S.highlight||[]).join(', '),v=>set('highlight',v.split(',').map(x=>x.trim()).filter(Boolean)))));
+  f3.appendChild(r);f3.appendChild(field('Dòng nguồn',inp(S.source,v=>set('source',v))));P.appendChild(f3);
+  const f4=el('<fieldset><legend>Ảnh cover</legend><div class="note">Cover được làm lại khi bấm Dựng lại.</div></fieldset>');S.cover=S.cover||{};const r4=el('<div class="row2"></div>');
+  const cs=(k,v)=>{v?S.cover[k]=v:delete S.cover[k];change(false);};
+  r4.appendChild(field('Tiêu đề (dùng &lt;em&gt; để tô vàng)',inp(S.cover.title,v=>cs('title',v))));r4.appendChild(field('Nhãn nhỏ',inp(S.cover.kicker,v=>cs('kicker',v))));
+  r4.appendChild(field('Số lớn',inp(S.cover.number,v=>cs('number',v))));r4.appendChild(field('Chú thích số',inp(S.cover.number_label,v=>cs('number_label',v))));
+  f4.appendChild(r4);P.appendChild(f4);
+  const f5=el('<fieldset><legend>Đăng TikTok</legend></fieldset>');
+  const sv=(k,v)=>{S[k]=v;change(false);};
+  f5.appendChild(field('Tiêu đề TikTok',inp(S.tiktok_title,v=>sv('tiktok_title',v))));
+  const cap=Array.isArray(S.caption)?S.caption.join('\n'):(S.caption||'');
+  f5.appendChild(field('Caption (mỗi dòng một câu)',inp(cap,v=>sv('caption',v.split('\n')),'textarea',{rows:3})));
+  f5.appendChild(field('Hashtag (cách nhau dấu cách)',inp((S.hashtags||[]).join(' '),v=>sv('hashtags',v.split(/\s+/).filter(Boolean)))));
+  P.appendChild(f5);
+}
+// ---------- lưu & dựng ----------
+async function save(){const r=await fetch('/api/save?d='+encodeURIComponent(D),{method:'POST',body:JSON.stringify(S)});
+  if(r.ok){dirty=false;$('dirty').textContent='Đã lưu';setTimeout(()=>{if(!dirty)$('dirty').textContent='';},2000);}else alert('Lưu lỗi');}
+$('save').onclick=save;
+$('render').onclick=async()=>{await save();pause();await fetch('/api/render?d='+encodeURIComponent(D),{method:'POST'});
+  $('log').style.display='block';$('render').disabled=true;$('busy').textContent='Đang dựng lại video…';poll();};
+async function poll(){const j=await (await fetch('/api/status?d='+encodeURIComponent(D))).json();$('log').textContent=j.log;$('log').scrollTop=1e9;
+  if(j.running){setTimeout(poll,2000);return;}
+  $('render').disabled=false;
+  if(j.code===0){$('busy').innerHTML='✓ Đã dựng xong. ';const r=await (await fetch('/api/spec?d='+encodeURIComponent(D))).json();
+    if(r.mp4){const a=el(`<a href="${fileURL(r.mp4)}" target="_blank" style="color:var(--ok)">Xem video mới</a>`);$('busy').appendChild(a);}}
+  else $('busy').innerHTML='<span style="color:var(--er)">Dựng lỗi, xem nhật ký bên trái.</span>';}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+load();
+</script></body></html>
