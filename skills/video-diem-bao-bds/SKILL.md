@@ -1,13 +1,13 @@
 ---
 name: video-diem-bao-bds
-description: Dựng video TikTok dọc 9:16 (45–60 giây, tối đa 75 giây, công thức hiển thị 3–3–1) từ một tin bất động sản cho kênh TRUNG - buôn chuyện nhà đất của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Mặc định Claude chỉ viết kịch bản và spec.json, máy Mac của anh tự tạo giọng và dựng (tiết kiệm credit Claude). Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo".
+description: Dựng video TikTok dọc 9:16 (45–60 giây, tối đa 75 giây, công thức hiển thị 3–3–1) từ một tin bất động sản cho kênh TRUNG - buôn chuyện nhà đất của anh Trung, đọc bằng giọng nhân bản của anh, có ảnh chân dung, video nền, phụ đề, nhạc nền và ảnh cover TikTok. Mặc định Claude chỉ viết kịch bản và spec.json, máy Mac của anh tự tạo giọng và dựng (tiết kiệm credit Claude). Dùng khi Trung đưa link bài báo và nhờ "dựng video", "làm video tin này", "video điểm báo", và cả khi anh chỉ gửi một đường link bài báo/tin tức (BĐS, kinh tế, chính sách, hạ tầng) không kèm lời nào: mặc định là nhờ viết kịch bản TikTok theo mẫu "kịch bản tổng" rồi làm video.
 ---
 
 # Video điểm báo BĐS
 
 Người dùng: anh Trung, Giám đốc Kinh doanh BĐS hạng sang tại Hà Nội, kênh TikTok **TRUNG - buôn chuyện nhà đất** (@trungbuonchuyennhadat). Mọi chữ trong video, lời đọc và tin nhắn gửi anh đều bằng tiếng Việt.
 
-**Trước khi viết kịch bản, đọc `NOI-DUNG.md` (cùng thư mục)**: cách chọn góc, giọng văn, hình ảnh, mẫu tin duyệt mà anh Trung đã chốt. Khi anh chỉ gửi một đường link, làm theo mục 1 của file đó.
+**Trước khi viết kịch bản, đọc `NOI-DUNG.md` (cùng thư mục)**: cách chọn góc, giọng văn, hình ảnh, mẫu tin duyệt mà anh Trung đã chốt. **Anh chỉ gửi một đường link (không kèm lời) nghĩa là nhờ làm video từ bài đó**: làm theo mục 1 của `NOI-DUNG.md` và trả lời bằng đúng mẫu "Kịch bản tổng" ở mục 9, không hỏi lại "anh muốn làm gì với bài này".
 
 Quy trình có **một bước duyệt bắt buộc**: viết xong kịch bản (Bước 2) thì gửi anh Trung duyệt (Bước 2b), anh OK mới viết spec (chế độ máy anh) hoặc tạo giọng và dựng (chế độ cloud).
 
@@ -92,7 +92,7 @@ Viết số bằng chữ số như văn viết (6.188, 48%). Giọng anh sau khi
 
 Chưa được tạo giọng đọc, tìm video nền hay dựng gì khi anh Trung chưa duyệt kịch bản. Tạo giọng tốn ~1.300 credit ElevenLabs cho mỗi 1.000 ký tự và không lấy lại được.
 
-1. Gửi cho anh (SendUserMessage nếu đang giữa lượt làm việc) **một tin duy nhất**, gồm:
+1. Gửi cho anh (SendUserMessage nếu đang giữa lượt làm việc) **một tin duy nhất, đúng mẫu "Kịch bản tổng" ở mục 9 của `NOI-DUNG.md`** (đọc file đó trước; không viết theo kiểu khác, không chỉ tóm tắt bài), gồm:
    - **Loại tin / màu** (`theme`), **câu móc** chữ lớn ở cảnh 1, tiêu đề ảnh cover và **caption** soạn sẵn theo Bước 8.
    - **Lời đọc** đánh số từng câu, đúng nguyên văn sẽ đọc, kèm tổng số ký tự (750–950, tối đa 1.150) và thời lượng ước tính (= số ký tự ÷ 16 giây, mục tiêu ≤ 60 giây).
    - **Kế hoạch cảnh** ngắn gọn: mỗi cảnh một dòng (câu nào · hiển thị gì · video nền định dùng).
