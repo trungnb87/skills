@@ -184,33 +184,107 @@ def pexels_search(query, key, page=1):
         return json.loads(r.read())
 
 
+STOP_WORDS = {"the", "a", "an", "of", "in", "on", "and", "with", "at", "to", "for", "view", "shot", "video"}
+# Clip Pixabay đã xem tận mắt, đúng bối cảnh Việt Nam/Hà Nội. Dùng khi tìm theo từ khóa không ra clip khớp.
+CLIP_DU_PHONG = ["px74652", "px74653", "px219342", "px219340", "px302062", "px36944", "px252936", "px219343"]
+VN_WORDS = {"vietnam", "hanoi", "ha noi", "saigon", "ho chi minh", "hochiminh", "viet nam"}
+
+
+def _query_words(query):
+    return [w for w in re.findall(r"[a-z0-9]+", query.lower()) if w not in STOP_WORDS and len(w) > 1]
+
+
+def _relevance(query, tags):
+    """Số từ khóa có trong tag của clip. Trả về (số từ khớp, số từ cần khớp tối thiểu)."""
+    tags = tags.lower()
+    words = _query_words(query)
+    hit = sum(1 for w in words if re.search(r"\b" + re.escape(w), tags))
+    # từ khóa có Việt Nam/Hà Nội thì clip bắt buộc phải có tag Việt Nam/Hà Nội
+    if any(v in query.lower() for v in VN_WORDS) and not any(v in tags for v in VN_WORDS):
+        return 0, 1
+    # 1–2 từ: khớp hết; từ 3 từ trở lên: được thiếu tối đa 1 từ
+    need = len(words) if len(words) <= 2 else len(words) - 1
+    return hit, max(1, need)
+
+
 def pixabay_search(query, key, page=1):
+    """Tìm clip trên Pixabay, xếp theo MỨC KHỚP TỪ KHÓA trước, độ nét/khung dọc sau.
+    (Bản cũ xếp clip dọc lên đầu bất kể nội dung, nên từng lấy nhầm cối xay gió, Dubai… vào tin Hà Nội.)"""
     q = urllib.parse.urlencode({"key": key, "q": query[:100], "video_type": "film", "safesearch": "true",
                                 "per_page": 50, "page": page})
     with http(f"https://pixabay.com/api/videos/?{q}") as r:
         data = json.loads(r.read())
     vids = []
-    for h in data.get("hits", []):
+    for rank, h in enumerate(data.get("hits", [])):
+        hit, need = _relevance(query, h.get("tags", ""))
+        if hit < need:
+            continue
         best = None
         for name, f in (h.get("videos") or {}).items():
             w, hh, url = f.get("width") or 0, f.get("height") or 0, f.get("url")
             if not url or not w:
                 continue
-            # dọc 9:16 là tốt nhất; ngang thì phải đủ cao (4K) để cắt dọc vẫn nét
+            # dọc 9:16 là tốt nhất; ngang thì 4K cắt dọc vẫn nét; ngang 1080p chấp nhận được
             if hh > w and hh >= 1280:
-                score = 0 + abs(hh - 1920) / 1e4
+                score = 0
             elif hh >= 2000:
-                score = 1 + abs(hh - 2160) / 1e4
+                score = 0.5
             elif hh >= 1080:
-                score = 2
+                score = 1
             else:
                 continue
             if best is None or score < best[0]:
                 best = (score, {"width": w, "height": hh, "link": url})
         if best:
-            vids.append((best[0], {"id": f"px{h['id']}", "duration": h.get("duration", 0), "file": best[1]}))
+            # khớp nhiều từ khóa hơn luôn đứng trước; cùng mức khớp mới xét khung dọc/độ nét và thứ hạng của Pixabay
+            vids.append(((-hit, best[0], rank), {"id": f"px{h['id']}", "duration": h.get("duration", 0),
+                                                 "file": best[1], "tags": h.get("tags", "")}))
     vids.sort(key=lambda x: x[0])
     return [v for _, v in vids]
+
+
+def pixabay_by_id(vid, key):
+    q = urllib.parse.urlencode({"key": key, "id": str(vid).lstrip("px")})
+    with http(f"https://pixabay.com/api/videos/?{q}") as r:
+        hits = json.loads(r.read()).get("hits", [])
+    if not hits:
+        return None
+    files = [f for f in hits[0]["videos"].values() if f.get("url") and 1080 <= (f.get("height") or 0) <= 2160]
+    if not files:
+        return None
+    f = max(files, key=lambda f: f["height"])
+    return {"width": f["width"], "height": f["height"], "link": f["url"]}
+
+
+def broll_sheet(spec, base):
+    """Ghép 1 khung hình của mỗi video nền thành xem-truoc-nen.jpg để anh/Claude soát nhanh nội dung."""
+    tiles = []
+    tmp = base / "_kiem-nen"
+    tmp.mkdir(exist_ok=True)
+    for i, sc in enumerate(spec["scenes"]):
+        src = base / sc.get("broll", "")
+        if not sc.get("broll") or not src.exists():
+            continue
+        out = tmp / f"{i + 1}.jpg"
+        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-ss", str(sc.get("broll_offset", 0) + 1.5), "-i", str(src),
+                        "-frames:v", "1", "-vf",
+                        "scale=270:480:force_original_aspect_ratio=increase,crop=270:480", str(out)])
+        if out.exists():
+            tiles.append(out)
+    if not tiles:
+        return None
+    sheet = base / "xem-truoc-nen.jpg"
+    if len(tiles) == 1:
+        shutil.copy(tiles[0], sheet)
+    else:
+        cmd = ["ffmpeg", "-loglevel", "error", "-y"]
+        for t in tiles:
+            cmd += ["-i", str(t)]
+        cmd += ["-filter_complex", "".join(f"[{k}]" for k in range(len(tiles))) + f"hstack=inputs={len(tiles)}",
+                str(sheet)]
+        subprocess.run(cmd)
+    shutil.rmtree(tmp, ignore_errors=True)
+    return sheet if sheet.exists() else None
 
 
 def make_maps(spec, base):
@@ -256,6 +330,23 @@ def get_broll(spec, base, env, st):
             used_now.add(Path(sc["broll"]).name)
     say(f"• Tìm video nền cho {len(need)} cảnh ({'Pexels' if key else 'Pixabay'})…")
     for sc in need:
+        if sc.get("broll_id") and pxb:
+            vid = "px" + str(sc["broll_id"]).lstrip("px")
+            try:
+                f = pixabay_by_id(vid, pxb)
+            except (urllib.error.HTTPError, urllib.error.URLError) as e:
+                f = None
+                say(f"  ! Không lấy được clip {vid} ({e}), chuyển sang tìm theo từ khóa.")
+            if f:
+                dest = base / "broll" / f"{vid}.mp4"
+                say(f"  ↓ clip chọn sẵn {vid} ({f['width']}x{f['height']})")
+                if not dest.exists():
+                    download(f["link"], dest)
+                sc["broll"] = f"broll/{dest.name}"
+                sc.setdefault("broll_offset", 0)
+                used_now.add(dest.name)
+                st["pexels"].append(vid)
+                continue
         queries = sc.get("broll_query") or spec.get("broll_query") or "Hanoi city skyline aerial"
         queries = [queries] if isinstance(queries, str) else list(queries)
         chosen = None
@@ -271,7 +362,7 @@ def get_broll(spec, base, env, st):
                     for v in cands:
                         if v["id"] in st["pexels"] or f"{v['id']}.mp4" in used_now or v["duration"] < 6:
                             continue
-                        chosen = (v["id"], v["file"], q)
+                        chosen = (v["id"], v["file"], q, v.get("tags", ""))
                         break
                     if chosen:
                         break
@@ -296,11 +387,23 @@ def get_broll(spec, base, env, st):
                     break
             if chosen:
                 break
+        if not chosen and pxb:
+            for vid in CLIP_DU_PHONG:
+                if f"{vid}.mp4" in used_now:
+                    continue
+                try:
+                    f = pixabay_by_id(vid, pxb)
+                except (urllib.error.HTTPError, urllib.error.URLError):
+                    f = None
+                if f:
+                    say(f"  ! Không có clip khớp {queries}, dùng clip Hà Nội/Việt Nam dự phòng {vid}.")
+                    chosen = (vid, f, "dự phòng")
+                    break
         if not chosen:
-            fail(f"Không tìm được video nền dọc mới cho từ khóa {queries}. Thêm từ khóa khác vào broll_query.")
-        vid, f, q = chosen
+            fail(f"Không tìm được video nền khớp từ khóa {queries}. Thêm từ khóa khác vào broll_query.")
+        vid, f, q = chosen[:3]
         dest = base / "broll" / (f"{vid}.mp4" if vid.startswith("px") else f"pexels-{vid}.mp4")
-        say(f"  ↓ \"{q}\" → {vid} ({f['width']}x{f['height']})")
+        say(f"  ↓ \"{q}\" → {vid} ({f['width']}x{f['height']})" + (f" · tag: {chosen[3][:60]}" if len(chosen) > 3 else ""))
         download(f["link"], dest)
         sc["broll"] = f"broll/{dest.name}"
         sc.setdefault("broll_offset", 0)
@@ -381,6 +484,9 @@ def run_job(base, env, preview=False, redo_voice=False):
     chars = make_voice(spec, base, env)
     make_maps(spec, base)
     get_broll(spec, base, env, st)
+    sheet = broll_sheet(spec, base)
+    if sheet:
+        say(f"• Ảnh soát video nền (mỗi cảnh 1 khung): {sheet.name}. Cảnh nào lạc đề thì gửi Claude để đổi.")
     say(f"• Nhạc nền: {Path(spec['music']).name}")
     spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
     save_state(st)

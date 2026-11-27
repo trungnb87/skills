@@ -24,7 +24,7 @@ Chỉ dùng quy trình dựng trên cloud (Bước 3–8 ở dưới) khi anh n�
 
 Sau khi anh OK kịch bản:
 1. Viết `spec.json` theo mẫu `examples/mau-spec-may-nha.json`. Khác với spec cloud:
-   - Mỗi cảnh **không có `broll`**, thay bằng `"broll_query": ["từ khóa tiếng Anh chính", "từ khóa dự phòng"]` (cảnh dọc, đúng chủ đề cảnh; không người nói vào camera).
+   - Mỗi cảnh **không có `broll`**, thay bằng `"broll_query": ["từ khóa tiếng Anh chính", "từ khóa dự phòng"]` (cảnh dọc, đúng chủ đề cảnh; không người nói vào camera). **Cảnh cần bối cảnh Hà Nội/Việt Nam (chung cư, phố, toàn cảnh) thì ghi thẳng `"broll_id"` một clip trong "Kho clip đã kiểm" ở Bước 4**, vì Pixabay có rất ít cảnh đô thị Hà Nội. Từ khóa viết ngắn 2–3 từ, đúng chữ hay gặp trong tag Pixabay ("gavel", "cardboard boxes", "construction site Vietnam"); cảnh thành phố luôn kèm "Vietnam"/"Hanoi", nếu không sẽ ra Dubai, New York.
    - `"music": "auto"` (máy tự chọn theo `theme`, tránh 3 bản dùng gần nhất); chỉ ghi tên file cụ thể, ví dụ `"04-epic-toi-cang-thang.mp3"`, khi tin cần sắc thái đặc biệt.
    - Bỏ `voice`, `avatar`, `out`, `date` (máy tự điền; tên video lấy theo tên thư mục).
    - Thêm `"tiktok_title"` (IN HOA), `"caption"` (mảng 3 dòng theo Bước 8), `"hashtags"` (mảng 4–5 thẻ).
@@ -124,7 +124,28 @@ Kiểm tra dòng "Mốc cảnh": cảnh nào ngắn bất thường (dưới ~3 
 
 Video 45–60 giây có 5–7 cảnh (móc · tin · 3 ý · câu kết), mỗi cảnh 5–10 giây và một đoạn video nền riêng (không lặp lại clip giữa các cảnh). Mỗi cảnh một đoạn, dọc (`orientation: portrait`), đúng chủ đề cảnh: thành phố nhắc trong tin, tòa căn hộ, ký hợp đồng, nội thất sang trọng, công trường, cầu đường, metro...
 
-- **Chế độ máy anh:** không tìm video, chỉ ghi `"broll_query": ["từ khóa chính", "từ khóa dự phòng"]` (tiếng Anh) cho từng cảnh; `dung.py` tự tìm trên Pixabay (hoặc Pexels nếu có key), chọn clip dọc và không lặp. Từ khóa nên có "Vietnam"/"Hanoi" khi cảnh cần bối cảnh Việt Nam, và một từ khóa dự phòng chung hơn.
+- **Chế độ máy anh:** không tìm video, chỉ ghi `"broll_query": ["từ khóa chính", "từ khóa dự phòng"]` (tiếng Anh) hoặc `"broll_id"` cho từng cảnh; `dung.py` tự tìm trên Pixabay (hoặc Pexels nếu có key) và không lặp clip.
+  - Từ 27/11/2026 `dung.py` xếp clip theo **mức khớp từ khóa với tag** trước, khung dọc/độ nét sau (bản cũ ưu tiên clip dọc bất kể nội dung nên từng lấy nhầm cối xay gió, Dubai, em bé ở sân chơi vào tin CT6 Kiến Hưng). Từ khóa 1–2 từ phải khớp hết; từ 3 từ trở lên được thiếu 1 từ; có "Vietnam/Hanoi" thì clip bắt buộc có tag Việt Nam. Không clip nào khớp thì máy lấy clip dự phòng trong kho dưới đây.
+  - Dựng xong, máy ghi `xem-truoc-nen.jpg` (mỗi cảnh 1 khung). Anh báo nền lạc đề thì Claude xem file này (`device_stage_files`), đổi `broll_id` cho cảnh sai, chuyển file .mp4 cũ sang `_kiem/` rồi nhờ anh dựng lại (giọng giữ nguyên).
+  - Tìm clip mới: chạy Pixabay API qua `device_bash` (key trong `_cong-cu/cau-hinh.env`, gửi kèm User-Agent), ghép ảnh `thumbnail` của các ứng viên thành một tấm, xem tận mắt rồi mới ghi `broll_id`. Clip mới đã kiểm thì bổ sung vào bảng dưới.
+
+  **Kho clip đã kiểm (Pixabay, `broll_id`)**
+
+  | broll_id | Nội dung | Độ nét |
+  |---|---|---|
+  | 74652 | Hà Nội: chung cư cao tầng xen nhà ống, đường lớn | 4K |
+  | 74653 | Hà Nội: toàn cảnh khu đô thị, sông, đường | 4K |
+  | 252936 | Hà Nội: bình minh trên mái nhà phố | 1080p |
+  | 45699 | Hà Nội: đường dưới cầu cạn ban đêm | 1080p |
+  | 129209 | Hà Nội: xe máy kẹt đường (có người đi đường) | 1080p |
+  | 219342 · 219340 · 219343 | Chung cư cao tầng Việt Nam nhìn từ trên cao (TP HCM, không lộ địa danh) | 4K |
+  | 302062 | Khu đô thị mới, nút giao từ trên cao (TP HCM) | 4K |
+  | 36944 | Phố nhà ống Việt Nam từ trên cao | 1080p |
+  | 42923 · 42926 | Công trường xây dựng Việt Nam | 1080p |
+  | 254922 · 162047 | Búa tòa án, không có người | 1080p |
+  | 198889 | Cán cân công lý, sách luật | 4K |
+  | 169000 | Thùng giấy chuyển nhà, không có người | 1080p |
+  | 203412 | Mặt tiền chung cư cao tầng (không rõ nước) | 4K |
 - **Chế độ cloud:** tìm bằng `vidiq_find_broll` (tiếng Anh, ví dụ "Hanoi skyline aerial", "luxury apartment interior city view"), lấy link MP4 bản 1080×1920 và tải vào `broll/`. Không dùng cảnh có người nói thẳng vào camera hoặc có logo, chữ lớn.
 
 ### 4b — Ảnh báo chí (khi cần hình thật của địa điểm trong tin)
